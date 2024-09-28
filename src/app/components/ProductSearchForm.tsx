@@ -13,18 +13,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { groupName, sizeCategory, sizeType } from "../lib/util";
+import { groupName, sizeCategory, sizeType, groupProducts } from "../lib/util";
 import { ProductContext, ProductContextType } from "./ProductProvider";
-
-const groupProducts: Record<string, string[]> = {
-  รถไถ: ["12", "30", "31", "35"],
-  รถยนต์: ["3", "5", "7", "8", "11", "16", "23", "29"],
-  "รถใหญ่ 6-10 ล้อ": ["1", "2", "4", "6", "9", "10", "28"],
-  "แมคโคร โฟล์คลิฟท์": ["32", "34"],
-  "น้ำมัน แบตฯ": ["21", "22"],
-  อื่นๆ: ["13", "14", "15", "17,18,19,20", "25", "26"],
-  บริการ: ["33", "40"],
-};
 
 export default function ProductSearchForm() {
   const [searchText, setSearchText] = React.useState("");
@@ -158,17 +148,19 @@ export default function ProductSearchForm() {
                     {Object.keys(groupName).map(
                       (key) =>
                         groupProducts[productKey].includes(key) && (
-                          <DropdownMenuItem
-                            key={key}
-                            onClick={() => handleSelect(key, "CODE")}
-                            className={
-                              key === searchGroup && searchKey === "CODE"
-                                ? "font-bold"
-                                : undefined
-                            }
-                          >
-                            {groupName[key]}
-                          </DropdownMenuItem>
+                          <>
+                            <DropdownMenuItem
+                              key={key}
+                              onClick={() => handleSelect(key, "CODE")}
+                              className={`${
+                                key === searchGroup && searchKey === "CODE"
+                                  ? "font-bold"
+                                  : undefined
+                              } last:border-t`}
+                            >
+                              {groupName[key]}
+                            </DropdownMenuItem>
+                          </>
                         )
                     )}
                   </DropdownMenuSubContent>
