@@ -13,7 +13,7 @@ async function main() {
   let count: number = 0;
   for (const index in Object.keys(productInfoData)) {
     await prisma.productInfo.create({
-      data: productInfoData[index],
+      data: productInfoData[index as keyof typeof productInfoData],
     });
 
     count += 1;

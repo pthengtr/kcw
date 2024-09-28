@@ -22,21 +22,21 @@ export default function ProductColumnHeder() {
   const category: string = searchParams.get("category") || "I";
 
   const fixedColumns: Record<string, string | null> =
-    searchParams.get("key") === "CODE"
-      ? { BCODE: "รหัสสินค้า", DESCR: "ชื่อสินค้า", MODEL: "รุ่น" }
-      : {
+    searchParams.get("key") === "SIZE"
+      ? {
           BCODE: "รหัสสินค้า",
           DESCR: "ชื่อสินค้า",
           MODEL: "รุ่น",
           SIZE1: sizeType[category][0],
           SIZE2: sizeType[category][1],
           SIZE3: sizeType[category][2] || "ขนาด3",
-        };
+        }
+      : { BCODE: "รหัสสินค้า", DESCR: "ชื่อสินค้า", MODEL: "รุ่น" };
 
   const optColumns =
-    searchParams.get("key") === "CODE"
-      ? [column1, column2, column3]
-      : [column1, column2];
+    searchParams.get("key") === "SIZE"
+      ? [column1, column2]
+      : [column1, column2, column3];
 
   return (
     <TableHeader className="sticky top-0 bg-white">
@@ -44,7 +44,7 @@ export default function ProductColumnHeder() {
         {Object.keys(fixedColumns).map((key) => (
           <TableHead key={key}>
             <button
-              className="w-full text-left"
+              className="w-full text-left outline-none"
               onClick={() => handleSort(searchParams, key)}
             >
               {fixedColumns[key]}

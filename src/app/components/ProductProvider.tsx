@@ -70,7 +70,6 @@ export default function ProductProvider({ children }: ProductProvider) {
   ) {
     let newUrl: string = "?";
     searchParams.forEach((key, value) => {
-      console.log(value);
       if (value != "page" && value != "order" && value != "direction")
         newUrl = newUrl + `${value}=${key}&`;
     });

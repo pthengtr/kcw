@@ -1,10 +1,8 @@
 import prisma from "@/app/lib/db";
 import React from "react";
 import { formatWordsSearch, formatSizeSearch } from "@/app/lib/util";
-
-import ProductMain from "@/app/components/ProductMain";
-import ProductHeader from "../components/ProductHeader";
 import { dbTake } from "@/app/lib/util";
+import ProductSearchPage from "../components/ProductSearchPage";
 
 type SearchProps = {
   searchParams: {
@@ -24,14 +22,14 @@ type SearchProps = {
 
 export default async function Search({ searchParams }: SearchProps) {
   const {
-    key,
-    value,
-    groups,
+    key = "CODE",
+    value = "",
+    groups = "all",
     category,
     size1,
     size2,
     size3,
-    status,
+    status = "true",
     order = "DESCR",
     direction = "asc",
     page = 1,
@@ -39,14 +37,14 @@ export default async function Search({ searchParams }: SearchProps) {
 
   let whereObj;
 
-  if (key !== undefined && value !== undefined) {
+  if (key === "CODE") {
     const searchWords = value.split(/[\s,]+/).map((word) => word.trim());
 
     const groupsNum =
       groups !== "all" ? groups.split(",").map((group) => Number(group)) : null;
 
     whereObj = formatWordsSearch(status, groupsNum, searchWords);
-  } else {
+  } else if (key === "SIZE") {
     whereObj = formatSizeSearch(status, category, [size1, size2, size3]);
   }
 
@@ -69,12 +67,9 @@ export default async function Search({ searchParams }: SearchProps) {
   });
 
   return (
-    <div className="flex flex-col gap-2 h-full">
-      <ProductHeader />
-      <ProductMain
-        itemListJson={JSON.stringify(itemList)}
-        totalFound={totalFound._count}
-      />
-    </div>
+    <ProductSearchPage
+      itemListJson={JSON.stringify(itemList)}
+      totalFound={totalFound._count}
+    />
   );
 }

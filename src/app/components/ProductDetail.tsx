@@ -1,4 +1,3 @@
-import React from "react";
 import cn from "@/app/lib/cn";
 import { Prisma } from "@prisma/client";
 import ProductDetailCardLg from "./ProductDetailCardLg";
@@ -18,12 +17,14 @@ export type ProductDetailProps = {
 
 export default function ProductDetail({ itemInfo }: ProductDetailProps) {
   return (
-    <div className="h-full overflow-auto mx-8">
-      <div className="grid w-full gap-6 md:grid-cols-[auto_auto] justify-items-center">
-        <ProductDetailCardLg itemInfo={itemInfo} />
-        <ProductDetailCardSm itemInfo={itemInfo} />
+    <>
+      <div className="h-full overflow-auto mx-8">
+        <div className="grid w-full gap-6 md:grid-cols-[auto_auto] justify-items-center">
+          <ProductDetailCardLg itemInfo={itemInfo} />
+          <ProductDetailCardSm itemInfo={itemInfo} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

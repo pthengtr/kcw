@@ -28,7 +28,7 @@ export default function ProductPagination({
     useContext(ProductContext) as ProductContextType;
 
   return (
-    <section className="p-2 bg-gray-100 w-full mt-auto">
+    <section className="flex items-center p-2 bg-gray-100 w-full mt-auto">
       <Pagination>
         <PaginationContent>
           <PaginationItem>
@@ -80,6 +80,7 @@ export default function ProductPagination({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
+      <div className="px-4 text-nowrap">{totalFound} รายการ</div>
     </section>
   );
 }

@@ -35,7 +35,7 @@ export default function ProductOptionalColumn({
 }: ProductOptionalColumnProps) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="focus:outline-none">
+      <DropdownMenuTrigger className="focus:outline-none outline-none">
         <div className="flex gap-2 items-center justify-center">
           <span>{columnName[column]}</span>
           <svg

@@ -4,7 +4,6 @@ import ProductColumnHeader from "./ProductColumnHeader";
 import { ProductInfo } from "@prisma/client";
 import { Table, TableBody } from "@/components/ui/table";
 import { ProductContext, ProductContextType } from "./ProductProvider";
-import { dbTake } from "../lib/util";
 
 type ProductTableProps = {
   itemList: ProductInfo[];
@@ -30,7 +29,7 @@ export default function ProductTable({ itemList }: ProductTableProps) {
           activeRow === "" ? selectedItem : itemList[currentIndex - 1].BCODE
         );
       } else if (key === "ArrowDown") {
-        if (currentIndex >= dbTake) return;
+        if (currentIndex >= itemList.length - 1) return;
         setActiveRow(
           activeRow === "" ? selectedItem : itemList[currentIndex + 1].BCODE
         );
