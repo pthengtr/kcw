@@ -147,17 +147,30 @@ export default function ProductDetailSection2({
         </CardHeader>
         <CardContent className="grid grid-cols-[1fr_2fr] gap-x-2 gap-1">
           <SpanName>ซื้อเข้า</SpanName>
-          <SpanValue>
-            {new Date(Date.parse(itemInfo.DATEUPDATE)).toLocaleDateString(
-              "th-TH"
-            )}
-          </SpanValue>
-          <SpanName>เช็คสต๊อก</SpanName>
-          <SpanValue>
-            {new Date(Date.parse(itemInfo.DATEUPDATE)).toLocaleDateString(
-              "th-TH"
-            )}
-          </SpanValue>
+          {itemInfo.DATEUPDATE !== null ? (
+            <>
+              <SpanName>ซื้อเข้า</SpanName>
+              <SpanValue>
+                {new Date(Date.parse(itemInfo.DATEUPDATE)).toLocaleDateString(
+                  "th-TH"
+                )}
+              </SpanValue>
+            </>
+          ) : (
+            <></>
+          )}
+          {itemInfo.DATEAUDIT !== null ? (
+            <>
+              <SpanName>เช็คสต๊อก</SpanName>
+              <SpanValue>
+                {new Date(Date.parse(itemInfo.DATEAUDIT)).toLocaleDateString(
+                  "th-TH"
+                )}
+              </SpanValue>
+            </>
+          ) : (
+            <></>
+          )}
         </CardContent>
       </Card>
 
