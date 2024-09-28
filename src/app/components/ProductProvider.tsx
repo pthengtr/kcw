@@ -74,7 +74,11 @@ export default function ProductProvider({ children }: ProductProvider) {
         newUrl = newUrl + `${value}=${key}&`;
     });
     newUrl =
-      pathName + newUrl + `page=${page}&order=${order}&direction=${direction}`;
+      pathName +
+      newUrl +
+      `page=${
+        searchParams.get("page") ? page : "1"
+      }&order=${order}&direction=${direction}`;
 
     router.push(newUrl);
   }

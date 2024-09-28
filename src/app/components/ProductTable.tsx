@@ -37,7 +37,7 @@ export default function ProductTable({ itemList }: ProductTableProps) {
           activeRow === "" ? selectedItem : itemList[currentIndex + 1].BCODE
         );
       } else if (key === "Enter" || key === "ArrowRight") {
-        handleSelectItem(itemList[currentIndex].BCODE);
+        if (currentIndex > 0) handleSelectItem(itemList[currentIndex].BCODE);
       }
     }
 
