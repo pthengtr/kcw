@@ -37,8 +37,8 @@ model ProductInfo {
   QTYMAX      Int?
   QTYGET      Int?
   QTYPUT      Int?
-  DATEAUDIT   DateTime?
-  DATEUPDATE  DateTime?
+  DATEAUDIT   String?
+  DATEUPDATE  String?
   REMARKS     String?
   location    ProductLocation[]
   price       ProductPrice[]
