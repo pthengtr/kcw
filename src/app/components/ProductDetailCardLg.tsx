@@ -1,6 +1,6 @@
 import { ProductDetailProps, SpanValue, SpanName } from "./ProductDetail";
 import React from "react";
-import ImageWithFallback from "./ImageWithFallback";
+//import ImageWithFallback from "./ImageWithFallback";
 import { groupName } from "../lib/util";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -51,7 +51,7 @@ export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
         </CardContent>
       </Card>
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>รูปสินค้า</CardTitle>
         </CardHeader>
@@ -61,7 +61,7 @@ export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
             alt={`kcw bcode ${itemInfo.BCODE} image`}
           />
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }
