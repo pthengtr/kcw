@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import ProductRow from "./ProductRow";
 import ProductColumnHeader from "./ProductColumnHeader";
-import { ProductInfo } from "@prisma/client";
 import { Table, TableBody } from "@/components/ui/table";
 import { ProductContext, ProductContextType } from "./ProductProvider";
+import { ItemInfoType } from "./ProductDetail";
 
 type ProductTableProps = {
-  itemList: ProductInfo[];
+  itemList: ItemInfoType[];
 };
 
 export default function ProductTable({ itemList }: ProductTableProps) {
