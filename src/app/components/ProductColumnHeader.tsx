@@ -1,28 +1,24 @@
 import React, { useContext } from "react";
 import ProductOptionalColumn from "./ProductOptionalColumn";
-import { useSearchParams } from "next/navigation";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { sizeType } from "../lib/util";
+import { SearchContext, SearchContextType } from "./SearchProvider";
 
 export default function ProductColumnHeder() {
-  const searchParams = useSearchParams();
+  const { column1, column2, column3, setColumn1, setColumn2, setColumn3 } =
+    useContext(ProductContext) as ProductContextType;
 
-  const {
-    column1,
-    column2,
-    column3,
-    setColumn1,
-    setColumn2,
-    setColumn3,
-    handleSort,
-  } = useContext(ProductContext) as ProductContextType;
+  const { handleSort } = useContext(SearchContext) as SearchContextType;
+
+  const { category, tableSearchKey } = useContext(
+    SearchContext
+  ) as SearchContextType;
 
   const setColumns = [setColumn1, setColumn2, setColumn3];
-  const category: string = searchParams.get("category") || "I";
 
   const fixedColumns: Record<string, string | null> =
-    searchParams.get("key") === "SIZE"
+    tableSearchKey === "SIZE"
       ? {
           BCODE: "รหัสสินค้า",
           DESCR: "ชื่อสินค้า",
@@ -34,7 +30,7 @@ export default function ProductColumnHeder() {
       : { BCODE: "รหัสสินค้า", DESCR: "ชื่อสินค้า", MODEL: "รุ่น" };
 
   const optColumns =
-    searchParams.get("key") === "SIZE"
+    tableSearchKey === "SIZE"
       ? [column1, column2]
       : [column1, column2, column3];
 
@@ -45,7 +41,7 @@ export default function ProductColumnHeder() {
           <TableHead key={key}>
             <button
               className="w-full text-left outline-none"
-              onClick={() => handleSort(searchParams, key)}
+              onClick={() => handleSort(key)}
             >
               {fixedColumns[key]}
             </button>
@@ -57,7 +53,7 @@ export default function ProductColumnHeder() {
             <ProductOptionalColumn
               column={col}
               setColumn={setColumns[index]}
-              handleSort={() => handleSort(searchParams, col)}
+              handleSort={() => handleSort(col)}
             />
           </TableHead>
         ))}

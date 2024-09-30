@@ -2,6 +2,7 @@ import { Prompt } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import ProductProvider from "./components/ProductProvider";
+import SearchProvider from "./components/SearchProvider";
 
 const prompt = Prompt({
   weight: ["400", "700"],
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className={`${prompt.className} antialiased h-full`}>
-        <ProductProvider>{children}</ProductProvider>
+        <ProductProvider>
+          <SearchProvider>{children}</SearchProvider>
+        </ProductProvider>
       </body>
     </html>
   );

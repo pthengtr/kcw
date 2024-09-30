@@ -1,19 +1,17 @@
+"use client";
+import React, { useContext } from "react";
 import ProductHeader from "./ProductHeader";
 import ProductMain from "./ProductMain";
+import { SearchContext, SearchContextType } from "./SearchProvider";
 
-type ProductSearchPageProps = {
-  itemListJson: string;
-  totalFound: number;
-};
-
-export default function ProductSearchPage({
-  itemListJson,
-  totalFound,
-}: ProductSearchPageProps) {
+export default function ProductSearchPage() {
+  const { itemList, totalFound } = useContext(
+    SearchContext
+  ) as SearchContextType;
   return (
     <div className="flex flex-col gap-2 h-full">
       <ProductHeader />
-      <ProductMain itemListJson={itemListJson} totalFound={totalFound} />
+      <ProductMain itemListJson={itemList} totalFound={totalFound} />
     </div>
   );
 }

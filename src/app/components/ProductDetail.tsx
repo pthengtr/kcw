@@ -5,12 +5,7 @@ import React, { useState, useEffect, useContext } from "react";
 import ProductDetailCardLg from "./ProductDetailCardLg";
 import ProductDetailCardSm from "./ProductDetailCardSm";
 import { ProductContext, ProductContextType } from "./ProductProvider";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  "https://jdzitzsucntqbjvwiwxm.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impkeml0enN1Y250cWJqdndpd3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjcyNDExNzIsImV4cCI6MjA0MjgxNzE3Mn0.NmBkpUpX939nzVOq2MzgpXNFGmYTz7FZQZvgVSOqKY4"
-);
+import { supabase } from "../lib/supabase";
 
 type ProductInfoFull = Prisma.ProductInfoGetPayload<{
   include: {
@@ -40,22 +35,18 @@ export default function ProductDetail() {
   const { selectedItem } = useContext(ProductContext) as ProductContextType;
 
   useEffect(() => {
-    async function prismaFetch() {
-      // const res = await fetch(`/api/product/${selectedItem}`);
-      // const data = await res.json();
-      //setItemInfo(data);
-
+    async function getDataSupabase() {
       const { data, error } = await supabase
         .from("productInfo")
         .select("*")
         .eq("BCODE", selectedItem)
         .limit(10);
-      console.log(data);
+
       if (error) return;
       if (data !== null) setItemInfo(data[0]);
     }
 
-    prismaFetch();
+    getDataSupabase();
   }, [selectedItem]);
 
   return (

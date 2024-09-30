@@ -1,15 +1,16 @@
 import React, { useContext } from "react";
-import { useSearchParams } from "next/navigation";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { ProductInfo } from "@prisma/client";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { SearchContext, SearchContextType } from "./SearchProvider";
 
 type ProductRowProps = {
   item: ProductInfo;
 };
 
 export default function ProductRow({ item }: ProductRowProps) {
-  const searchParams = useSearchParams();
+  const { tableSearchKey } = useContext(SearchContext) as SearchContextType;
+
   const {
     column1,
     column2,
@@ -20,7 +21,7 @@ export default function ProductRow({ item }: ProductRowProps) {
   } = useContext(ProductContext) as ProductContextType;
   const optCol = [column1, column2, column3];
   const columnArray: (keyof ProductInfo)[] =
-    searchParams.get("key") === "SIZE"
+    tableSearchKey === "SIZE"
       ? ([
           "BCODE",
           "DESCR",

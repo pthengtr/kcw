@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import PaginationNext from "@/app/components/PaginationNext";
 import PaginationPrev from "@/app/components/PaginationPrev";
-import { ProductContext, ProductContextType } from "./ProductProvider";
+import { SearchContext, SearchContextType } from "./SearchProvider";
 import { dbTake } from "../lib/util";
 
 import {
@@ -11,7 +11,6 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
-import { useSearchParams } from "next/navigation";
 
 type ProductPaginationProps = {
   totalFound: number;
@@ -23,18 +22,15 @@ export default function ProductPagination({
   const totalPage = Math.ceil((Number(totalFound) / dbTake) as number);
   const totalPageArray = Array.from(Array(totalPage).keys()).map((i) => i + 1);
 
-  const searchParams = useSearchParams();
   const { handleNextPage, handlePrevPage, currentPage, handleSetCurrentPage } =
-    useContext(ProductContext) as ProductContextType;
+    useContext(SearchContext) as SearchContextType;
 
   return (
     <section className="flex items-center p-2 bg-gray-100 w-full mt-auto">
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrev
-              handlePrevPage={() => handlePrevPage(searchParams)}
-            />
+            <PaginationPrev handlePrevPage={() => handlePrevPage()} />
           </PaginationItem>
 
           {totalPageArray.map((page) => {
@@ -57,7 +53,7 @@ export default function ProductPagination({
                   )}
                   <PaginationItem>
                     <PaginationLink
-                      onClick={() => handleSetCurrentPage(searchParams, page)}
+                      onClick={() => handleSetCurrentPage(page)}
                       isActive={currentPage === page}
                     >
                       {page}
@@ -74,9 +70,7 @@ export default function ProductPagination({
           })}
 
           <PaginationItem>
-            <PaginationNext
-              handleNextPage={() => handleNextPage(searchParams, totalPage)}
-            />
+            <PaginationNext handleNextPage={() => handleNextPage(totalPage)} />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

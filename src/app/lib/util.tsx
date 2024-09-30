@@ -1,5 +1,3 @@
-import { Prisma } from "@prisma/client";
-
 export const dbTake: number = 50;
 
 export const groupProducts: Record<string, string[]> = {
@@ -91,62 +89,3 @@ export const groupName: Record<string, string> = {
   "40": "ค่าแรง",
   "33,40": "บริการทั้งหมด",
 };
-
-export function formatWordsSearch(
-  status: string,
-  groups: number[] | null,
-  words: string[]
-) {
-  const andArray = [];
-  const orGroup: Prisma.ProductInfoWhereInput[] = [];
-
-  words.forEach((word) =>
-    andArray.push({
-      OR: [
-        { BCODE: { contains: word } },
-        { XCODE: { contains: word } },
-        { PCODE: { contains: word } },
-        { MCODE: { contains: word } },
-        { PCODE: { contains: word } },
-        { DESCR: { contains: word } },
-        { MODEL: { contains: word } },
-        { VENDOR: { contains: word } },
-        { BRAND: { contains: word } },
-      ],
-    })
-  );
-
-  if (groups !== null) {
-    groups.forEach((group) => orGroup.push({ MAIN: { equals: group } }));
-
-    andArray.push({ OR: orGroup });
-  }
-
-  if (status === "true") {
-    andArray.push({ STATUS: { equals: 1 } });
-  }
-  return { AND: andArray };
-}
-
-export function formatSizeSearch(
-  status: string,
-  category: string,
-  sizeArray: string[]
-) {
-  const andArray: Prisma.ProductInfoWhereInput[] = [
-    { CODE1: { contains: category } },
-  ];
-
-  sizeArray.forEach((size, index) => {
-    if (size !== "")
-      andArray.push({
-        [`SIZE${(index + 1).toString()}`]: { contains: size },
-      });
-  });
-
-  if (status === "true") {
-    andArray.push({ STATUS: { equals: 1 } });
-  }
-
-  return { AND: andArray };
-}

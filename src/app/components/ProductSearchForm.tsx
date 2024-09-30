@@ -1,6 +1,5 @@
 "use client";
 import React, { useContext } from "react";
-import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,51 +13,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { groupName, sizeCategory, sizeType, groupProducts } from "../lib/util";
-import { ProductContext, ProductContextType } from "./ProductProvider";
+import { SearchContext, SearchContextType } from "./SearchProvider";
 
 export default function ProductSearchForm() {
-  const [searchText, setSearchText] = React.useState("");
-  const [searchGroup, setSearchGroup] = React.useState("all");
-  const [searchKey, setSearchKey] = React.useState("CODE");
-  const [currentStatus, setCurrentStatus] = React.useState(true);
-
-  const [size1, setSize1] = React.useState("");
-  const [size2, setSize2] = React.useState("");
-  const [size3, setSize3] = React.useState("");
-
-  const { category, setCategory } = useContext(
-    ProductContext
-  ) as ProductContextType;
-
-  function handleToggleStatus() {
-    setCurrentStatus((cur) => !cur);
-  }
-
-  const router = useRouter();
-
-  function handleSubmitForm(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    if (searchKey === "CODE") {
-      router.push(
-        `/search?key=CODE&groups=${searchGroup}&value=${searchText}&status=${currentStatus}`
-      );
-    } else {
-      router.push(
-        `/search?key=SIZE&category=${category}&size1=${size1}&size2=${size2}&size3=${size3}&status=${currentStatus.toString()}`
-      );
-    }
-  }
-
-  function handleSelect(value: string, key: string) {
-    setSearchKey(key);
-
-    if (key === "CODE") {
-      setSearchGroup(value);
-    } else if (key === "SIZE") {
-      setCategory(value);
-    }
-  }
+  const {
+    searchText,
+    setSearchText,
+    searchGroup,
+    searchKey,
+    currentStatus,
+    size1,
+    setSize1,
+    size2,
+    setSize2,
+    size3,
+    setSize3,
+    category,
+    handleSubmitForm,
+    handleToggleStatus,
+    handleSelect,
+  } = useContext(SearchContext) as SearchContextType;
 
   return (
     <form onSubmit={handleSubmitForm} className="flex gap-2 items-center">
@@ -148,9 +122,8 @@ export default function ProductSearchForm() {
                     {Object.keys(groupName).map(
                       (key) =>
                         groupProducts[productKey].includes(key) && (
-                          <>
+                          <React.Fragment key={key}>
                             <DropdownMenuItem
-                              key={key}
                               onClick={() => handleSelect(key, "CODE")}
                               className={`${
                                 key === searchGroup && searchKey === "CODE"
@@ -160,7 +133,7 @@ export default function ProductSearchForm() {
                             >
                               {groupName[key]}
                             </DropdownMenuItem>
-                          </>
+                          </React.Fragment>
                         )
                     )}
                   </DropdownMenuSubContent>
