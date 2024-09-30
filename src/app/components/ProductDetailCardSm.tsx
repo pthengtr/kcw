@@ -35,7 +35,9 @@ export default function ProductDetailSection2({
         </CardHeader>
         <CardContent className="grid grid-cols-[1fr_1fr] gap-2">
           <SpanName>ราคาหน้าร้าน</SpanName>
-          <SpanValue>{itemInfo.PRICENET1}</SpanValue>
+          <SpanValue>
+            {parseFloat(itemInfo.PRICENET1).toLocaleString()}
+          </SpanValue>
         </CardContent>
 
         <CardContent>
@@ -50,7 +52,9 @@ export default function ProductDetailSection2({
                     price.Attribute !== "PRICE1" && (
                       <React.Fragment key={price.Attribute}>
                         <SpanName>{price.Attribute}</SpanName>
-                        <SpanValue>{price.Value}</SpanValue>
+                        <SpanValue>
+                          {parseFloat(price.Value).toLocaleString()}
+                        </SpanValue>
                       </React.Fragment>
                     )
                 )}
@@ -66,7 +70,9 @@ export default function ProductDetailSection2({
         </CardHeader>
         <CardContent className="grid grid-cols-[1fr_1fr] gap-2 ">
           <SpanName>ทุนสุทธิ</SpanName>
-          <SpanValue>{itemInfo.productCost.COSTNET}</SpanValue>
+          <SpanValue>
+            {parseFloat(itemInfo.productCost.COSTNET).toLocaleString()}
+          </SpanValue>
         </CardContent>
         <CardContent>
           <Accordion type="single" collapsible>
@@ -76,16 +82,18 @@ export default function ProductDetailSection2({
               </AccordionTrigger>
               <AccordionContent className="grid grid-cols-[1fr_1fr] gap-1">
                 <SpanName>ราคาเต็ม</SpanName>
-                <SpanValue>{itemInfo.productCost.COSTSET1}</SpanValue>
+                <SpanValue>
+                  {parseFloat(itemInfo.productCost.COSTSET1).toLocaleString()}
+                </SpanValue>
                 {discountArray.map((discount) => (
                   <React.Fragment key={discount}>
                     <SpanName>discount</SpanName>
                     <SpanValue>
-                      {
+                      {parseFloat(
                         itemInfo.productCost[
                           discount as keyof typeof itemInfo.productCost
                         ]
-                      }
+                      ).toLocaleString()}
                     </SpanValue>
                   </React.Fragment>
                 ))}

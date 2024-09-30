@@ -30,6 +30,7 @@ type ItemInfoType = {
   DATEUPDATE: string;
   DATEAUDIT: string;
   REMARKS: string;
+  LOCATION1: string;
   productCost: {
     BCODE: string;
     ISVAT: string;

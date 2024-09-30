@@ -5,6 +5,13 @@ import { groupName } from "../lib/util";
 import { ProductDetailProps } from "./ProductDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
 export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
   return (
     <div className="grid gap-6 auto-rows-min @[1024px]:grid-cols-[auto_auto]">
@@ -26,11 +33,22 @@ export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
           <SpanName>บริษัท</SpanName>
           <SpanValue>{itemInfo.VENDOR}</SpanValue>
           <SpanName>ที่เก็บ</SpanName>
-          <SpanValue>
-            {itemInfo.productLocation.map((item) => (
-              <span key={item.Attribute}>, {item.Value}</span>
-            ))}
-          </SpanValue>
+          <SpanValue>{itemInfo.LOCATION1}</SpanValue>
+          <Accordion type="single" className="col-span-2" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-gray-500">
+                ที่เก็บสำรอง
+              </AccordionTrigger>
+              <AccordionContent className="grid grid-cols-[1fr_1fr] gap-1">
+                {itemInfo.productLocation.map((item) => (
+                  <React.Fragment key={item.Attribute}>
+                    <SpanName>{item.Attribute}</SpanName>
+                    <SpanValue>{item.Value}</SpanValue>
+                  </React.Fragment>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </CardContent>
       </Card>
 
