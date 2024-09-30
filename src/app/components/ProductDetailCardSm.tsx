@@ -3,30 +3,30 @@ import { sizeCategory, sizeType } from "../lib/util";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+// import {
+//   Accordion,
+//   AccordionContent,
+//   AccordionItem,
+//   AccordionTrigger,
+// } from "@/components/ui/accordion";
 
 export default function ProductDetailSection2({
   itemInfo,
 }: ProductDetailProps) {
-  let ui1text = "",
-    ui2text = "",
-    ui2number = "";
-  itemInfo.unit.forEach((item) => {
-    if (item.Attribute === "UI1") {
-      ui1text = item.Value;
-    } else if (item.Attribute === "UI2") {
-      ui2text = item.Value;
-      ui2number = item.NumberPerUnit.toString();
-    }
-  });
+  // let ui1text = "",
+  //   ui2text = "",
+  //   ui2number = "";
+  // itemInfo.unit.forEach((item) => {
+  //   if (item.Attribute === "UI1") {
+  //     ui1text = item.Value;
+  //   } else if (item.Attribute === "UI2") {
+  //     ui2text = item.Value;
+  //     ui2number = item.NumberPerUnit.toString();
+  //   }
+  // });
 
-  const productCost = itemInfo.productCost[0];
-  const discountArray = ["DISCNT1", "DISCNT2", "DISCNT3", "DISCNT4"];
+  // const productCost = itemInfo.productCost[0];
+  // const discountArray = ["DISCNT1", "DISCNT2", "DISCNT3", "DISCNT4"];
 
   return (
     <div className="grid grid-cols-2 gap-6 lg:grid-cols-2 md:grid-cols-1 md:items-start md:auto-rows-min">
@@ -40,7 +40,7 @@ export default function ProductDetailSection2({
         </CardContent>
 
         <CardContent>
-          <Accordion type="single" collapsible>
+          {/* <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
               <AccordionTrigger className="text-gray-500">
                 ราคาพิเศษ
@@ -57,7 +57,7 @@ export default function ProductDetailSection2({
                 )}
               </AccordionContent>
             </AccordionItem>
-          </Accordion>
+          </Accordion> */}
         </CardContent>
       </Card>
 
@@ -67,10 +67,10 @@ export default function ProductDetailSection2({
         </CardHeader>
         <CardContent className="grid grid-cols-[1fr_1fr] gap-2 ">
           <SpanName>ทุนสุทธิ</SpanName>
-          <SpanValue>{productCost.COSTNET}</SpanValue>
+          {/* <SpanValue>{productCost.COSTNET}</SpanValue> */}
         </CardContent>
         <CardContent>
-          <Accordion type="single" collapsible>
+          {/* <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
               <AccordionTrigger className="text-gray-500">
                 รายละเอียดส่วนลด
@@ -88,7 +88,7 @@ export default function ProductDetailSection2({
                 ))}
               </AccordionContent>
             </AccordionItem>
-          </Accordion>
+          </Accordion> */}
         </CardContent>
       </Card>
 
@@ -106,7 +106,7 @@ export default function ProductDetailSection2({
         </CardContent>
       </Card>
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>หน่วยสินค้า</CardTitle>
         </CardHeader>
@@ -118,7 +118,7 @@ export default function ProductDetailSection2({
           <SpanName>บรรจุ</SpanName>
           <SpanValue>{ui2number}</SpanValue>
         </CardContent>
-      </Card>
+      </Card> */}
       {itemInfo.CODE1 && Object.keys(sizeCategory).includes(itemInfo.CODE1) && (
         <Card>
           <CardHeader>

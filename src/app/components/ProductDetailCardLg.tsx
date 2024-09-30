@@ -26,12 +26,12 @@ export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
           <SpanName>บริษัท</SpanName>
           <SpanValue>{itemInfo.VENDOR}</SpanValue>
           <SpanName>ที่เก็บ</SpanName>
-          <SpanValue>
+          {/* <SpanValue>
             {itemInfo.LOCATION1}
             {itemInfo.location.map((item) => (
               <span key={item.Attribute}>, {item.Value}</span>
             ))}
-          </SpanValue>
+          </SpanValue> */}
         </CardContent>
       </Card>
 
