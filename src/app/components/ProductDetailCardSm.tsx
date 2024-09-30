@@ -149,7 +149,6 @@ export default function ProductDetailSection2({
           <CardTitle>ข้อมูลล่าสุด</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-[1fr_2fr] gap-x-2 gap-1">
-          <SpanName>ซื้อเข้า</SpanName>
           {itemInfo.DATEUPDATE !== null ? (
             <>
               <SpanName>ซื้อเข้า</SpanName>
