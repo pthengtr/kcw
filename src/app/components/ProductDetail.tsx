@@ -6,7 +6,7 @@ import ProductDetailCardSm from "./ProductDetailCardSm";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { supabase } from "../lib/supabase";
 
-type ItemInfoType = {
+export type ItemInfoType = {
   MAIN: number;
   BCODE: string;
   DESCR: string;

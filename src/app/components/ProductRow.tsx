@@ -3,9 +3,10 @@ import { ProductContext, ProductContextType } from "./ProductProvider";
 import { ProductInfo } from "@prisma/client";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SearchContext, SearchContextType } from "./SearchProvider";
+import { ItemInfoType } from "./ProductDetail";
 
 type ProductRowProps = {
-  item: ProductInfo;
+  item: ItemInfoType;
 };
 
 export default function ProductRow({ item }: ProductRowProps) {
@@ -62,7 +63,9 @@ export default function ProductRow({ item }: ProductRowProps) {
             "bg-red-50"
           }`}
         >
-          {item[col]?.toString()}
+          {col === "PRICENET1"
+            ? parseFloat(item[col]).toLocaleString()
+            : item[col as keyof typeof item]?.toString()}
         </TableCell>
       ))}
     </TableRow>
