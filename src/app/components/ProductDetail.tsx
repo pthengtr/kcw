@@ -1,36 +1,75 @@
 "use client";
 import cn from "@/app/lib/cn";
-import { Prisma } from "@prisma/client";
 import React, { useState, useEffect, useContext } from "react";
 import ProductDetailCardLg from "./ProductDetailCardLg";
 import ProductDetailCardSm from "./ProductDetailCardSm";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { supabase } from "../lib/supabase";
 
-type ProductInfoFull = Prisma.ProductInfoGetPayload<{
-  include: {
-    location: true;
-    price: true;
-    priceM: true;
-    unit: true;
-    productCost: true;
+type ItemInfoType = {
+  MAIN: number;
+  BCODE: string;
+  DESCR: string;
+  ACODE: string;
+  XCODE: string;
+  PCODE: string;
+  MCODE: string;
+  MODEL: string;
+  BRAND: string;
+  VENDOR: string;
+  COSTSET1: string;
+  PRICENET1: string;
+  QTYOH2: string;
+  QTYMIN: string;
+  QTYMAX: string;
+  QTYGET: string;
+  CODE1: string;
+  SIZE1: string;
+  SIZE2: string;
+  SIZE3: string;
+  DATEUPDATE: string;
+  DATEAUDIT: string;
+  REMARKS: string;
+  productCost: {
+    BCODE: string;
+    ISVAT: string;
+    COSTSET1: string;
+    DISCNT: string;
+    DISCNT1: string;
+    DISCNT2: string;
+    DISCNT3: string;
+    DISCNT4: string;
+    COSTNET: string;
   };
-}>;
-
-export type ProductDetailProps = {
-  itemInfo: Prisma.ProductInfoGetPayload<{
-    include: {
-      location: true;
-      price: true;
-      priceM: true;
-      unit: true;
-      productCost: true;
-    };
-  }>;
+  productLocation: {
+    BCODE: string;
+    Attribute: string;
+    Value: string;
+  }[];
+  productPrice: {
+    BCODE: string;
+    Attribute: string;
+    Markup: string;
+    Value: string;
+  }[];
+  productPriceM: {
+    BCODE: string;
+    Attribute: string;
+    Markup: string;
+    Value: string;
+  }[];
+  productUnit: {
+    BCODE: string;
+    Attribute: string;
+    Value: string;
+    NumberPerUnit: string;
+  }[];
 };
 
+export type ProductDetailProps = { itemInfo: ItemInfoType };
+
 export default function ProductDetail() {
-  const [itemInfo, setItemInfo] = useState<ProductInfoFull>();
+  const [itemInfo, setItemInfo] = useState<ItemInfoType | null>();
 
   const { selectedItem } = useContext(ProductContext) as ProductContextType;
 
@@ -38,7 +77,9 @@ export default function ProductDetail() {
     async function getDataSupabase() {
       const { data, error } = await supabase
         .from("productInfo")
-        .select("*")
+        .select(
+          `*, productCost(*), productUnit(*), productLocation(*), productPrice(*), productPriceM(*)`
+        )
         .eq("BCODE", selectedItem)
         .limit(10);
 
@@ -52,8 +93,8 @@ export default function ProductDetail() {
   return (
     <div className="w-full h-full">
       {itemInfo && (
-        <div className="h-full overflow-auto mx-8">
-          <div className="grid w-full gap-6 md:grid-cols-1 justify-items-center">
+        <div className="h-full overflow-auto @container mx-8">
+          <div className="grid w-full gap-6 @[768px]:grid-cols-[auto_auto] justify-items-center @container">
             <ProductDetailCardLg itemInfo={itemInfo} />
             <ProductDetailCardSm itemInfo={itemInfo} />
           </div>

@@ -1,13 +1,13 @@
-import { ProductDetailProps, SpanValue, SpanName } from "./ProductDetail";
+import { SpanValue, SpanName } from "./ProductDetail";
 import React from "react";
-//import ImageWithFallback from "./ImageWithFallback";
+import ImageWithFallback from "./ImageWithFallback";
 import { groupName } from "../lib/util";
-
+import { ProductDetailProps } from "./ProductDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
   return (
-    <div className="grid gap-6 auto-rows-min xl:grid-cols-[auto_auto]">
+    <div className="grid gap-6 auto-rows-min @[1024px]:grid-cols-[auto_auto]">
       <Card>
         <CardHeader>
           <CardTitle>ข้อมูลสินค้า</CardTitle>
@@ -26,12 +26,11 @@ export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
           <SpanName>บริษัท</SpanName>
           <SpanValue>{itemInfo.VENDOR}</SpanValue>
           <SpanName>ที่เก็บ</SpanName>
-          {/* <SpanValue>
-            {itemInfo.LOCATION1}
-            {itemInfo.location.map((item) => (
+          <SpanValue>
+            {itemInfo.productLocation.map((item) => (
               <span key={item.Attribute}>, {item.Value}</span>
             ))}
-          </SpanValue> */}
+          </SpanValue>
         </CardContent>
       </Card>
 
@@ -51,7 +50,7 @@ export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
         </CardContent>
       </Card>
 
-      {/* <Card>
+      <Card>
         <CardHeader>
           <CardTitle>รูปสินค้า</CardTitle>
         </CardHeader>
@@ -61,7 +60,7 @@ export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
             alt={`kcw bcode ${itemInfo.BCODE} image`}
           />
         </CardContent>
-      </Card> */}
+      </Card>
     </div>
   );
 }

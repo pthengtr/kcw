@@ -100,7 +100,6 @@ export default function SearchProvider({ children }: ProductProvider) {
 
       const { data, error, count } = await query;
 
-      console.log(data, count);
       if (error) return;
       if (data !== null) setItemList(JSON.stringify(data));
       if (count !== null) setTotalFound(count);
@@ -113,10 +112,8 @@ export default function SearchProvider({ children }: ProductProvider) {
 
       const { data, error, count } = await query;
 
-      console.log(count);
-      if (count !== null) setTotalFound(count);
-
       if (error) return;
+      if (count !== null) setTotalFound(count);
       if (data !== null) setItemList(JSON.stringify(data));
     }
   }
