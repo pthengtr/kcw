@@ -28,7 +28,7 @@ export default function ProductDetailSection2({
   const discountArray = ["DISCNT1", "DISCNT2", "DISCNT3", "DISCNT4"];
 
   return (
-    <div className="grid grid-cols-2 gap-6 @[768px]:grid-cols-1 @[768px]:items-start @[768px]:auto-rows-min @[1024px]:grid-cols-[auto_auto]">
+    <div className="grid grid-cols-2 gap-6 @[760px]:grid-cols-1 @[768px]:items-start @[768px]:auto-rows-min @[1024px]:grid-cols-[auto_auto]">
       <Card>
         <CardHeader>
           <CardTitle>ราคาสินค้า</CardTitle>
@@ -41,7 +41,7 @@ export default function ProductDetailSection2({
         </CardContent>
 
         <CardContent>
-          <Accordion type="single" collapsible>
+          <Accordion type="multiple">
             <AccordionItem value="item-1">
               <AccordionTrigger className="text-gray-500">
                 ราคาพิเศษ
@@ -58,6 +58,21 @@ export default function ProductDetailSection2({
                       </React.Fragment>
                     )
                 )}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="text-gray-500">
+                ราคาหน่วยใหญ่
+              </AccordionTrigger>
+              <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
+                {itemInfo.productPriceM.map((price) => (
+                  <React.Fragment key={price.Attribute}>
+                    <SpanName>{price.Attribute}</SpanName>
+                    <SpanValue>
+                      {parseFloat(price.Value).toLocaleString()}
+                    </SpanValue>
+                  </React.Fragment>
+                ))}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
