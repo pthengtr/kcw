@@ -62,7 +62,7 @@ export default function ProductDetailSection2({
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger className="text-gray-500">
-                ราคาหน่วยใหญ่
+                {`ราคา${ui2text != "" ? ui2text : "หน่วยใหญ่"}`}
               </AccordionTrigger>
               <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
                 {itemInfo.productPriceM.map((price) => (
