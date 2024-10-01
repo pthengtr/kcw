@@ -90,7 +90,7 @@ export default function ProductDetailSection2({
           </SpanValue>
         </CardContent>
         <CardContent>
-          <Accordion type="single" collapsible>
+          <Accordion type="multiple">
             <AccordionItem value="item-1">
               <AccordionTrigger className="text-gray-500">
                 รายละเอียดส่วนลด
@@ -114,6 +114,24 @@ export default function ProductDetailSection2({
                 ))}
               </AccordionContent>
             </AccordionItem>
+            {ui2number && (
+              <AccordionItem value="item-2">
+                <AccordionTrigger className="text-gray-500">
+                  ทุนหน่วยใหญ่
+                </AccordionTrigger>
+                <AccordionContent className="grid grid-cols-[1fr_1fr] gap-1">
+                  <SpanName>{`${ui2number} ${ui1text}/${ui2text}`}</SpanName>
+                  <SpanValue>
+                    {(
+                      parseFloat(itemInfo.productCost.COSTNET) *
+                      parseFloat(ui2number)
+                    )
+                      .toFixed(2)
+                      .toLocaleString()}
+                  </SpanValue>
+                </AccordionContent>
+              </AccordionItem>
+            )}
           </Accordion>
         </CardContent>
       </Card>
