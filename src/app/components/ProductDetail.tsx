@@ -5,6 +5,7 @@ import ProductDetailCardLg from "./ProductDetailCardLg";
 import ProductDetailCardSm from "./ProductDetailCardSm";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { supabase } from "../lib/supabase";
+import ProductCardBuy from "./ProductDetailCards/ProductCardBuy";
 
 export type ItemInfoType = {
   MAIN: number;
@@ -65,6 +66,22 @@ export type ItemInfoType = {
     Value: string;
     NumberPerUnit: string;
   }[];
+  billItemInfo: {
+    id: number;
+    BCODE: string;
+    JOURDATE: Date;
+    BILLDATE: Date;
+    BILLNO: string;
+    QTY: string;
+    UI: string;
+    MTP: string;
+    PRICE: string;
+    DISCNT1: string;
+    DISCNT2: string;
+    DISCNT3: string;
+    DISCNT4: string;
+    AMOUNT: string;
+  }[];
 };
 
 export type ProductDetailProps = { itemInfo: ItemInfoType };
@@ -79,7 +96,7 @@ export default function ProductDetail() {
       const { data, error } = await supabase
         .from("productInfo")
         .select(
-          `*, productCost(*), productUnit(*), productLocation(*), productPrice(*), productPriceM(*)`
+          `*, productCost(*), productUnit(*), productLocation(*), productPrice(*), productPriceM(*), billItemInfo(*)`
         )
         .eq("BCODE", selectedItem)
         .limit(10);
@@ -98,6 +115,10 @@ export default function ProductDetail() {
           <div className="grid w-full gap-6 @[768px]:grid-cols-[auto_auto] justify-items-center @container">
             <ProductDetailCardLg itemInfo={itemInfo} />
             <ProductDetailCardSm itemInfo={itemInfo} />
+            <div className="border w-full col-span-full mr-16"></div>
+            <div className="grid gap-6 @[1024px]:grid-cols-[auto_auto] @[768px]:col-span-2 mb-12">
+              <ProductCardBuy itemInfo={itemInfo} />
+            </div>
           </div>
         </div>
       )}

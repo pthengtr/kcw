@@ -58,7 +58,7 @@ export default function ProductTable({ itemList }: ProductTableProps) {
   }, [activeRow, setActiveRow, itemList, handleSelectItem, selectedItem]);
 
   return (
-    <Table className="w-full relative">
+    <Table className="w-full">
       <ProductColumnHeader />
       <TableBody>
         {itemList.map((item) => (
