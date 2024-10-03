@@ -1,6 +1,6 @@
 "use client";
 import cn from "@/app/lib/cn";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import ProductDetailCardLg from "./ProductDetailCardLg";
 import ProductDetailCardSm from "./ProductDetailCardSm";
 import { ProductContext, ProductContextType } from "./ProductProvider";
@@ -91,6 +91,12 @@ export default function ProductDetail() {
 
   const { selectedItem } = useContext(ProductContext) as ProductContextType;
 
+  const productDetailRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    productDetailRef.current?.scrollTo(0, 0);
+  }, [itemInfo]);
+
   useEffect(() => {
     async function getDataSupabase() {
       const { data, error } = await supabase
@@ -111,7 +117,10 @@ export default function ProductDetail() {
   return (
     <div className="w-full h-full">
       {itemInfo && (
-        <div className="h-full overflow-auto @container mx-8">
+        <div
+          ref={productDetailRef}
+          className="h-full overflow-auto @container mx-8"
+        >
           <div className="grid w-full gap-6 @[768px]:grid-cols-[auto_auto] justify-items-center @container">
             <ProductDetailCardLg itemInfo={itemInfo} />
             <ProductDetailCardSm itemInfo={itemInfo} />

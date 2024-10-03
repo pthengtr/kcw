@@ -67,7 +67,9 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
       (acc, cur) => (acc * (100 - cur)) / 100,
       cost
     );
-    return (costnet * (isVat ? 1.07 : 1)).toFixed(2);
+    return parseFloat(
+      (costnet * (isVat ? 1.07 : 1)).toFixed(2)
+    ).toLocaleString();
   }
 
   return (
