@@ -35,6 +35,9 @@ type billItemsType = {
     PAID: string;
     PO: string;
     REMARKS: string;
+    supplier: {
+      ACCTNAME: string;
+    };
   };
 }[];
 
@@ -46,7 +49,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
     async function getBillItems(bcode: string) {
       const { data, error } = await supabase
         .from("billItems")
-        .select(`*, billInfo(*)`)
+        .select(`*, billInfo(*, supplier(*))`)
         .eq("BCODE", bcode)
         .order("billInfo(JOURDATE)", { ascending: false });
 
@@ -85,6 +88,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
               <TableHead>วันที่</TableHead>
               <TableHead>เลขที่บิล</TableHead>
               <TableHead>บริษัท</TableHead>
+              <TableHead>ชื่อย่อ</TableHead>
               <TableHead>ทุน/หน่วย</TableHead>
               <TableHead>จำนวน</TableHead>
             </TableRow>
@@ -102,6 +106,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
                     )}
                   </TableCell>
                   <TableCell>{bill.BILLNO}</TableCell>
+                  <TableCell>{bill.billInfo.supplier.ACCTNAME}</TableCell>
                   <TableCell>{bill.billInfo.ACCTNO}</TableCell>
                   <TableCell>
                     {calculateCostnet(
