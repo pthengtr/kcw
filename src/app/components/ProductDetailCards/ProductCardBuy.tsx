@@ -74,7 +74,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
   }
 
   return (
-    <Card className="max-w-xl">
+    <Card className="max-w-full">
       <CardHeader>
         <CardTitle>ประวัติซื้อ</CardTitle>
       </CardHeader>

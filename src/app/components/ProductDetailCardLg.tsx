@@ -2,6 +2,7 @@ import React from "react";
 import ProductCardProductInfo from "./ProductDetailCards/ProductCardProductInfo";
 import ProductCardProductCode from "./ProductDetailCards/ProductCardProductCode";
 import ProductCardProductImage from "./ProductDetailCards/ProductCardProductImage";
+import ProductCardProductTransaction from "./ProductDetailCards/ProductCardProductTransaction";
 import { ProductDetailProps } from "./ProductDetail";
 
 export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
@@ -10,6 +11,7 @@ export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
       <ProductCardProductInfo itemInfo={itemInfo} />
       <ProductCardProductCode itemInfo={itemInfo} />
       <ProductCardProductImage itemInfo={itemInfo} />
+      <ProductCardProductTransaction itemInfo={itemInfo} />
     </div>
   );
 }
