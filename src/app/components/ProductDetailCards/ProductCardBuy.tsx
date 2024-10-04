@@ -61,6 +61,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
   function calculateCostnet(
     [...discnt]: number[],
     cost: number,
+    numberPerQty: number,
     isVat: boolean
   ) {
     const costnet = discnt.reduce(
@@ -68,7 +69,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
       cost
     );
     return parseFloat(
-      (costnet * (isVat ? 1.07 : 1)).toFixed(2)
+      ((costnet * (isVat ? 1.07 : 1)) / numberPerQty).toFixed(2)
     ).toLocaleString();
   }
 
@@ -111,10 +112,13 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
                         parseFloat(bill.DISCNT4),
                       ],
                       parseFloat(bill.PRICE),
+                      parseFloat(bill.MTP),
                       bill.billInfo.ACCTNO.charAt(0) === "7"
                     )}
                   </TableCell>
-                  <TableCell>{parseInt(bill.QTY)}</TableCell>
+                  <TableCell>
+                    {parseInt(bill.QTY) * parseInt(bill.MTP)}
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
