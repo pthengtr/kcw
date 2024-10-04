@@ -29,19 +29,17 @@ export default function ProductCardProductCost({
       <CardHeader>
         <CardTitle>ทุนสินค้าล่าสุด</CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-[1fr_1fr] gap-2 ">
-        <SpanName>ทุนสุทธิ</SpanName>
-        <SpanValue>
-          {parseFloat(itemInfo.productCost.COSTNET).toLocaleString()}
-        </SpanValue>
-      </CardContent>
       <CardContent>
         <Accordion type="multiple">
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-gray-500">
-              รายละเอียดส่วนลด
+              รายละเอียดทุน
             </AccordionTrigger>
             <AccordionContent className="grid grid-cols-[1fr_1fr] gap-1">
+              <SpanName>ทุนสุทธิ</SpanName>
+              <SpanValue>
+                {parseFloat(itemInfo.productCost.COSTNET).toLocaleString()}
+              </SpanValue>
               <SpanName>ราคาเต็ม</SpanName>
               <SpanValue>
                 {parseFloat(itemInfo.productCost.COSTSET1).toLocaleString()}

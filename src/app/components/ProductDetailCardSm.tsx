@@ -14,10 +14,10 @@ export default function ProductDetailSection2({
   return (
     <div className="grid grid-cols-2 gap-6 @[760px]:grid-cols-1 @[768px]:items-start @[768px]:auto-rows-min @[1024px]:grid-cols-[auto_auto]">
       <ProductCardProductPrice itemInfo={itemInfo} />
-      <ProductCardProductCost itemInfo={itemInfo} />
       <ProductCardProductSize itemInfo={itemInfo} />
       <ProductCardProductStock itemInfo={itemInfo} />
       <ProductCardProductUnit itemInfo={itemInfo} />
+      <ProductCardProductCost itemInfo={itemInfo} />
       <ProductCardProductDate itemInfo={itemInfo} />
       <ProductCardProductRemark itemInfo={itemInfo} />
     </div>

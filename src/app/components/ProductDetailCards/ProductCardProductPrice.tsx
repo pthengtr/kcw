@@ -20,12 +20,13 @@ export default function ProductCardProductPrice({
   });
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="grid place-content-center">
         <CardTitle>ราคาสินค้า</CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-cols-[1fr_1fr] gap-2">
-        <SpanName>ราคาหน้าร้าน</SpanName>
-        <SpanValue>{parseFloat(itemInfo.PRICENET1).toLocaleString()}</SpanValue>
+      <CardContent className="grid place-content-center">
+        <SpanValue className="text-5xl px-4 py-2">
+          {parseFloat(itemInfo.PRICENET1).toLocaleString()}
+        </SpanValue>
       </CardContent>
 
       <CardContent>

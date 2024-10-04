@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-type billItemInfoType = {
+type billItemsType = {
   AMOUNT: string;
   BCODE: string;
   BILLNO: string;
@@ -39,13 +39,13 @@ type billItemInfoType = {
 }[];
 
 export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
-  const [itemBillInfo, setItemBillInfo] = useState<billItemInfoType>();
+  const [itemBillInfo, setItemBillInfo] = useState<billItemsType>();
 
   const cardId = useId();
   useEffect(() => {
-    async function getBillItemInfo(bcode: string) {
+    async function getBillItems(bcode: string) {
       const { data, error } = await supabase
-        .from("billItemInfo")
+        .from("billItems")
         .select(`*, billInfo(*)`)
         .eq("BCODE", bcode)
         .order("billInfo(JOURDATE)", { ascending: false });
@@ -55,7 +55,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
         setItemBillInfo(data);
       }
     }
-    getBillItemInfo(itemInfo.BCODE);
+    getBillItems(itemInfo.BCODE);
   }, [itemInfo]);
 
   function calculateCostnet(
@@ -74,7 +74,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
   }
 
   return (
-    <Card className="@[768px]:max-w-full">
+    <Card className="max-w-xl">
       <CardHeader>
         <CardTitle>ประวัติซื้อ</CardTitle>
       </CardHeader>

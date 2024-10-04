@@ -6,6 +6,7 @@ import ProductDetailCardSm from "./ProductDetailCardSm";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { supabase } from "../lib/supabase";
 import ProductCardBuy from "./ProductDetailCards/ProductCardBuy";
+import ProductCardSell from "./ProductDetailCards/ProductCardSell";
 
 export type ItemInfoType = {
   MAIN: number;
@@ -102,7 +103,7 @@ export default function ProductDetail() {
       const { data, error } = await supabase
         .from("productInfo")
         .select(
-          `*, productCost(*), productUnit(*), productLocation(*), productPrice(*), productPriceM(*), billItemInfo(*)`
+          `*, productCost(*), productUnit(*), productLocation(*), productPrice(*), productPriceM(*), billItems(*)`
         )
         .eq("BCODE", selectedItem)
         .limit(10);
@@ -125,8 +126,9 @@ export default function ProductDetail() {
             <ProductDetailCardLg itemInfo={itemInfo} />
             <ProductDetailCardSm itemInfo={itemInfo} />
             <div className="border w-full col-span-full mr-16"></div>
-            <div className="grid gap-6 @[1024px]:grid-cols-[auto_auto] @[768px]:col-span-2 mb-12">
+            <div className="grid justify-items-center gap-6 @[1024px]:grid-cols-[auto_auto] @[768px]:col-span-2 mb-12">
               <ProductCardBuy itemInfo={itemInfo} />
+              <ProductCardSell itemInfo={itemInfo} />
             </div>
           </div>
         </div>
