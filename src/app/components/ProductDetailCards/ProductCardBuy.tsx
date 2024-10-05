@@ -80,7 +80,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
   }
 
   return (
-    <Card className="max-w-full">
+    <Card className="max-h-fit">
       <CardHeader>
         <CardTitle>ประวัติซื้อ</CardTitle>
       </CardHeader>

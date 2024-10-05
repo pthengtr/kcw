@@ -71,7 +71,7 @@ export default function ProductCardSale({ itemInfo }: ProductDetailProps) {
   }, [itemInfo]);
 
   return (
-    <Card className="max-w-full">
+    <Card className="max-h-fit">
       <CardHeader>
         <CardTitle>ประวัติขาย</CardTitle>
       </CardHeader>
