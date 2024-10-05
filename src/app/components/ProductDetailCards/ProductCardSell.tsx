@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import ProductCardLoading from "./ProductCardLoading";
 
 type salesItemsType = {
   BILLNO: string;
@@ -47,6 +48,7 @@ type salesItemsType = {
 
 export default function ProductCardSale({ itemInfo }: ProductDetailProps) {
   const [itemSalesInfo, setItemSalesInfo] = useState<salesItemsType>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const cardId = useId();
   useEffect(() => {
@@ -58,6 +60,7 @@ export default function ProductCardSale({ itemInfo }: ProductDetailProps) {
         .order("salesInfo(JOURDATE)", { ascending: false })
         .limit(100);
 
+      setIsLoading(false);
       if (error) return;
       if (data !== null) {
         console.log(data);
@@ -73,39 +76,43 @@ export default function ProductCardSale({ itemInfo }: ProductDetailProps) {
         <CardTitle>ประวัติขาย</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table className="block max-h-80 overflow-auto">
-          <TableHeader className="sticky top-0 bg-white">
-            <TableRow>
-              <TableHead>วันที่</TableHead>
-              <TableHead>เลขที่บิล</TableHead>
-              <TableHead>ลูกค้า</TableHead>
-              <TableHead>ราคา/หน่วย</TableHead>
-              <TableHead>จำนวน</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {itemSalesInfo &&
-              itemSalesInfo.map((sale, index) => (
-                <TableRow
-                  className="even:bg-gray-100"
-                  key={`${sale.BILLNO}${cardId}${index}`}
-                >
-                  <TableCell>
-                    {new Date(sale.salesInfo.BILLDATE).toLocaleDateString(
-                      "th-TH"
-                    )}
-                  </TableCell>
-                  <TableCell>{sale.BILLNO}</TableCell>
-                  <TableCell>{sale.salesInfo.customers.ACCTNAME}</TableCell>
+        {isLoading ? (
+          <ProductCardLoading />
+        ) : (
+          <Table className="block max-h-80 overflow-auto">
+            <TableHeader className="sticky top-0 bg-white">
+              <TableRow>
+                <TableHead>วันที่</TableHead>
+                <TableHead>เลขที่บิล</TableHead>
+                <TableHead>ลูกค้า</TableHead>
+                <TableHead>ราคา/หน่วย</TableHead>
+                <TableHead>จำนวน</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {itemSalesInfo &&
+                itemSalesInfo.map((sale, index) => (
+                  <TableRow
+                    className="even:bg-gray-100"
+                    key={`${sale.BILLNO}${cardId}${index}`}
+                  >
+                    <TableCell>
+                      {new Date(sale.salesInfo.BILLDATE).toLocaleDateString(
+                        "th-TH"
+                      )}
+                    </TableCell>
+                    <TableCell>{sale.BILLNO}</TableCell>
+                    <TableCell>{sale.salesInfo.customers.ACCTNAME}</TableCell>
 
-                  <TableCell>
-                    {parseFloat(sale.PRICE).toLocaleString()}
-                  </TableCell>
-                  <TableCell>{parseInt(sale.QTY)}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+                    <TableCell>
+                      {parseFloat(sale.PRICE).toLocaleString()}
+                    </TableCell>
+                    <TableCell>{parseInt(sale.QTY)}</TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );
