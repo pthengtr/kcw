@@ -26,7 +26,6 @@ type billItemsType = {
   QTY: string;
   UI: string;
   billInfo: {
-    ACCTNO: string;
     BILLDATE: string;
     BILLNO: string;
     CASHAMT: string;
@@ -37,6 +36,7 @@ type billItemsType = {
     PO: string;
     REMARKS: string;
     supplier: {
+      ACCTNO: string;
       ACCTNAME: string;
     };
   };
@@ -113,7 +113,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
                     </TableCell>
                     <TableCell>{bill.BILLNO}</TableCell>
                     <TableCell>{bill.billInfo.supplier.ACCTNAME}</TableCell>
-                    <TableCell>{bill.billInfo.ACCTNO}</TableCell>
+                    <TableCell>{bill.billInfo.supplier.ACCTNO}</TableCell>
                     <TableCell>
                       {calculateCostnet(
                         [
@@ -124,7 +124,7 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
                         ],
                         parseFloat(bill.PRICE),
                         parseFloat(bill.MTP),
-                        bill.billInfo.ACCTNO.charAt(0) === "7"
+                        bill.billInfo.supplier.ACCTNO.charAt(0) === "7"
                       )}
                     </TableCell>
                     <TableCell>
