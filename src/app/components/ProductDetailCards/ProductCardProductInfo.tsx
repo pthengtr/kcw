@@ -11,7 +11,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductInfo({
-  itemInfo,
+  itemDetail,
 }: ProductDetailProps) {
   return (
     <Card>
@@ -20,26 +20,26 @@ export default function ProductCardProductInfo({
       </CardHeader>
       <CardContent className="grid grid-cols-[1fr_2fr] gap-x-2 gap-1">
         <SpanName>หมวดสินค้า</SpanName>
-        <SpanValue>{groupName[itemInfo.MAIN.toString()]}</SpanValue>
+        <SpanValue>{groupName[itemDetail.MAIN.toString()]}</SpanValue>
         <SpanName>รหัสสินค้า</SpanName>
-        <SpanValue>{itemInfo.BCODE}</SpanValue>
+        <SpanValue>{itemDetail.BCODE}</SpanValue>
         <SpanName>ชื่อสินค้า</SpanName>
-        <SpanValue>{itemInfo.DESCR}</SpanValue>
+        <SpanValue>{itemDetail.DESCR}</SpanValue>
         <SpanName>รุ่น</SpanName>
-        <SpanValue>{itemInfo.MODEL}</SpanValue>
+        <SpanValue>{itemDetail.MODEL}</SpanValue>
         <SpanName>ยี่ห้อ</SpanName>
-        <SpanValue>{itemInfo.BRAND}</SpanValue>
+        <SpanValue>{itemDetail.BRAND}</SpanValue>
         <SpanName>บริษัท</SpanName>
-        <SpanValue>{itemInfo.VENDOR}</SpanValue>
+        <SpanValue>{itemDetail.VENDOR}</SpanValue>
         <SpanName>ที่เก็บ</SpanName>
-        <SpanValue>{itemInfo.LOCATION1}</SpanValue>
+        <SpanValue>{itemDetail.LOCATION1}</SpanValue>
         <Accordion type="single" className="col-span-2" collapsible>
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-gray-500">
               ที่เก็บสำรอง
             </AccordionTrigger>
             <AccordionContent className="grid grid-cols-[1fr_1fr] gap-1">
-              {itemInfo.productLocation.map((item) => (
+              {itemDetail.productLocation.map((item) => (
                 <React.Fragment key={item.Attribute}>
                   <SpanName>{item.Attribute}</SpanName>
                   <SpanValue>{item.Value}</SpanValue>

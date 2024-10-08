@@ -42,7 +42,7 @@ type billItemsType = {
   };
 }[];
 
-export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
+export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
   const [itemBillInfo, setItemBillInfo] = useState<billItemsType>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -61,8 +61,8 @@ export default function ProductCardBuy({ itemInfo }: ProductDetailProps) {
         setItemBillInfo(data);
       }
     }
-    getBillItems(itemInfo.BCODE);
-  }, [itemInfo]);
+    getBillItems(itemDetail.BCODE);
+  }, [itemDetail]);
 
   function calculateCostnet(
     [...discnt]: number[],

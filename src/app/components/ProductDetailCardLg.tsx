@@ -5,13 +5,15 @@ import ProductCardProductImage from "./ProductDetailCards/ProductCardProductImag
 import ProductCardProductTransaction from "./ProductDetailCards/ProductCardProductTransaction";
 import { ProductDetailProps } from "./ProductDetail";
 
-export default function ProductDetailCardLg({ itemInfo }: ProductDetailProps) {
+export default function ProductDetailCardLg({
+  itemDetail,
+}: ProductDetailProps) {
   return (
     <div className="grid gap-6 auto-rows-min mb-12 @[1024px]:grid-cols-[auto_auto]">
-      <ProductCardProductInfo itemInfo={itemInfo} />
-      <ProductCardProductCode itemInfo={itemInfo} />
-      <ProductCardProductImage itemInfo={itemInfo} />
-      <ProductCardProductTransaction itemInfo={itemInfo} />
+      <ProductCardProductInfo itemDetail={itemDetail} />
+      <ProductCardProductCode itemDetail={itemDetail} />
+      <ProductCardProductImage itemDetail={itemDetail} />
+      <ProductCardProductTransaction itemDetail={itemDetail} />
     </div>
   );
 }

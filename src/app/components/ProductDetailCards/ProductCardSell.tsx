@@ -38,7 +38,7 @@ type salesItemsType = {
     CASHAMT: string;
     CHKAMT: string;
     DUEAMT: string;
-    customers: {
+    customer: {
       customerId: string;
       ACCTNO: string;
       ACCTNAME: string;
@@ -46,7 +46,7 @@ type salesItemsType = {
   };
 }[];
 
-export default function ProductCardSale({ itemInfo }: ProductDetailProps) {
+export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
   const [itemSalesInfo, setItemSalesInfo] = useState<salesItemsType>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -55,7 +55,7 @@ export default function ProductCardSale({ itemInfo }: ProductDetailProps) {
     async function getSalesItems(bcode: string) {
       const { data, error } = await supabase
         .from("salesItems")
-        .select(`*, salesInfo(*, customers(*))`)
+        .select(`*, salesInfo(*, customer(*))`)
         .eq("BCODE", bcode)
         .order("salesInfo(JOURDATE)", { ascending: false })
         .limit(100);
@@ -67,8 +67,8 @@ export default function ProductCardSale({ itemInfo }: ProductDetailProps) {
         setItemSalesInfo(data);
       }
     }
-    getSalesItems(itemInfo.BCODE);
-  }, [itemInfo]);
+    getSalesItems(itemDetail.BCODE);
+  }, [itemDetail]);
 
   return (
     <Card className="max-h-fit">
@@ -102,7 +102,7 @@ export default function ProductCardSale({ itemInfo }: ProductDetailProps) {
                       )}
                     </TableCell>
                     <TableCell>{sale.BILLNO}</TableCell>
-                    <TableCell>{sale.salesInfo.customers.ACCTNAME}</TableCell>
+                    <TableCell>{sale.salesInfo.customer.ACCTNAME}</TableCell>
 
                     <TableCell>
                       {parseFloat(sale.PRICE).toLocaleString()}

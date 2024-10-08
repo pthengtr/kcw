@@ -4,12 +4,12 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductUnit({
-  itemInfo,
+  itemDetail,
 }: ProductDetailProps) {
   let ui1text = "",
     ui2text = "",
     ui2number = "";
-  itemInfo.productUnit.forEach((item) => {
+  itemDetail.productUnit.forEach((item) => {
     if (item.Attribute === "UI1") {
       ui1text = item.Value;
     } else if (item.Attribute === "UI2") {

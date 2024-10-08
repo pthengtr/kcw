@@ -31,7 +31,7 @@ export default function ProductMain({
             </>
           )}
         </ResizablePanel>
-        <ResizableHandle withHandle className="p-0.5 m-1 bg-slate-100 " />
+        <ResizableHandle className="p-0.5 m-1 bg-slate-100 " />
         <ResizablePanel className="w-1/2 h-full">
           <ProductDetail />
         </ResizablePanel>

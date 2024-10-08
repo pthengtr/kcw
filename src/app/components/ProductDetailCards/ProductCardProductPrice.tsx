@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/accordion";
 
 export default function ProductCardProductPrice({
-  itemInfo,
+  itemDetail,
 }: ProductDetailProps) {
   let ui2text = "";
-  itemInfo.productUnit.forEach((item) => {
+  itemDetail.productUnit.forEach((item) => {
     if (item.Attribute === "UI2") {
       ui2text = item.Value;
     }
@@ -25,7 +25,7 @@ export default function ProductCardProductPrice({
       </CardHeader>
       <CardContent className="grid place-content-center">
         <SpanValue className="text-5xl px-4 py-2">
-          {parseFloat(itemInfo.PRICENET1).toLocaleString()}
+          {parseFloat(itemDetail.PRICENET1).toLocaleString()}
         </SpanValue>
       </CardContent>
 
@@ -36,7 +36,7 @@ export default function ProductCardProductPrice({
               ราคาพิเศษ
             </AccordionTrigger>
             <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
-              {itemInfo.productPrice.map(
+              {itemDetail.productPrice.map(
                 (price) =>
                   price.Attribute !== "PRICE1" && (
                     <React.Fragment key={price.Attribute}>
@@ -54,7 +54,7 @@ export default function ProductCardProductPrice({
               {`ราคา${ui2text != "" ? ui2text : "หน่วยใหญ่"}`}
             </AccordionTrigger>
             <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
-              {itemInfo.productPriceM.map((price) => (
+              {itemDetail.productPriceM.map((price) => (
                 <React.Fragment key={price.Attribute}>
                   <SpanName>{price.Attribute}</SpanName>
                   <SpanValue>

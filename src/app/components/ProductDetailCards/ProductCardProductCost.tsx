@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/accordion";
 
 export default function ProductCardProductCost({
-  itemInfo,
+  itemDetail,
 }: ProductDetailProps) {
   const discountArray = ["DISCNT1", "DISCNT2", "DISCNT3", "DISCNT4"];
   let ui1text = "",
     ui2text = "",
     ui2number = "";
-  itemInfo.productUnit.forEach((item) => {
+  itemDetail.productUnit.forEach((item) => {
     if (item.Attribute === "UI1") {
       ui1text = item.Value;
     } else if (item.Attribute === "UI2") {
@@ -38,19 +38,19 @@ export default function ProductCardProductCost({
             <AccordionContent className="grid grid-cols-[1fr_1fr] gap-1">
               <SpanName>ทุนสุทธิ</SpanName>
               <SpanValue>
-                {parseFloat(itemInfo.productCost.COSTNET).toLocaleString()}
+                {parseFloat(itemDetail.productCost.COSTNET).toLocaleString()}
               </SpanValue>
               <SpanName>ราคาเต็ม</SpanName>
               <SpanValue>
-                {parseFloat(itemInfo.productCost.COSTSET1).toLocaleString()}
+                {parseFloat(itemDetail.productCost.COSTSET1).toLocaleString()}
               </SpanValue>
               {discountArray.map((discount) => (
                 <React.Fragment key={discount}>
                   <SpanName>discount</SpanName>
                   <SpanValue>
                     {parseFloat(
-                      itemInfo.productCost[
-                        discount as keyof typeof itemInfo.productCost
+                      itemDetail.productCost[
+                        discount as keyof typeof itemDetail.productCost
                       ]
                     ).toLocaleString()}
                   </SpanValue>
@@ -68,7 +68,7 @@ export default function ProductCardProductCost({
                 <SpanValue>
                   {parseFloat(
                     (
-                      parseFloat(itemInfo.productCost.COSTNET) *
+                      parseFloat(itemDetail.productCost.COSTNET) *
                       parseFloat(ui2number)
                     ).toFixed(2)
                   ).toLocaleString()}

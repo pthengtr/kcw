@@ -1,12 +1,12 @@
 "use client";
 import cn from "@/app/lib/cn";
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import ProductDetailCardLg from "./ProductDetailCardLg";
 import ProductDetailCardSm from "./ProductDetailCardSm";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { supabase } from "../lib/supabase";
 
-export type ItemInfoType = {
+export type ItemDetailType = {
   MAIN: number;
   BCODE: string;
   DESCR: string;
@@ -83,18 +83,18 @@ export type ItemInfoType = {
   }[];
 };
 
-export type ProductDetailProps = { itemInfo: ItemInfoType };
+export type ProductDetailProps = { itemDetail: ItemDetailType };
 
 export default function ProductDetail() {
-  const [itemInfo, setItemInfo] = useState<ItemInfoType | null>();
-
-  const { selectedItem } = useContext(ProductContext) as ProductContextType;
+  const { selectedItem, itemDetail, setItemDetail } = useContext(
+    ProductContext
+  ) as ProductContextType;
 
   const productDetailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     productDetailRef.current?.scrollTo(0, 0);
-  }, [itemInfo]);
+  }, [itemDetail]);
 
   useEffect(() => {
     async function getDataSupabase() {
@@ -107,22 +107,21 @@ export default function ProductDetail() {
         .limit(10);
 
       if (error) return;
-      if (data !== null) setItemInfo(data[0]);
+      if (data !== null) setItemDetail(data[0]);
     }
-
-    getDataSupabase();
-  }, [selectedItem]);
+    if (selectedItem !== "") getDataSupabase();
+  }, [selectedItem, setItemDetail]);
 
   return (
     <div className="w-full h-full">
-      {itemInfo && (
+      {itemDetail && (
         <div
           ref={productDetailRef}
           className="h-full overflow-auto @container mx-8"
         >
           <div className="grid w-full gap-6 @[768px]:grid-cols-[auto_auto] justify-items-center @container">
-            <ProductDetailCardLg itemInfo={itemInfo} />
-            <ProductDetailCardSm itemInfo={itemInfo} />
+            <ProductDetailCardLg itemDetail={itemDetail} />
+            <ProductDetailCardSm itemDetail={itemDetail} />
             <div className="border w-full col-span-full mr-16"></div>
           </div>
         </div>

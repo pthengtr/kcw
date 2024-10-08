@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SearchContext, SearchContextType } from "./SearchProvider";
-import { ItemInfoType } from "./ProductDetail";
+import { ItemDetailType } from "./ProductDetail";
 
 type ProductRowProps = {
-  item: ItemInfoType;
+  item: ItemDetailType;
 };
 
 export default function ProductRow({ item }: ProductRowProps) {
@@ -20,7 +20,7 @@ export default function ProductRow({ item }: ProductRowProps) {
     activeRow,
   } = useContext(ProductContext) as ProductContextType;
   const optCol = [column1, column2, column3];
-  const columnArray: (keyof ItemInfoType)[] =
+  const columnArray: (keyof ItemDetailType)[] =
     tableSearchKey === "SIZE"
       ? ([
           "BCODE",
@@ -31,7 +31,7 @@ export default function ProductRow({ item }: ProductRowProps) {
           "SIZE3",
           optCol[0],
           optCol[1],
-        ] as (keyof ItemInfoType)[])
+        ] as (keyof ItemDetailType)[])
       : ([
           "BCODE",
           "DESCR",
@@ -39,7 +39,7 @@ export default function ProductRow({ item }: ProductRowProps) {
           optCol[0],
           optCol[1],
           optCol[2],
-        ] as (keyof ItemInfoType)[]);
+        ] as (keyof ItemDetailType)[]);
 
   return (
     <TableRow

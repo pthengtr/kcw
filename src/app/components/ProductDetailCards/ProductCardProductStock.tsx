@@ -4,7 +4,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductStock({
-  itemInfo,
+  itemDetail,
 }: ProductDetailProps) {
   return (
     <Card>
@@ -13,11 +13,11 @@ export default function ProductCardProductStock({
       </CardHeader>
       <CardContent className="grid grid-cols-[1fr_2fr] gap-x-2 gap-1">
         <SpanName>คงเหลือ</SpanName>
-        <SpanValue>{itemInfo.QTYOH2}</SpanValue>
+        <SpanValue>{itemDetail.QTYOH2}</SpanValue>
         <SpanName>LOW</SpanName>
-        <SpanValue>{itemInfo.QTYMIN}</SpanValue>
+        <SpanValue>{itemDetail.QTYMIN}</SpanValue>
         <SpanName>ORDER</SpanName>
-        <SpanValue>{itemInfo.QTYGET}</SpanValue>
+        <SpanValue>{itemDetail.QTYGET}</SpanValue>
       </CardContent>
     </Card>
   );

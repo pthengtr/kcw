@@ -13,6 +13,7 @@ export type SearchContextType = {
   setSearchText: (text: string) => void;
   searchGroup: string;
   searchKey: string;
+  setSearchKey: (key: string) => void;
   currentStatus: boolean;
   size1: string;
   setSize1: (size: string) => void;
@@ -31,6 +32,10 @@ export type SearchContextType = {
   category: string;
   currentPage: number;
   setCurrentPage: (page: number) => void;
+  transactionCustomerId: string;
+  setTransactionCustomerId: (id: string) => void;
+  transactionBillId: string;
+  setTransactionBillId: (id: string) => void;
   handleToggleStatus: () => void;
   handleSelect: (value: string, key: string) => void;
   handleSubmitForm: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -60,30 +65,27 @@ export default function SearchProvider({ children }: ProductProvider) {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [sortOrder, setSortOrder] = React.useState("asc");
   const [tableSearchKey, setTableSearchKey] = React.useState("CODE");
+  const [transactionCustomerId, setTransactionCustomerId] = React.useState("");
+  const [transactionBillId, setTransactionBillId] = React.useState("");
 
   const { sortBy, setSortBy } = useContext(
     ProductContext
   ) as ProductContextType;
 
-  async function getDataFromSearch(
-    page: number,
-    sortOrder: string,
-    sortBy: string
-  ) {
+  async function searchCode(page: number, sortOrder: string, sortBy: string) {
     let query = supabase
       .from("productInfo")
       .select("*", { count: "exact" })
       .order(sortBy, { ascending: sortOrder === "asc" })
-      .limit(10)
       .range((page - 1) * dbTake, page * dbTake - 1);
 
     if (currentStatus) query.eq("STATUS", 1);
 
-    if (searchKey === "CODE") {
-      const searchWords = searchText.split(/[\s,]+/).map((word) => word.trim());
-      const orSearchArr = searchWords.map(
-        (word) =>
-          ` \
+    const searchWords = searchText.split(/[\s,]+/).map((word) => word.trim());
+
+    const orSearchArr = searchWords.map(
+      (word) =>
+        ` \
       BCODE.ilike.%${word}%, \
       DESCR.ilike.%${word}%, \
       XCODE.ilike.%${word}%, \
@@ -93,28 +95,45 @@ export default function SearchProvider({ children }: ProductProvider) {
       BRAND.ilike.%${word}%, \
       MODEL.ilike.%${word}%, \
       VENDOR.ilike.%${word}%`
-      );
-      orSearchArr.forEach((orSearch) => (query = query.or(orSearch)));
+    );
+    orSearchArr.forEach((orSearch) => (query = query.or(orSearch)));
 
-      if (searchGroup != "all") query = query.eq("MAIN", searchGroup);
+    if (searchGroup != "all") query = query.eq("MAIN", searchGroup);
 
-      const { data, error, count } = await query;
+    const { data, error, count } = await query;
 
-      if (error) return;
-      if (data !== null) setItemList(JSON.stringify(data));
-      if (count !== null) setTotalFound(count);
+    if (error) return;
+    if (data !== null) setItemList(JSON.stringify(data));
+    if (count !== null) setTotalFound(count);
+  }
+
+  async function searchSize(page: number, sortOrder: string, sortBy: string) {
+    let query = supabase
+      .from("productInfo")
+      .select("*", { count: "exact" })
+      .order(sortBy, { ascending: sortOrder === "asc" })
+      .range((page - 1) * dbTake, page * dbTake - 1);
+
+    if (currentStatus) query.eq("STATUS", 1);
+
+    [size1, size2, size3].forEach((size, index) => {
+      if (size !== "") query = query.or(`SIZE${index + 1}.ilike.${size}`);
+    });
+
+    query = query.eq("CODE1", category);
+
+    const { data, error, count } = await query;
+
+    if (error) return;
+    if (count !== null) setTotalFound(count);
+    if (data !== null) setItemList(JSON.stringify(data));
+  }
+
+  function getDataFromSearch(page: number, sortOrder: string, sortBy: string) {
+    if (searchKey === "CODE") {
+      searchCode(page, sortOrder, sortBy);
     } else if (searchKey === "SIZE") {
-      [size1, size2, size3].forEach((size, index) => {
-        if (size !== "") query = query.or(`SIZE${index + 1}.ilike.${size}`);
-      });
-
-      query = query.eq("CODE1", category);
-
-      const { data, error, count } = await query;
-
-      if (error) return;
-      if (count !== null) setTotalFound(count);
-      if (data !== null) setItemList(JSON.stringify(data));
+      searchSize(page, sortOrder, sortBy);
     }
   }
 
@@ -175,6 +194,7 @@ export default function SearchProvider({ children }: ProductProvider) {
     setSearchText,
     searchGroup,
     searchKey,
+    setSearchKey,
     currentStatus,
     sortOrder,
     setSortOrder,
@@ -200,6 +220,10 @@ export default function SearchProvider({ children }: ProductProvider) {
     handleSort,
     tableSearchKey,
     setTableSearchKey,
+    transactionCustomerId,
+    setTransactionCustomerId,
+    transactionBillId,
+    setTransactionBillId,
   };
 
   return (

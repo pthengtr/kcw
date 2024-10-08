@@ -3,10 +3,10 @@ import ProductRow from "./ProductRow";
 import ProductColumnHeader from "./ProductColumnHeader";
 import { Table, TableBody } from "@/components/ui/table";
 import { ProductContext, ProductContextType } from "./ProductProvider";
-import { ItemInfoType } from "./ProductDetail";
+import { ItemDetailType } from "./ProductDetail";
 
 type ProductTableProps = {
-  itemList: ItemInfoType[];
+  itemList: ItemDetailType[];
 };
 
 export default function ProductTable({ itemList }: ProductTableProps) {
