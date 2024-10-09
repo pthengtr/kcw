@@ -16,10 +16,7 @@ export default function TransactionSearchPage() {
   return (
     <main className="h-[85%] w-full">
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel
-          defaultSize={25}
-          className="flex flex-col items-center h-full "
-        >
+        <ResizablePanel defaultSize={40} className="h-full">
           <TransactionCustomerBills
             customerId={transactionCustomerId}
             customerBillNo={transactionBillId}

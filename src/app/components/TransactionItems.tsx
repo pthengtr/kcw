@@ -1,7 +1,8 @@
 import { useEffect, useContext, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+//import { format } from "date-fns";
 import {
   TransactionContext,
   TransactionContextType,
@@ -25,6 +26,7 @@ export default function TransactionCustomerItems({
   customerId,
 }: TransactionCustomerItemsProps) {
   const [customerItems, setCustomerItems] = useState<salesItemType[]>();
+
   const { billNo, setBillNo } = useContext(
     TransactionContext
   ) as TransactionContextType;
@@ -58,6 +60,7 @@ export default function TransactionCustomerItems({
       if (data !== null) setCustomerItems(data);
     }
 
+    console.log("render", billNo);
     if (customerId !== "") {
       getDataSupabase();
     } else {
@@ -67,46 +70,56 @@ export default function TransactionCustomerItems({
   }, [customerId, billNo, searchId, searchTableBill, setBillNo]);
 
   return (
-    <div className="p-8">
+    <>
       {customerItems && (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-4">
-            <CardTitle>{billNo === "" ? "สินค้าทั้งหมด" : billNo}</CardTitle>
+        <>
+          <div className="flex justify-between py-4 px-8">
+            <span className="font-semibold text-2xl">{`รายการสินค้า${
+              billNo === "" ? "ทั้งหมด" : ` ${billNo}`
+            }`}</span>
             <Button
               onClick={handleClickAllItems}
-              className="text-white bg-secondary hover:bg-secondary hover:scale-[1.02] active:scale-[0.98] transition"
+              className="text-white bg-secondary hover:bg-secondary hover:bg-red-800 active:bg-secondary transition"
             >
               ดูสินค้าทั้งหมด
             </Button>
-          </CardHeader>
-          <CardContent>
-            <Table className="h-96 block overflow-auto">
-              <TableHeader>
+          </div>
+          <div className="w-full h-full overflow-auto">
+            <Table>
+              <TableHeader className="sticky top-0 bg-white">
                 <TableRow>
-                  <TableHead>เลขที่บิล</TableHead>
+                  <TableHead>วันที่</TableHead>
                   <TableHead>รหัสสินค้า</TableHead>
                   <TableHead>ชื่อสินค้า</TableHead>
                   <TableHead>จำนวน</TableHead>
                   <TableHead>หน่วย</TableHead>
                   <TableHead>ราคา</TableHead>
+                  <TableHead>ส่วนลด</TableHead>
+                  <TableHead>จำนวนเงิน</TableHead>
+                  <TableHead>เลขที่บิล</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {customerItems.map((item, index) => (
                   <TableRow key={`${item.BILLNO}-${index}`}>
-                    <TableCell>{item.BILLNO}</TableCell>
+                    <TableCell>
+                      {new Date(item.JOURDATE).toLocaleDateString("th-TH")}
+                    </TableCell>
                     <TableCell>{item.BCODE}</TableCell>
                     <TableCell>{`${item.productInfo.DESCR}, ${item.productInfo.MODEL}`}</TableCell>
                     <TableCell>{item.QTY}</TableCell>
                     <TableCell>{item.UI}</TableCell>
                     <TableCell>{item.PRICE}</TableCell>
+                    <TableCell>{item.DISCNT1}</TableCell>
+                    <TableCell>{item.AMOUNT}</TableCell>
+                    <TableCell>{item.BILLNO}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
+          </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

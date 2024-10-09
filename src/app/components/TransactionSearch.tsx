@@ -142,7 +142,7 @@ export default function TransactionSearch() {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className="bg-gray-200 px-2 rounded-l-md focus:outline-none font-semibold">
+        <DropdownMenuTrigger className="bg-gray-200 px-2 rounded-l-md focus:outline-none font-semibold shadow-lg">
           {transactionMenu[searchKey as keyof typeof transactionMenu]}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -166,7 +166,7 @@ export default function TransactionSearch() {
       />
 
       {contactResult && contactResult.length > 0 && searchText && (
-        <div className="absolute flex gap-4 w-[500px] bg-white bottom-0 translate-y-full shadow-md p-2 z-10">
+        <div className="absolute flex gap-4 w-[512px] bg-white bottom-0 translate-y-full shadow-md p-2 z-10">
           <Table>
             <TableBody>
               {contactResult.map((item, index) => (
