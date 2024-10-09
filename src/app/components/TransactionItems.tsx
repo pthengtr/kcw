@@ -107,11 +107,15 @@ export default function TransactionCustomerItems({
                     </TableCell>
                     <TableCell>{item.BCODE}</TableCell>
                     <TableCell>{`${item.productInfo.DESCR}, ${item.productInfo.MODEL}`}</TableCell>
-                    <TableCell>{item.QTY}</TableCell>
+                    <TableCell>{parseInt(item.QTY)}</TableCell>
                     <TableCell>{item.UI}</TableCell>
-                    <TableCell>{item.PRICE}</TableCell>
+                    <TableCell>
+                      {parseFloat(item.PRICE).toLocaleString()}
+                    </TableCell>
                     <TableCell>{item.DISCNT1}</TableCell>
-                    <TableCell>{item.AMOUNT}</TableCell>
+                    <TableCell>
+                      {parseFloat(item.AMOUNT).toLocaleString()}
+                    </TableCell>
                     <TableCell>{item.BILLNO}</TableCell>
                   </TableRow>
                 ))}

@@ -15,9 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const transactionMenu = {
-  salesInfo: "บิลขาย",
   customer: "ลูกค้า",
-  billInfo: "บิลซื้อ",
   supplier: "เจ้าหนี้",
 };
 

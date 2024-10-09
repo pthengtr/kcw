@@ -309,10 +309,11 @@ export default function TransactionCustomerBills({
                 <TableRow className="w-full">
                   <TableHead>วันที่</TableHead>
                   <TableHead>เลขที่บิล</TableHead>
-                  <TableHead>เงินสด</TableHead>
-                  <TableHead>เช็ค</TableHead>
+                  <TableHead>ยอดรวม</TableHead>
                   <TableHead>ค้าง</TableHead>
                   <TableHead>สถานะ</TableHead>
+                  <TableHead>ใบสำคัญรับ-จ่าย</TableHead>
+                  <TableHead>วันที่ใบสำคัญ</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -330,12 +331,21 @@ export default function TransactionCustomerBills({
                       {new Date(item.JOURDATE).toLocaleDateString("th-TH")}
                     </TableCell>
                     <TableCell>{item.BILLNO}</TableCell>
-                    <TableCell>{item.CASHAMT}</TableCell>
-                    <TableCell>{item.CHKAMT}</TableCell>
-                    <TableCell>{item.DUEAMT}</TableCell>
+                    <TableCell>
+                      {(
+                        parseFloat(item.CASHAMT) +
+                        parseFloat(item.CHKAMT) +
+                        parseFloat(item.DUEAMT)
+                      ).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      {parseFloat(item.DUEAMT).toLocaleString()}
+                    </TableCell>
                     <TableCell>
                       {parseFloat(item.DUEAMT) !== 0 ? "ค้างชำระ" : "จ่ายแล้ว"}
                     </TableCell>
+                    <TableCell>XXX-XXXX</TableCell>
+                    <TableCell>XX/XX/XX</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
