@@ -23,10 +23,12 @@ export default function ProductMain({
   return (
     <main className="h-[90%]">
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel className="w-1/2 flex flex-col items-center h-full ">
+        <ResizablePanel className="w-1/2 flex flex-col items-center h-full  overflow-auto">
           {itemList !== "" && (
             <>
-              <ProductTable itemList={itemList} />
+              <div className="w-full overflow-auto">
+                <ProductTable itemList={itemList} />
+              </div>
               <ProductPagination totalFound={totalFound} />
             </>
           )}
