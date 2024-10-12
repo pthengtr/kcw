@@ -27,10 +27,10 @@ export default function TransactionBillsBillList({
             <TableHead>วันที่</TableHead>
             <TableHead>เลขที่บิล</TableHead>
             <TableHead>ยอดรวม</TableHead>
-            <TableHead>วันที่ใบวางบิล</TableHead>
             <TableHead>เลขที่ใบวางบิล</TableHead>
-            <TableHead>วันที่ใบสำคัญ</TableHead>
+            <TableHead>วันที่ใบวางบิล</TableHead>
             <TableHead>เลขที่ใบสำคัญ</TableHead>
+            <TableHead>วันที่ใบสำคัญ</TableHead>
             <TableHead>สถานะ</TableHead>
           </TableRow>
         </TableHeader>

@@ -53,8 +53,8 @@ export default function TransactionVouchers({
         .from("_vouchers")
         .select(`*, _accounts(*)`)
         .eq("accountId", accountId)
-        .lte("JOURDATE", toDate.toLocaleString())
-        .gte("JOURDATE", fromDate.toLocaleString())
+        .lte("VOUCDATE", toDate.toLocaleString())
+        .gte("VOUCDATE", fromDate.toLocaleString())
         .order("VOUCDATE", { ascending: false })
         .limit(100);
 

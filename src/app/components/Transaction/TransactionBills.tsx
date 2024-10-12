@@ -56,8 +56,8 @@ export default function TransactionBills({
         .select(`*, _vouchers(*), _notes(*)`)
         .eq("accountId", accountId)
         .order("JOURDATE", { ascending: false })
-        .lte("NOTEDATE", toDate.toLocaleString())
-        .gte("NOTEDATE", fromDate.toLocaleString())
+        .lte("JOURDATE", toDate.toLocaleString())
+        .gte("JOURDATE", fromDate.toLocaleString())
         .limit(100);
 
       if (error) return;
