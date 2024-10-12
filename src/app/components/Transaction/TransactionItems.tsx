@@ -13,7 +13,6 @@ import {
   TransactionContext,
   TransactionContextType,
 } from "./TransactionProvider";
-import { createLastYearDate } from "./TransactionProvider";
 
 type TransactionCustomerItemsProps = {
   accountId: string;
