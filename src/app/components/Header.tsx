@@ -7,7 +7,7 @@ export default function ProductHeader() {
       {/* empty element to keep SearchForm center */}
       <div className="flex-1"></div>
       <SearchForm />
-      <div className="flex-1 flex justify-end pr-16">
+      <div className="flex-1 flex justify-end">
         <NavMenu />
       </div>
     </header>

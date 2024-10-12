@@ -16,7 +16,7 @@ const menu = [
     path: "/product",
   },
   {
-    name: "ซื้อ-ขาย",
+    name: "บัญชี",
     path: "/transaction",
   },
 ];
@@ -25,7 +25,7 @@ export default function NavMenu() {
   const pathName = usePathname();
 
   return (
-    <NavigationMenu className="text-white ">
+    <NavigationMenu className="text-white pr-16">
       <NavigationMenuList className="flex gap-4">
         {menu.map((menu) => (
           <React.Fragment key={menu.name}>

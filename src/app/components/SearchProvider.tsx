@@ -7,6 +7,7 @@ import ProductProvider, {
   ProductContext,
   ProductContextType,
 } from "./ProductProvider";
+import { accountsType } from "./Transaction/TransactionProvider";
 
 export type SearchContextType = {
   searchText: string;
@@ -32,10 +33,8 @@ export type SearchContextType = {
   category: string;
   currentPage: number;
   setCurrentPage: (page: number) => void;
-  transactionCustomerId: string;
-  setTransactionCustomerId: (id: string) => void;
-  transactionBillId: string;
-  setTransactionBillId: (id: string) => void;
+  transactionAccountObject: accountsType | undefined;
+  setTransactionAccountObject: (id: accountsType | undefined) => void;
   handleToggleStatus: () => void;
   handleSelect: (value: string, key: string) => void;
   handleSubmitForm: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -65,8 +64,8 @@ export default function SearchProvider({ children }: ProductProvider) {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [sortOrder, setSortOrder] = React.useState("asc");
   const [tableSearchKey, setTableSearchKey] = React.useState("CODE");
-  const [transactionCustomerId, setTransactionCustomerId] = React.useState("");
-  const [transactionBillId, setTransactionBillId] = React.useState("");
+  const [transactionAccountObject, setTransactionAccountObject] =
+    React.useState<accountsType | undefined>();
 
   const { sortBy, setSortBy } = useContext(
     ProductContext
@@ -220,10 +219,8 @@ export default function SearchProvider({ children }: ProductProvider) {
     handleSort,
     tableSearchKey,
     setTableSearchKey,
-    transactionCustomerId,
-    setTransactionCustomerId,
-    transactionBillId,
-    setTransactionBillId,
+    transactionAccountObject,
+    setTransactionAccountObject,
   };
 
   return (

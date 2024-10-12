@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SearchContext, SearchContextType } from "./SearchProvider";
 import { usePathname } from "next/navigation";
 import ProductSearch from "./ProductSearch";
-import TransactionSearch from "./TransactionSearch";
+import TransactionSearch from "./Transaction/TransactionSearch";
 
 export default function SearchForm() {
   const { handleSubmitForm } = useContext(SearchContext) as SearchContextType;
