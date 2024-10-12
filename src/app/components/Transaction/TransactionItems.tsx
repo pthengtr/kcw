@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import {
   Table,
@@ -8,7 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { itemsType } from "./TransactionProvider";
+import {
+  itemsType,
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
+import { createLastYearDate } from "./TransactionProvider";
 
 type TransactionCustomerItemsProps = {
   accountId: string;
@@ -19,13 +24,18 @@ export default function TransactionItems({
 }: TransactionCustomerItemsProps) {
   const [accountItems, setAccountItems] = useState<itemsType[]>();
 
+  const { toDate, fromDate } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
+
   useEffect(() => {
     async function getAccountItemsSupabase() {
       const query = supabase
         .from("_items")
         .select(`*, productInfo(*)`)
         .eq("accountId", accountId)
-
+        .lte("JOURDATE", toDate.toLocaleString())
+        .gte("JOURDATE", fromDate.toLocaleString())
         .order("JOURDATE", { ascending: false })
         .limit(100);
 
@@ -36,7 +46,7 @@ export default function TransactionItems({
     }
 
     getAccountItemsSupabase();
-  }, [setAccountItems, accountId]);
+  }, [setAccountItems, accountId, fromDate, toDate]);
 
   return (
     <>

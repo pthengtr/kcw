@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { supabase } from "@/app/lib/supabase";
 import { billsType, noteType } from "./TransactionProvider";
-
+import {
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -17,9 +20,11 @@ type TransactionNotesProps = {
 
 export default function TransactionNotes({ accountId }: TransactionNotesProps) {
   const [accountNotes, setAccountNotes] = useState<noteType[]>();
-
   const [currentNote, setCurrentNote] = useState<noteType>();
   const [currentNoteBills, setCurrentNoteBills] = useState<billsType[]>();
+  const { toDate, fromDate } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
 
   function handleClickNote(note: noteType) {
     async function getCurrentNoteBillsSupabase() {
@@ -47,6 +52,8 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
         .select(`*, _accounts(*)`)
         .eq("accountId", accountId)
         .order("NOTEDATE", { ascending: false })
+        .lte("NOTEDATE", toDate.toLocaleString())
+        .gte("NOTEDATE", fromDate.toLocaleString())
         .limit(100);
 
       if (error) return;
@@ -54,7 +61,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
     }
 
     getBillsSupabase();
-  }, [accountId, setAccountNotes]);
+  }, [accountId, setAccountNotes, fromDate, toDate]);
 
   return (
     <>

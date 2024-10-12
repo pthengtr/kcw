@@ -85,11 +85,23 @@ export type TransactionContextType = {
   setBillNo: (bill: string) => void;
   accountId: string;
   setAccountId: (key: string) => void;
+  filterText: string;
+  setFilterText: (filterText: string) => void;
+  toDate: Date;
+  setToDate: (toDate: Date) => void;
+  fromDate: Date;
+  setFromDate: (fromDate: Date) => void;
 };
 
 export const TransactionContext = createContext<TransactionContextType | null>(
   null
 );
+
+export function createLastYearDate() {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - 1);
+  return date;
+}
 
 type TransactionProvider = {
   children: React.ReactNode;
@@ -98,12 +110,21 @@ type TransactionProvider = {
 export default function TransactionProvider({ children }: TransactionProvider) {
   const [accountId, setAccountId] = React.useState("");
   const [billNo, setBillNo] = React.useState("");
+  const [filterText, setFilterText] = React.useState("");
+  const [fromDate, setFromDate] = React.useState<Date>(createLastYearDate());
+  const [toDate, setToDate] = React.useState<Date>(new Date());
 
   const value = {
     accountId,
     setAccountId,
     billNo,
     setBillNo,
+    filterText,
+    setFilterText,
+    fromDate,
+    setFromDate,
+    toDate,
+    setToDate,
   };
 
   return (

@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { supabase } from "@/app/lib/supabase";
 import { voucherType, billsType } from "./TransactionProvider";
-
+import {
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -19,9 +22,11 @@ export default function TransactionVouchers({
   accountId,
 }: TransactionVouchersProps) {
   const [accountVouchers, setAccountVouchers] = useState<voucherType[]>();
-
   const [currentVoucher, setCurrentVoucher] = useState<voucherType>();
   const [currentVoucherBills, setCurrentVoucherBills] = useState<billsType[]>();
+  const { toDate, fromDate } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
 
   function handleClickVoucher(voucher: voucherType) {
     async function getCurrentVoucherBillsSupabase() {
@@ -48,6 +53,8 @@ export default function TransactionVouchers({
         .from("_vouchers")
         .select(`*, _accounts(*)`)
         .eq("accountId", accountId)
+        .lte("JOURDATE", toDate.toLocaleString())
+        .gte("JOURDATE", fromDate.toLocaleString())
         .order("VOUCDATE", { ascending: false })
         .limit(100);
 
@@ -56,7 +63,7 @@ export default function TransactionVouchers({
     }
 
     getBillsSupabase();
-  }, [accountId, setAccountVouchers]);
+  }, [accountId, setAccountVouchers, fromDate, toDate]);
 
   return (
     <>

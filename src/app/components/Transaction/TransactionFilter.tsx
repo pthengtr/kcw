@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { th } from "date-fns/locale";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,19 +8,20 @@ import {
 } from "@radix-ui/react-popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-function createLastYearDate() {
-  const date = new Date();
-  date.setFullYear(date.getFullYear() - 1);
-  return date;
-}
+import {
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
 
 export default function TransactionFilter() {
-  const [filterText, setFilterText] = useState("");
-  const [fromDate, setFromDate] = useState<Date | undefined>(
-    createLastYearDate()
-  );
-  const [toDate, setToDate] = useState<Date | undefined>(new Date());
+  const {
+    fromDate,
+    setFromDate,
+    toDate,
+    setToDate,
+    filterText,
+    setFilterText,
+  } = React.useContext(TransactionContext) as TransactionContextType;
 
   return (
     <div className="flex gap-2 items-center justify-end">
@@ -59,7 +60,8 @@ export default function TransactionFilter() {
                 mode="single"
                 locale={th}
                 selected={fromDate}
-                onSelect={setFromDate}
+                onDayClick={setFromDate}
+                defaultMonth={fromDate}
                 formatters={{
                   formatCaption: (date) =>
                     date.toLocaleDateString("th-TH", {
@@ -67,9 +69,6 @@ export default function TransactionFilter() {
                       year: "numeric",
                     }),
                 }}
-                toYear={fromDate?.getFullYear()}
-                toMonth={fromDate}
-                toDate={fromDate}
                 classNames={{
                   day_selected:
                     "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
@@ -81,7 +80,8 @@ export default function TransactionFilter() {
                 mode="single"
                 locale={th}
                 selected={toDate}
-                onSelect={setToDate}
+                onDayClick={setToDate}
+                defaultMonth={toDate}
                 formatters={{
                   formatCaption: (date) =>
                     date.toLocaleDateString("th-TH", {
@@ -89,9 +89,6 @@ export default function TransactionFilter() {
                       year: "numeric",
                     }),
                 }}
-                toYear={toDate?.getFullYear()}
-                toMonth={toDate}
-                toDate={toDate}
                 classNames={{
                   day_selected:
                     "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
