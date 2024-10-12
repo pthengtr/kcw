@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from "react";
 import { ProductDetailProps } from "../ProductDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "../../lib/supabase";
+import { itemsType } from "../Transaction/TransactionProvider";
 
 import {
   Table,
@@ -13,51 +14,19 @@ import {
 } from "@/components/ui/table";
 import ProductCardLoading from "./ProductCardLoading";
 
-type salesItemsType = {
-  BILLNO: string;
-  BCODE: string;
-  QTY: string;
-  UI: string;
-  MTP: string;
-  PRICE: string;
-  DISCNT1: string;
-  DISCNT2: string;
-  DISCNT3: string;
-  DISCNT4: string;
-  AMOUNT: string;
-  salesInfo: {
-    customerId: string;
-    JOURDATE: string;
-    JOURTIME: string;
-    BILLDATE: string;
-    BILLNO: string;
-    DEDUCT: string;
-    BEFORETAX: string;
-    VAT: string;
-    AFTERTAX: string;
-    CASHAMT: string;
-    CHKAMT: string;
-    DUEAMT: string;
-    customer: {
-      customerId: string;
-      ACCTNO: string;
-      ACCTNAME: string;
-    };
-  };
-}[];
-
 export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
-  const [itemSalesInfo, setItemSalesInfo] = useState<salesItemsType>();
+  const [itemSalesInfo, setItemSalesInfo] = useState<itemsType[]>();
   const [isLoading, setIsLoading] = useState(true);
 
   const cardId = useId();
   useEffect(() => {
     async function getSalesItems(bcode: string) {
       const { data, error } = await supabase
-        .from("salesItems")
-        .select(`*, salesInfo(*, customer(*))`)
+        .from("_items")
+        .select(`*, _bills!inner(*), _accounts(*)`)
         .eq("BCODE", bcode)
-        .order("salesInfo(JOURDATE)", { ascending: false })
+        .ilike("_bills.BILLTYPE", "%S%")
+        .order("_bills(JOURDATE)", { ascending: false })
         .limit(100);
 
       setIsLoading(false);
@@ -97,12 +66,12 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
                     key={`${sale.BILLNO}${cardId}${index}`}
                   >
                     <TableCell>
-                      {new Date(sale.salesInfo.BILLDATE).toLocaleDateString(
+                      {new Date(sale._bills.BILLDATE).toLocaleDateString(
                         "th-TH"
                       )}
                     </TableCell>
                     <TableCell>{sale.BILLNO}</TableCell>
-                    <TableCell>{sale.salesInfo.customer.ACCTNAME}</TableCell>
+                    <TableCell>{sale._accounts?.ACCTNAME}</TableCell>
 
                     <TableCell>
                       {parseFloat(sale.PRICE).toLocaleString()}

@@ -18,7 +18,9 @@ export default function ProductCardProductTransaction({
         <div className="grid place-content-center">
           <Drawer>
             <DrawerTrigger>
-              <Button className="bg-gray-200">เช็คประวัติ ซื้อ-ขาย</Button>
+              <Button className="hover:bg-blue-900">
+                เช็คประวัติ ซื้อ-ขาย
+              </Button>
             </DrawerTrigger>
             <DrawerContent>
               <div className="grid grid-cols-2 justify-items-center gap-8 m-16">

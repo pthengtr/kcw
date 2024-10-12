@@ -58,6 +58,7 @@ export type itemsType = {
   PRICE: string;
   AMOUNT: string;
   _accounts: accountsType;
+  _bills: billsType;
   productInfo: ItemDetailType;
 };
 

@@ -101,7 +101,7 @@ export default function ProductDetail() {
       const { data, error } = await supabase
         .from("productInfo")
         .select(
-          `*, productCost(*), productUnit(*), productLocation(*), productPrice(*), productPriceM(*), billItems(*)`
+          `*, productCost(*), productUnit(*), productLocation(*), productPrice(*), productPriceM(*), _items(*)`
         )
         .eq("BCODE", selectedItem)
         .limit(10);

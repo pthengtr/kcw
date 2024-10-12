@@ -3,6 +3,7 @@ import { ProductDetailProps } from "../ProductDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "../../lib/supabase";
 import ProductCardLoading from "./ProductCardLoading";
+import { itemsType } from "../Transaction/TransactionProvider";
 
 import {
   Table,
@@ -13,47 +14,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-type billItemsType = {
-  AMOUNT: string;
-  BCODE: string;
-  BILLNO: string;
-  DISCNT1: string;
-  DISCNT2: string;
-  DISCNT3: string;
-  DISCNT4: string;
-  MTP: string;
-  PRICE: string;
-  QTY: string;
-  UI: string;
-  billInfo: {
-    BILLDATE: string;
-    BILLNO: string;
-    CASHAMT: string;
-    CHKAMT: string;
-    DUEAMT: string;
-    JOURDATE: string;
-    PAID: string;
-    PO: string;
-    REMARKS: string;
-    supplier: {
-      ACCTNO: string;
-      ACCTNAME: string;
-    };
-  };
-}[];
-
 export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
-  const [itemBillInfo, setItemBillInfo] = useState<billItemsType>();
+  const [itemBillInfo, setItemBillInfo] = useState<itemsType[]>();
   const [isLoading, setIsLoading] = useState(true);
 
   const cardId = useId();
   useEffect(() => {
     async function getBillItems(bcode: string) {
       const { data, error } = await supabase
-        .from("billItems")
-        .select(`*, billInfo(*, supplier(*))`)
+        .from("_items")
+        .select(`*, _bills!inner(*), _accounts(*)`)
         .eq("BCODE", bcode)
-        .order("billInfo(JOURDATE)", { ascending: false });
+        .ilike("_bills.BILLTYPE", "%P%")
+        .order("_bills(JOURDATE)", { ascending: false })
+        .limit(100);
 
       setIsLoading(false);
       if (error) return;
@@ -107,24 +81,24 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
                     key={`${bill.BILLNO}${cardId}${index}`}
                   >
                     <TableCell>
-                      {new Date(bill.billInfo.BILLDATE).toLocaleDateString(
+                      {new Date(bill._bills?.BILLDATE).toLocaleDateString(
                         "th-TH"
                       )}
                     </TableCell>
                     <TableCell>{bill.BILLNO}</TableCell>
-                    <TableCell>{bill.billInfo.supplier.ACCTNAME}</TableCell>
-                    <TableCell>{bill.billInfo.supplier.ACCTNO}</TableCell>
+                    <TableCell>{bill._accounts?.ACCTNAME}</TableCell>
+                    <TableCell>{bill._accounts?.ACCTNO}</TableCell>
                     <TableCell>
                       {calculateCostnet(
                         [
-                          parseFloat(bill.DISCNT1),
-                          parseFloat(bill.DISCNT2),
-                          parseFloat(bill.DISCNT3),
-                          parseFloat(bill.DISCNT4),
+                          parseFloat(bill.DISCNT1 ? bill.DISCNT1 : "0"),
+                          parseFloat(bill.DISCNT2 ? bill.DISCNT2 : "0"),
+                          parseFloat(bill.DISCNT3 ? bill.DISCNT3 : "0"),
+                          parseFloat(bill.DISCNT4 ? bill.DISCNT4 : "0"),
                         ],
-                        parseFloat(bill.PRICE),
-                        parseFloat(bill.MTP),
-                        bill.billInfo.supplier.ACCTNO.charAt(0) === "7"
+                        parseFloat(bill.PRICE ? bill.PRICE : "0"),
+                        parseFloat(bill.MTP ? bill.MTP : "0"),
+                        bill._accounts?.ACCTNO.charAt(0) === "7"
                       )}
                     </TableCell>
                     <TableCell>
