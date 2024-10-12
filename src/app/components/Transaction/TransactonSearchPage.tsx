@@ -5,11 +5,17 @@ import { SearchContext, SearchContextType } from "../SearchProvider";
 import TransactionFilter from "./TransactionFilter";
 import TransactionItems from "./TransactionItems";
 import TransactionBills from "./TransactionBills";
+import TransactionNotes from "./TransactionNotes";
+import TransactionVouchers from "./TransactionVouchers";
 
 export default function TransactionSearchPage() {
   const { transactionAccountObject } = useContext(
     SearchContext
   ) as SearchContextType;
+
+  const accountId = transactionAccountObject
+    ? transactionAccountObject.accountId.toString()
+    : "";
 
   return (
     <main className="h-[85%] w-full">
@@ -43,21 +49,17 @@ export default function TransactionSearchPage() {
         </div>
 
         <TabsContent value="allItems">
-          {transactionAccountObject !== undefined && (
-            <TransactionItems
-              accountId={transactionAccountObject.accountId.toString()}
-            />
-          )}
+          {accountId !== "" && <TransactionItems accountId={accountId} />}
         </TabsContent>
         <TabsContent value="bills">
-          {transactionAccountObject !== undefined && (
-            <TransactionBills
-              accountId={transactionAccountObject.accountId.toString()}
-            />
-          )}
+          {accountId !== "" && <TransactionBills accountId={accountId} />}
         </TabsContent>
-        <TabsContent value="notes">Notes</TabsContent>
-        <TabsContent value="vouchers">Vouchers</TabsContent>
+        <TabsContent value="notes">
+          {accountId !== "" && <TransactionNotes accountId={accountId} />}
+        </TabsContent>
+        <TabsContent value="vouchers">
+          {accountId !== "" && <TransactionVouchers accountId={accountId} />}
+        </TabsContent>
       </Tabs>
     </main>
   );

@@ -13,17 +13,17 @@ export type voucherType = {
   CASHAMT: string;
   CHKAMT: string;
   PAYAMT: string;
-  _account: accountsType;
+  _accounts: accountsType;
 };
 
 export type noteType = {
-  voucherId: number;
+  noteId: number;
   NOTEDATE: string;
   NOTENO: string;
   BILLAMT: string;
   DISCOUNT: string;
   NETAMT: string;
-  _account: accountsType;
+  _accounts: accountsType;
 };
 
 export type billsType = {

@@ -41,7 +41,7 @@ export default function TransactionItems({
   return (
     <>
       {accountItems && (
-        <div className="w-full h-[75vh] overflow-auto">
+        <div className="w-full h-[70vh] overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 bg-white">
               <TableRow>

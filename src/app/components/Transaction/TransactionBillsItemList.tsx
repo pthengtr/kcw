@@ -1,11 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import TransactionItemList from "./TransactionItemList";
 import { itemsType, billsType } from "./TransactionProvider";
 
 type TransactionBillsItemListProps = {
@@ -20,7 +13,7 @@ export default function TransactionBillsItemList({
   return (
     <>
       {currentBillItems && (
-        <div className="w-full h-[75vh] overflow-auto text-lg p-4 flex flex-col gap-4">
+        <div className="w-full overflow-auto text-lg p-4 flex flex-col gap-4">
           {currentBill && (
             <div className="flex gap-4 justify-center">
               <span>บิลเลขที่</span>
@@ -31,50 +24,8 @@ export default function TransactionBillsItemList({
               </span>
             </div>
           )}
-          <div className="relative overflow-auto h-[45vh]">
-            <Table>
-              <TableHeader className="sticky top-0 bg-white">
-                <TableRow>
-                  <TableHead>รหัสสินค้า</TableHead>
-                  <TableHead>ชื่อสินค้า</TableHead>
-                  <TableHead>จำนวน</TableHead>
-                  <TableHead>หน่วย</TableHead>
-                  <TableHead>ราคา</TableHead>
-                  <TableHead>ส่วนลด</TableHead>
-                  <TableHead>จำนวนเงิน</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentBillItems.map((item, index) => (
-                  <TableRow key={`${item.BILLNO}-${index}`}>
-                    <TableCell>{item.BCODE}</TableCell>
-                    <TableCell>
-                      {item.productInfo
-                        ? `${item.productInfo.DESCR}, ${item.productInfo.MODEL}`
-                        : ""}
-                    </TableCell>
-                    <TableCell>{parseInt(item.QTY ? item.QTY : "0")}</TableCell>
-                    <TableCell>{item.UI}</TableCell>
-                    <TableCell>
-                      {parseFloat(
-                        item.PRICE ? item.PRICE : "0"
-                      ).toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      {parseFloat(
-                        item.DISCNT1 ? item.DISCNT1 : "0"
-                      ).toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      {parseFloat(
-                        item.AMOUNT ? item.AMOUNT : "0"
-                      ).toLocaleString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+
+          <TransactionItemList currentItems={currentBillItems} />
 
           {currentBill && (
             <div className="flex justify-end mr-8 text-base mt-auto h-fit">

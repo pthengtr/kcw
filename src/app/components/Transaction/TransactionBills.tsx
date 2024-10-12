@@ -61,7 +61,7 @@ export default function TransactionBills({
     <>
       {accountBills && (
         <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel className="h-[75vh]">
+          <ResizablePanel className="h-[70vh]">
             <TransactionBillsBillList
               accountBills={accountBills}
               handleClickBill={handleClickBill}
@@ -69,7 +69,7 @@ export default function TransactionBills({
             />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
-          <ResizablePanel>
+          <ResizablePanel className="h-[70vh]">
             <TransactionBillsItemList
               currentBill={currentBill}
               currentBillItems={currentBillItems}
