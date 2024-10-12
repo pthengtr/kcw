@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { supabase } from "../../lib/supabase";
 import { billsType, itemsType } from "./TransactionProvider";
+import {
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
 
 import {
   ResizableHandle,
@@ -21,6 +25,10 @@ export default function TransactionBills({
   const [accountBills, setAccountBills] = useState<billsType[]>();
   const [currentBill, setCurrentBill] = useState<billsType>();
   const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
+
+  const { toDate, fromDate } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
 
   function handleClickBill(bill: billsType) {
     async function getCurrentBillItemsSupabase() {
@@ -48,6 +56,8 @@ export default function TransactionBills({
         .select(`*, _vouchers(*), _notes(*)`)
         .eq("accountId", accountId)
         .order("JOURDATE", { ascending: false })
+        .lte("NOTEDATE", toDate.toLocaleString())
+        .gte("NOTEDATE", fromDate.toLocaleString())
         .limit(100);
 
       if (error) return;
@@ -55,7 +65,7 @@ export default function TransactionBills({
     }
 
     getBillsSupabase();
-  }, [accountId, setAccountBills]);
+  }, [accountId, setAccountBills, fromDate, toDate]);
 
   return (
     <>
