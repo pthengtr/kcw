@@ -23,15 +23,29 @@ export default function TransactionItems({
 }: TransactionCustomerItemsProps) {
   const [accountItems, setAccountItems] = useState<itemsType[]>();
 
-  const { toDate, fromDate } = useContext(
+  const { toDate, fromDate, filterText } = useContext(
     TransactionContext
   ) as TransactionContextType;
 
   useEffect(() => {
     async function getAccountItemsSupabase() {
-      const query = supabase
-        .from("_items")
-        .select(`*, productInfo(*)`)
+      let query;
+
+      if (filterText === "") {
+        query = supabase.from("_items").select(`*, productInfo(*)`);
+      } else {
+        query = supabase
+          .from("_items")
+          .select(`*, productInfo!inner(*)`)
+          .or(
+            `DESCR.ilike.%${filterText}%, MODEL.ilike.%${filterText}%, BCODE.ilike.%${filterText}%`,
+            {
+              referencedTable: "productInfo",
+            }
+          );
+      }
+
+      query = query
         .eq("accountId", accountId)
         .lte("JOURDATE", toDate.toLocaleString())
         .gte("JOURDATE", fromDate.toLocaleString())
@@ -45,7 +59,7 @@ export default function TransactionItems({
     }
 
     getAccountItemsSupabase();
-  }, [setAccountItems, accountId, fromDate, toDate]);
+  }, [setAccountItems, accountId, fromDate, toDate, filterText]);
 
   return (
     <>

@@ -91,6 +91,8 @@ export type TransactionContextType = {
   setToDate: (toDate: Date) => void;
   fromDate: Date;
   setFromDate: (fromDate: Date) => void;
+  currentTab: string;
+  setCurrentTab: (tab: string) => void;
 };
 
 export const TransactionContext = createContext<TransactionContextType | null>(
@@ -113,6 +115,7 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   const [filterText, setFilterText] = React.useState("");
   const [fromDate, setFromDate] = React.useState<Date>(createLastYearDate());
   const [toDate, setToDate] = React.useState<Date>(new Date());
+  const [currentTab, setCurrentTab] = React.useState("allItems");
 
   const value = {
     accountId,
@@ -125,6 +128,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     setFromDate,
     toDate,
     setToDate,
+    currentTab,
+    setCurrentTab,
   };
 
   return (

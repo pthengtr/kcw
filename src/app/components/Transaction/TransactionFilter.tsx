@@ -13,6 +13,13 @@ import {
   TransactionContextType,
 } from "./TransactionProvider";
 
+const filterPlaceholder = {
+  allItems: "ชื่อ หรือ รหัสสินค้า...",
+  bills: "เลขที่บิล...",
+  notes: "เลขที่ใบวางบิล...",
+  vouchers: "เลขที่ใบสำคัญ...",
+};
+
 export default function TransactionFilter() {
   const {
     fromDate,
@@ -21,6 +28,7 @@ export default function TransactionFilter() {
     setToDate,
     filterText,
     setFilterText,
+    currentTab,
   } = React.useContext(TransactionContext) as TransactionContextType;
 
   return (
@@ -29,7 +37,9 @@ export default function TransactionFilter() {
         <Input
           className="roundeก-md"
           type="text"
-          placeholder="กรองผลการค้นหา..."
+          placeholder={
+            filterPlaceholder[currentTab as keyof typeof filterPlaceholder]
+          }
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
         ></Input>

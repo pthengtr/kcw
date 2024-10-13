@@ -24,7 +24,7 @@ export default function TransactionVouchers({
   const [accountVouchers, setAccountVouchers] = useState<voucherType[]>();
   const [currentVoucher, setCurrentVoucher] = useState<voucherType>();
   const [currentVoucherBills, setCurrentVoucherBills] = useState<billsType[]>();
-  const { toDate, fromDate } = useContext(
+  const { toDate, fromDate, filterText } = useContext(
     TransactionContext
   ) as TransactionContextType;
 
@@ -36,8 +36,6 @@ export default function TransactionVouchers({
         .eq("voucherId", voucher.voucherId)
         .order("JOURDATE", { ascending: false })
         .limit(100);
-
-      console.log(data);
 
       if (error) return;
       if (data !== null) setCurrentVoucherBills(data);
@@ -52,6 +50,7 @@ export default function TransactionVouchers({
       const { data, error } = await supabase
         .from("_vouchers")
         .select(`*, _accounts(*)`)
+        .ilike("VOUCNO", `%${filterText}%`)
         .eq("accountId", accountId)
         .lte("VOUCDATE", toDate.toLocaleString())
         .gte("VOUCDATE", fromDate.toLocaleString())
@@ -63,7 +62,7 @@ export default function TransactionVouchers({
     }
 
     getBillsSupabase();
-  }, [accountId, setAccountVouchers, fromDate, toDate]);
+  }, [accountId, setAccountVouchers, fromDate, toDate, filterText]);
 
   return (
     <>

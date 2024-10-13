@@ -26,7 +26,7 @@ export default function TransactionBills({
   const [currentBill, setCurrentBill] = useState<billsType>();
   const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
 
-  const { toDate, fromDate } = useContext(
+  const { toDate, fromDate, filterText } = useContext(
     TransactionContext
   ) as TransactionContextType;
 
@@ -38,8 +38,6 @@ export default function TransactionBills({
         .eq("BILLNO", bill.BILLNO)
         .order("JOURDATE", { ascending: false })
         .limit(100);
-
-      console.log(data);
 
       if (error) return;
       if (data !== null) setCurrentBillItems(data);
@@ -54,6 +52,7 @@ export default function TransactionBills({
       const { data, error } = await supabase
         .from("_bills")
         .select(`*, _vouchers(*), _notes(*)`)
+        .ilike("BILLNO", `%${filterText}%`)
         .eq("accountId", accountId)
         .order("JOURDATE", { ascending: false })
         .lte("JOURDATE", toDate.toLocaleString())
@@ -65,7 +64,7 @@ export default function TransactionBills({
     }
 
     getBillsSupabase();
-  }, [accountId, setAccountBills, fromDate, toDate]);
+  }, [accountId, setAccountBills, fromDate, toDate, filterText]);
 
   return (
     <>

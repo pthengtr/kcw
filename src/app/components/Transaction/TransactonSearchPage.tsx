@@ -7,11 +7,19 @@ import TransactionItems from "./TransactionItems";
 import TransactionBills from "./TransactionBills";
 import TransactionNotes from "./TransactionNotes";
 import TransactionVouchers from "./TransactionVouchers";
+import {
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
 
 export default function TransactionSearchPage() {
   const { transactionAccountObject } = useContext(
     SearchContext
   ) as SearchContextType;
+
+  const { setCurrentTab } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
 
   const accountId = transactionAccountObject
     ? transactionAccountObject.accountId.toString()
@@ -38,10 +46,24 @@ export default function TransactionSearchPage() {
             </span>
           </div>
           <TabsList className="">
-            <TabsTrigger value="allItems">ดูสินค้าทั้งหมด</TabsTrigger>
-            <TabsTrigger value="bills">บิลซื้อ-ขาย</TabsTrigger>
-            <TabsTrigger value="notes">วางบิล</TabsTrigger>
-            <TabsTrigger value="vouchers">ใบสำคัญรับ-จ่าย</TabsTrigger>
+            <TabsTrigger
+              onClick={() => setCurrentTab("allItems")}
+              value="allItems"
+            >
+              ดูสินค้าทั้งหมด
+            </TabsTrigger>
+            <TabsTrigger onClick={() => setCurrentTab("bills")} value="bills">
+              บิลซื้อ-ขาย
+            </TabsTrigger>
+            <TabsTrigger onClick={() => setCurrentTab("notes")} value="notes">
+              วางบิล
+            </TabsTrigger>
+            <TabsTrigger
+              onClick={() => setCurrentTab("vouchers")}
+              value="vouchers"
+            >
+              ใบสำคัญรับ-จ่าย
+            </TabsTrigger>
           </TabsList>
           <div className="flex-1">
             <TransactionFilter />

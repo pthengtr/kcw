@@ -22,7 +22,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
   const [accountNotes, setAccountNotes] = useState<noteType[]>();
   const [currentNote, setCurrentNote] = useState<noteType>();
   const [currentNoteBills, setCurrentNoteBills] = useState<billsType[]>();
-  const { toDate, fromDate } = useContext(
+  const { toDate, fromDate, filterText } = useContext(
     TransactionContext
   ) as TransactionContextType;
 
@@ -34,8 +34,6 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
         .eq("noteId", note.noteId)
         .order("JOURDATE", { ascending: false })
         .limit(100);
-
-      console.log(data);
 
       if (error) return;
       if (data !== null) setCurrentNoteBills(data);
@@ -50,6 +48,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
       const { data, error } = await supabase
         .from("_notes")
         .select(`*, _accounts(*)`)
+        .ilike("NOTENO", `%${filterText}%`)
         .eq("accountId", accountId)
         .order("NOTEDATE", { ascending: false })
         .lte("NOTEDATE", toDate.toLocaleString())
@@ -61,7 +60,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
     }
 
     getBillsSupabase();
-  }, [accountId, setAccountNotes, fromDate, toDate]);
+  }, [accountId, setAccountNotes, fromDate, toDate, filterText]);
 
   return (
     <>
