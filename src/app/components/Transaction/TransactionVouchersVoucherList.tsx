@@ -1,4 +1,5 @@
 import { voucherType } from "./TransactionProvider";
+import { useEffect } from "react";
 
 import {
   Table,
@@ -20,6 +21,15 @@ export default function TransactionVouchersVoucherList({
   handleClickVoucher,
   currentVoucher,
 }: TransactionVouchersVoucherListProps) {
+  useEffect(() => {
+    if (!currentVoucher) return;
+    const element = document.getElementById(currentVoucher.VOUCNO);
+    if (element !== null)
+      element.scrollIntoView({
+        block: "center",
+        inline: "start",
+      });
+  }, [currentVoucher]);
   return (
     <div className="overflow-auto w-full h-full">
       <Table>
@@ -39,6 +49,7 @@ export default function TransactionVouchersVoucherList({
         <TableBody>
           {accountVouchers.map((item, index) => (
             <TableRow
+              id={item.VOUCNO}
               key={`${item.VOUCNO}-${index}`}
               onClick={() => handleClickVoucher(item)}
               className={`${

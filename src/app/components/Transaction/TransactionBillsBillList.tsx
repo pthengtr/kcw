@@ -7,6 +7,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { billsType } from "./TransactionProvider";
+import {
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
+import { useContext, useEffect } from "react";
 
 type TransactionBillsBillListProps = {
   accountBills: billsType[];
@@ -19,6 +24,20 @@ export default function TransactionBillsBillList({
   currentBill,
   handleClickBill,
 }: TransactionBillsBillListProps) {
+  const { handleClickNote, handleClickVoucher } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
+
+  useEffect(() => {
+    if (!currentBill) return;
+    const element = document.getElementById(currentBill.BILLNO);
+    if (element !== null)
+      element.scrollIntoView({
+        block: "center",
+        inline: "start",
+      });
+  }, [currentBill]);
+
   return (
     <div className="overflow-auto w-full h-full">
       <Table>
@@ -27,10 +46,10 @@ export default function TransactionBillsBillList({
             <TableHead>วันที่</TableHead>
             <TableHead>เลขที่บิล</TableHead>
             <TableHead>ยอดรวม</TableHead>
-            <TableHead>เลขที่ใบวางบิล</TableHead>
             <TableHead>วันที่ใบวางบิล</TableHead>
-            <TableHead>เลขที่ใบสำคัญ</TableHead>
+            <TableHead>เลขที่ใบวางบิล</TableHead>
             <TableHead>วันที่ใบสำคัญ</TableHead>
+            <TableHead>เลขที่ใบสำคัญ</TableHead>
             <TableHead>สถานะ</TableHead>
           </TableRow>
         </TableHeader>
@@ -44,6 +63,7 @@ export default function TransactionBillsBillList({
                   : ""
               }`}
               key={`${item.BILLNO}-${index}`}
+              id={item.BILLNO}
             >
               <TableCell>
                 {new Date(item.JOURDATE).toLocaleDateString("th-TH")}
@@ -57,16 +77,34 @@ export default function TransactionBillsBillList({
                 ).toLocaleString()}
               </TableCell>
 
-              <TableCell>{item._notes?.NOTENO}</TableCell>
               <TableCell>
                 {item._notes &&
                   new Date(item._notes?.NOTEDATE).toLocaleDateString("th-TH")}
               </TableCell>
-              <TableCell>{item._vouchers?.VOUCNO}</TableCell>
+              <TableCell
+                className={`${
+                  item._notes &&
+                  "hover:cursor-pointer hover:underline hover:italic"
+                }`}
+                onClick={() => handleClickNote(item.noteId)}
+              >
+                {item._notes?.NOTENO}
+              </TableCell>
+
               <TableCell>
                 {item._vouchers &&
                   new Date(item._vouchers?.VOUCDATE).toLocaleDateString()}
               </TableCell>
+              <TableCell
+                onClick={() => handleClickVoucher(item.voucherId)}
+                className={`${
+                  item._notes &&
+                  "hover:cursor-pointer hover:underline hover:italic"
+                }`}
+              >
+                {item._vouchers?.VOUCNO}
+              </TableCell>
+
               <TableCell>
                 {item._vouchers
                   ? "ชำระแล้ว"

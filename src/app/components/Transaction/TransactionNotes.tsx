@@ -1,6 +1,6 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { supabase } from "@/app/lib/supabase";
-import { billsType, noteType } from "./TransactionProvider";
+import { noteType } from "./TransactionProvider";
 import {
   TransactionContext,
   TransactionContextType,
@@ -19,32 +19,25 @@ type TransactionNotesProps = {
 };
 
 export default function TransactionNotes({ accountId }: TransactionNotesProps) {
-  const [accountNotes, setAccountNotes] = useState<noteType[]>();
-  const [currentNote, setCurrentNote] = useState<noteType>();
-  const [currentNoteBills, setCurrentNoteBills] = useState<billsType[]>();
-  const { toDate, fromDate, filterText } = useContext(
-    TransactionContext
-  ) as TransactionContextType;
+  const {
+    accountNotes,
+    setAccountNotes,
+    currentNote,
+    setCurrentNote,
+    currentNoteBills,
+    getCurrentNoteBillsSupabase,
+    toDate,
+    fromDate,
+    filterText,
+  } = useContext(TransactionContext) as TransactionContextType;
 
   function handleClickNote(note: noteType) {
-    async function getCurrentNoteBillsSupabase() {
-      const { data, error } = await supabase
-        .from("_bills")
-        .select(`*, _vouchers(*), _notes(*)`)
-        .eq("noteId", note.noteId)
-        .order("JOURDATE", { ascending: false })
-        .limit(100);
-
-      if (error) return;
-      if (data !== null) setCurrentNoteBills(data);
-    }
-
     setCurrentNote(note);
-    getCurrentNoteBillsSupabase();
+    getCurrentNoteBillsSupabase(note.noteId);
   }
 
   useEffect(() => {
-    async function getBillsSupabase() {
+    async function getNotesSupabase() {
       const { data, error } = await supabase
         .from("_notes")
         .select(`*, _accounts(*)`)
@@ -59,7 +52,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
       if (data !== null) setAccountNotes(data);
     }
 
-    getBillsSupabase();
+    getNotesSupabase();
   }, [accountId, setAccountNotes, fromDate, toDate, filterText]);
 
   return (
@@ -74,8 +67,23 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
             />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
-          <ResizablePanel className="h-[70vh]">
-            <TransactionBillList currentBills={currentNoteBills} />
+          <ResizablePanel className="h-[70vh] flex flex-col gap-6">
+            {currentNote && (
+              <>
+                <div className="flex gap-4 justify-center mt-6 text-lg">
+                  <span>ใบวางบิลเลขที่</span>
+                  <span className="font-semibold">{currentNote.NOTENO}</span>
+                  <span>วันที่</span>
+                  <span className="font-semibold">
+                    {new Date(currentNote.NOTEDATE).toLocaleDateString("th-TH")}
+                  </span>
+                </div>
+                <TransactionBillList
+                  currentBills={currentNoteBills}
+                  mode="notes"
+                />
+              </>
+            )}
           </ResizablePanel>
         </ResizablePanelGroup>
       )}

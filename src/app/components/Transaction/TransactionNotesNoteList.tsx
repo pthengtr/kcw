@@ -1,4 +1,5 @@
 import { noteType } from "./TransactionProvider";
+import { useEffect } from "react";
 
 import {
   Table,
@@ -20,6 +21,16 @@ export default function TransactionNotesNoteList({
   handleClickNote,
   currentNote,
 }: TransactionNotesNoteListProps) {
+  useEffect(() => {
+    if (!currentNote) return;
+    const element = document.getElementById(currentNote.NOTENO);
+    if (element !== null)
+      element.scrollIntoView({
+        block: "center",
+        inline: "start",
+      });
+  }, [currentNote]);
+
   return (
     <div className="overflow-auto w-full h-full">
       <Table>
@@ -36,6 +47,7 @@ export default function TransactionNotesNoteList({
         <TableBody>
           {accountNotes.map((item, index) => (
             <TableRow
+              id={item.NOTENO}
               key={`${item.NOTENO}-${index}`}
               onClick={() => handleClickNote(item)}
               className={`${

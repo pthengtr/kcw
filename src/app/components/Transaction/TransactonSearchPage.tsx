@@ -17,7 +17,7 @@ export default function TransactionSearchPage() {
     SearchContext
   ) as SearchContextType;
 
-  const { setCurrentTab } = useContext(
+  const { setCurrentTab, currentTab } = useContext(
     TransactionContext
   ) as TransactionContextType;
 
@@ -27,7 +27,11 @@ export default function TransactionSearchPage() {
 
   return (
     <main className="h-[85%] w-full">
-      <Tabs defaultValue="allItems">
+      <Tabs
+        defaultValue="allItems"
+        value={currentTab}
+        onValueChange={setCurrentTab}
+      >
         <div className="flex justify-center items-center py-2 bg-gray-100 px-16">
           <div className="flex-1 flex gap-2">
             <span
@@ -45,25 +49,11 @@ export default function TransactionSearchPage() {
               {transactionAccountObject?.ACCTNAME}
             </span>
           </div>
-          <TabsList className="">
-            <TabsTrigger
-              onClick={() => setCurrentTab("allItems")}
-              value="allItems"
-            >
-              ดูสินค้าทั้งหมด
-            </TabsTrigger>
-            <TabsTrigger onClick={() => setCurrentTab("bills")} value="bills">
-              บิลซื้อ-ขาย
-            </TabsTrigger>
-            <TabsTrigger onClick={() => setCurrentTab("notes")} value="notes">
-              วางบิล
-            </TabsTrigger>
-            <TabsTrigger
-              onClick={() => setCurrentTab("vouchers")}
-              value="vouchers"
-            >
-              ใบสำคัญรับ-จ่าย
-            </TabsTrigger>
+          <TabsList>
+            <TabsTrigger value="allItems">ดูสินค้าทั้งหมด</TabsTrigger>
+            <TabsTrigger value="bills">บิลซื้อ-ขาย</TabsTrigger>
+            <TabsTrigger value="notes">วางบิล</TabsTrigger>
+            <TabsTrigger value="vouchers">ใบสำคัญรับ-จ่าย</TabsTrigger>
           </TabsList>
           <div className="flex-1">
             <TransactionFilter />

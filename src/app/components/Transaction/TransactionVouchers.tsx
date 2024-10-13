@@ -1,6 +1,6 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { supabase } from "@/app/lib/supabase";
-import { voucherType, billsType } from "./TransactionProvider";
+import { voucherType } from "./TransactionProvider";
 import {
   TransactionContext,
   TransactionContextType,
@@ -21,32 +21,25 @@ type TransactionVouchersProps = {
 export default function TransactionVouchers({
   accountId,
 }: TransactionVouchersProps) {
-  const [accountVouchers, setAccountVouchers] = useState<voucherType[]>();
-  const [currentVoucher, setCurrentVoucher] = useState<voucherType>();
-  const [currentVoucherBills, setCurrentVoucherBills] = useState<billsType[]>();
-  const { toDate, fromDate, filterText } = useContext(
-    TransactionContext
-  ) as TransactionContextType;
+  const {
+    toDate,
+    fromDate,
+    filterText,
+    accountVouchers,
+    setAccountVouchers,
+    currentVoucher,
+    setCurrentVoucher,
+    currentVoucherBills,
+    getCurrentVoucherBillsSupabase,
+  } = useContext(TransactionContext) as TransactionContextType;
 
   function handleClickVoucher(voucher: voucherType) {
-    async function getCurrentVoucherBillsSupabase() {
-      const { data, error } = await supabase
-        .from("_bills")
-        .select(`*, _vouchers(*), _notes(*)`)
-        .eq("voucherId", voucher.voucherId)
-        .order("JOURDATE", { ascending: false })
-        .limit(100);
-
-      if (error) return;
-      if (data !== null) setCurrentVoucherBills(data);
-    }
-
     setCurrentVoucher(voucher);
-    getCurrentVoucherBillsSupabase();
+    getCurrentVoucherBillsSupabase(voucher.voucherId);
   }
 
   useEffect(() => {
-    async function getBillsSupabase() {
+    async function getVouchersSupabase() {
       const { data, error } = await supabase
         .from("_vouchers")
         .select(`*, _accounts(*)`)
@@ -61,7 +54,7 @@ export default function TransactionVouchers({
       if (data !== null) setAccountVouchers(data);
     }
 
-    getBillsSupabase();
+    getVouchersSupabase();
   }, [accountId, setAccountVouchers, fromDate, toDate, filterText]);
 
   return (
@@ -76,8 +69,25 @@ export default function TransactionVouchers({
             />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
-          <ResizablePanel className="h-[70vh]">
-            <TransactionBillList currentBills={currentVoucherBills} />
+          <ResizablePanel className="h-[70vh] flex flex-col gap-6">
+            {currentVoucher && (
+              <>
+                <div className="flex gap-4 justify-center mt-6 text-lg">
+                  <span>ใบสำคัญเลขที่</span>
+                  <span className="font-semibold">{currentVoucher.VOUCNO}</span>
+                  <span>วันที่</span>
+                  <span className="font-semibold">
+                    {new Date(currentVoucher.VOUCDATE).toLocaleDateString(
+                      "th-TH"
+                    )}
+                  </span>
+                </div>
+                <TransactionBillList
+                  currentBills={currentVoucherBills}
+                  mode="vouchers"
+                />
+              </>
+            )}
           </ResizablePanel>
         </ResizablePanelGroup>
       )}

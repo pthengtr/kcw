@@ -1,7 +1,7 @@
 "use client";
-import { createContext } from "react";
-import React from "react";
+import React, { useState, createContext } from "react";
 import { ItemDetailType } from "../ProductDetail";
+import { supabase } from "@/app/lib/supabase";
 
 export type voucherType = {
   voucherId: number;
@@ -37,9 +37,11 @@ export type billsType = {
   CASHAMT: string;
   CHKAMT: string;
   DUEAMT: string;
-  customerId: number;
+  accountId: number;
   _accounts: accountsType;
+  voucherId: number;
   _vouchers: voucherType;
+  noteId: number;
   _notes: noteType;
   salesItems: itemsType;
 };
@@ -93,6 +95,33 @@ export type TransactionContextType = {
   setFromDate: (fromDate: Date) => void;
   currentTab: string;
   setCurrentTab: (tab: string) => void;
+  //Bills tab state
+  accountBills: billsType[] | undefined;
+  setAccountBills: (notes: billsType[]) => void;
+  currentBill: billsType | undefined;
+  setCurrentBill: (note: billsType) => void;
+  currentBillItems: itemsType[] | undefined;
+  setCurrentBillItems: (bills: itemsType[]) => void;
+  getCurrentBillItemsSupabase: (billNo: string) => void;
+  //Notes tab state
+  accountNotes: noteType[] | undefined;
+  setAccountNotes: (notes: noteType[]) => void;
+  currentNote: noteType | undefined;
+  setCurrentNote: (note: noteType) => void;
+  currentNoteBills: billsType[] | undefined;
+  setCurrentNoteBills: (bills: billsType[]) => void;
+  getCurrentNoteBillsSupabase: (noteId: number) => void;
+  //Vouchers tab state
+  accountVouchers: voucherType[] | undefined;
+  setAccountVouchers: (vouchers: voucherType[]) => void;
+  currentVoucher: voucherType | undefined;
+  setCurrentVoucher: (voucher: voucherType) => void;
+  currentVoucherBills: billsType[] | undefined;
+  setCurrentVoucherBills: (bills: billsType[]) => void;
+  getCurrentVoucherBillsSupabase: (voucherId: number) => void;
+  handleClickNote: (noteId: number) => void;
+  handleClickVoucher: (voucherId: number) => void;
+  handleClickBill: (billNo: string) => void;
 };
 
 export const TransactionContext = createContext<TransactionContextType | null>(
@@ -110,12 +139,117 @@ type TransactionProvider = {
 };
 
 export default function TransactionProvider({ children }: TransactionProvider) {
-  const [accountId, setAccountId] = React.useState("");
-  const [billNo, setBillNo] = React.useState("");
-  const [filterText, setFilterText] = React.useState("");
-  const [fromDate, setFromDate] = React.useState<Date>(createLastYearDate());
-  const [toDate, setToDate] = React.useState<Date>(new Date());
-  const [currentTab, setCurrentTab] = React.useState("allItems");
+  const [accountId, setAccountId] = useState("");
+  const [billNo, setBillNo] = useState("");
+  const [filterText, setFilterText] = useState("");
+  const [fromDate, setFromDate] = useState<Date>(createLastYearDate());
+  const [toDate, setToDate] = useState<Date>(new Date());
+  const [currentTab, setCurrentTab] = useState("allItems");
+  //Bills tab states
+  const [accountBills, setAccountBills] = useState<billsType[]>();
+  const [currentBill, setCurrentBill] = useState<billsType>();
+  const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
+  //Notes tab states
+  const [accountNotes, setAccountNotes] = useState<noteType[]>();
+  const [currentNote, setCurrentNote] = useState<noteType>();
+  const [currentNoteBills, setCurrentNoteBills] = useState<billsType[]>();
+  //Vouchers tab states
+  const [accountVouchers, setAccountVouchers] = useState<voucherType[]>();
+  const [currentVoucher, setCurrentVoucher] = useState<voucherType>();
+  const [currentVoucherBills, setCurrentVoucherBills] = useState<billsType[]>();
+
+  async function getCurrentNoteBillsSupabase(noteId: number) {
+    const { data, error } = await supabase
+      .from("_bills")
+      .select(`*, _vouchers(*), _notes(*)`)
+      .eq("noteId", noteId)
+      .order("JOURDATE", { ascending: false })
+      .limit(100);
+
+    if (error) return;
+    if (data !== null) setCurrentNoteBills(data);
+  }
+
+  async function getCurrentVoucherBillsSupabase(voucherId: number) {
+    const { data, error } = await supabase
+      .from("_bills")
+      .select(`*, _vouchers(*), _notes(*)`)
+      .eq("voucherId", voucherId)
+      .order("JOURDATE", { ascending: false })
+      .limit(100);
+
+    if (error) return;
+    if (data !== null) setCurrentVoucherBills(data);
+  }
+
+  async function getCurrentBillItemsSupabase(billNo: string) {
+    const { data, error } = await supabase
+      .from("_items")
+      .select(`*, productInfo(*)`)
+      .eq("BILLNO", billNo)
+      .order("JOURDATE", { ascending: false })
+      .limit(100);
+
+    if (error) return;
+    if (data !== null) setCurrentBillItems(data);
+  }
+
+  function handleClickBill(billNo: string) {
+    async function getBillSupabase(billNo: string) {
+      const { data, error } = await supabase
+        .from("_bills")
+        .select(`*,  _vouchers(*), _notes(*)`)
+        .eq("BILLNO", billNo)
+        .limit(100);
+
+      if (error) return;
+      if (data !== null) setCurrentBill(data[0]);
+    }
+
+    if (!billNo) return;
+
+    getBillSupabase(billNo);
+    getCurrentBillItemsSupabase(billNo);
+    setCurrentTab("bills");
+  }
+
+  function handleClickNote(noteId: number) {
+    async function getNoteSupabase(noteId: number) {
+      const { data, error } = await supabase
+        .from("_notes")
+        .select(`*, _accounts(*)`)
+        .eq("noteId", noteId)
+        .limit(100);
+
+      if (error) return;
+      if (data !== null) setCurrentNote(data[0]);
+    }
+
+    if (!noteId) return;
+
+    getNoteSupabase(noteId);
+    getCurrentNoteBillsSupabase(noteId);
+    setCurrentTab("notes");
+  }
+
+  function handleClickVoucher(voucherId: number) {
+    async function getVoucherSupabase(voucherId: number) {
+      const { data, error } = await supabase
+        .from("_vouchers")
+        .select(`*, _accounts(*)`)
+        .eq("voucherId", voucherId)
+        .limit(100);
+
+      if (error) return;
+      if (data !== null) setCurrentVoucher(data[0]);
+    }
+
+    if (!voucherId) return;
+
+    getVoucherSupabase(voucherId);
+    getCurrentVoucherBillsSupabase(voucherId);
+    setCurrentTab("vouchers");
+  }
 
   const value = {
     accountId,
@@ -130,6 +264,30 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     setToDate,
     currentTab,
     setCurrentTab,
+    accountNotes,
+    setAccountNotes,
+    currentNote,
+    setCurrentNote,
+    currentNoteBills,
+    setCurrentNoteBills,
+    getCurrentNoteBillsSupabase,
+    accountVouchers,
+    setAccountVouchers,
+    currentVoucher,
+    setCurrentVoucher,
+    currentVoucherBills,
+    setCurrentVoucherBills,
+    getCurrentVoucherBillsSupabase,
+    accountBills,
+    setAccountBills,
+    currentBill,
+    setCurrentBill,
+    currentBillItems,
+    setCurrentBillItems,
+    getCurrentBillItemsSupabase,
+    handleClickNote,
+    handleClickVoucher,
+    handleClickBill,
   };
 
   return (

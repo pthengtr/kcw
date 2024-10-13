@@ -23,7 +23,7 @@ export default function TransactionItems({
 }: TransactionCustomerItemsProps) {
   const [accountItems, setAccountItems] = useState<itemsType[]>();
 
-  const { toDate, fromDate, filterText } = useContext(
+  const { toDate, fromDate, filterText, handleClickBill } = useContext(
     TransactionContext
   ) as TransactionContextType;
 
@@ -91,16 +91,23 @@ export default function TransactionItems({
                       ? `${item.productInfo.DESCR}, ${item.productInfo.MODEL}`
                       : ""}
                   </TableCell>
-                  <TableCell>{parseInt(item.QTY)}</TableCell>
+                  <TableCell>{parseInt(item.QTY ? item.QTY : "0")}</TableCell>
                   <TableCell>{item.UI}</TableCell>
                   <TableCell>
-                    {parseFloat(item.PRICE).toLocaleString()}
+                    {parseFloat(item.PRICE ? item.PRICE : "0").toLocaleString()}
                   </TableCell>
                   <TableCell>{item.DISCNT1}</TableCell>
                   <TableCell>
-                    {parseFloat(item.AMOUNT).toLocaleString()}
+                    {parseFloat(
+                      item.AMOUNT ? item.AMOUNT : "0"
+                    ).toLocaleString()}
                   </TableCell>
-                  <TableCell>{item.BILLNO}</TableCell>
+                  <TableCell
+                    onClick={() => handleClickBill(item.BILLNO)}
+                    className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
+                  >
+                    {item.BILLNO}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

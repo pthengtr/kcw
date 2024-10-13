@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { supabase } from "../../lib/supabase";
-import { billsType, itemsType } from "./TransactionProvider";
+import { billsType } from "./TransactionProvider";
 import {
   TransactionContext,
   TransactionContextType,
@@ -22,29 +22,21 @@ type TransactionAccountBillsProps = {
 export default function TransactionBills({
   accountId,
 }: TransactionAccountBillsProps) {
-  const [accountBills, setAccountBills] = useState<billsType[]>();
-  const [currentBill, setCurrentBill] = useState<billsType>();
-  const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
-
-  const { toDate, fromDate, filterText } = useContext(
-    TransactionContext
-  ) as TransactionContextType;
+  const {
+    toDate,
+    fromDate,
+    filterText,
+    accountBills,
+    setAccountBills,
+    currentBill,
+    setCurrentBill,
+    currentBillItems,
+    getCurrentBillItemsSupabase,
+  } = useContext(TransactionContext) as TransactionContextType;
 
   function handleClickBill(bill: billsType) {
-    async function getCurrentBillItemsSupabase() {
-      const { data, error } = await supabase
-        .from("_items")
-        .select(`*, productInfo(*)`)
-        .eq("BILLNO", bill.BILLNO)
-        .order("JOURDATE", { ascending: false })
-        .limit(100);
-
-      if (error) return;
-      if (data !== null) setCurrentBillItems(data);
-    }
-
     setCurrentBill(bill);
-    getCurrentBillItemsSupabase();
+    getCurrentBillItemsSupabase(bill.BILLNO);
   }
 
   useEffect(() => {

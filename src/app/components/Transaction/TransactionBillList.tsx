@@ -6,15 +6,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { billsType } from "./TransactionProvider";
+import {
+  billsType,
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
+import { useContext } from "react";
 
 type TransactionBillListProps = {
   currentBills: billsType[] | undefined;
+  mode: "notes" | "vouchers";
 };
 
 export default function TransactionBillList({
   currentBills,
+  mode = "notes",
 }: TransactionBillListProps) {
+  const { handleClickNote, handleClickVoucher, handleClickBill } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
+
   return (
     <div className="overflow-auto w-full h-full">
       <Table>
@@ -23,10 +34,12 @@ export default function TransactionBillList({
             <TableHead>วันที่</TableHead>
             <TableHead>เลขที่บิล</TableHead>
             <TableHead>ยอดรวม</TableHead>
-            <TableHead>วันที่ใบวางบิล</TableHead>
-            <TableHead>เลขที่ใบวางบิล</TableHead>
-            <TableHead>วันที่ใบสำคัญ</TableHead>
-            <TableHead>เลขที่ใบสำคัญ</TableHead>
+            <TableHead>
+              {mode === "notes" ? "วันที่ใบสำคัญ" : "วันที่ใบวางบิล"}
+            </TableHead>
+            <TableHead>
+              {mode === "notes" ? "เลขที่ใบสำคัญ" : "เลขที่ใบวางบิล"}
+            </TableHead>
             <TableHead>สถานะ</TableHead>
           </TableRow>
         </TableHeader>
@@ -37,7 +50,12 @@ export default function TransactionBillList({
                 <TableCell>
                   {new Date(item.JOURDATE).toLocaleDateString("th-TH")}
                 </TableCell>
-                <TableCell>{item.BILLNO}</TableCell>
+                <TableCell
+                  onClick={() => handleClickBill(item.BILLNO)}
+                  className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
+                >
+                  {item.BILLNO}
+                </TableCell>
                 <TableCell>
                   {(
                     parseFloat(item.CASHAMT ? item.CASHAMT : "0") +
@@ -46,16 +64,34 @@ export default function TransactionBillList({
                   ).toLocaleString()}
                 </TableCell>
 
-                <TableCell>{item._notes?.NOTENO}</TableCell>
                 <TableCell>
-                  {item._notes &&
-                    new Date(item._notes?.NOTEDATE).toLocaleDateString("th-TH")}
+                  {mode === "notes"
+                    ? item._vouchers &&
+                      new Date(item._vouchers?.VOUCDATE).toLocaleDateString()
+                    : item._notes &&
+                      new Date(item._notes?.NOTEDATE).toLocaleDateString(
+                        "th-TH"
+                      )}
                 </TableCell>
-                <TableCell>{item._vouchers?.VOUCNO}</TableCell>
-                <TableCell>
-                  {item._vouchers &&
-                    new Date(item._vouchers?.VOUCDATE).toLocaleDateString()}
+                <TableCell
+                  onClick={
+                    mode === "notes"
+                      ? () => handleClickVoucher(item.voucherId)
+                      : () => handleClickNote(item.noteId)
+                  }
+                  className={`${
+                    mode === "notes"
+                      ? item._notes &&
+                        "hover:cursor-pointer hover:underline hover:italic"
+                      : item._vouchers &&
+                        "hover:cursor-pointer hover:underline hover:italic"
+                  }`}
+                >
+                  {mode === "notes"
+                    ? item._vouchers?.VOUCNO
+                    : item._notes?.NOTENO}
                 </TableCell>
+
                 <TableCell>
                   {item._vouchers
                     ? "ชำระแล้ว"
