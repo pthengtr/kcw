@@ -107,7 +107,7 @@ export type TransactionContextType = {
   accountNotes: noteType[] | undefined;
   setAccountNotes: (notes: noteType[]) => void;
   currentNote: noteType | undefined;
-  setCurrentNote: (note: noteType) => void;
+  setCurrentNote: (note: noteType | undefined) => void;
   currentNoteBills: billsType[] | undefined;
   setCurrentNoteBills: (bills: billsType[]) => void;
   getCurrentNoteBillsSupabase: (noteId: number) => void;
@@ -115,7 +115,7 @@ export type TransactionContextType = {
   accountVouchers: voucherType[] | undefined;
   setAccountVouchers: (vouchers: voucherType[]) => void;
   currentVoucher: voucherType | undefined;
-  setCurrentVoucher: (voucher: voucherType) => void;
+  setCurrentVoucher: (voucher: voucherType | undefined) => void;
   currentVoucherBills: billsType[] | undefined;
   setCurrentVoucherBills: (bills: billsType[]) => void;
   getCurrentVoucherBillsSupabase: (voucherId: number) => void;

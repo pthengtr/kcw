@@ -39,6 +39,10 @@ export default function TransactionVouchers({
   }
 
   useEffect(() => {
+    setCurrentVoucher(undefined);
+  }, [accountId, setCurrentVoucher]);
+
+  useEffect(() => {
     async function getVouchersSupabase() {
       const { data, error } = await supabase
         .from("_vouchers")
