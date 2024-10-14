@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { billsType } from "./TransactionProvider";
 import {
@@ -14,6 +14,7 @@ import {
 
 import TransactionBillsBillList from "./TransactionBillsBillList";
 import TransactionBillsItemList from "./TransactionBillsItemList";
+import TransactionTotalCount from "./TransactionTotalCount";
 
 type TransactionAccountBillsProps = {
   accountId: string;
@@ -33,6 +34,7 @@ export default function TransactionBills({
     currentBillItems,
     getCurrentBillItemsSupabase,
   } = useContext(TransactionContext) as TransactionContextType;
+  const [totalCount, setTotalCount] = useState(0);
 
   function handleClickBill(bill: billsType) {
     setCurrentBill(bill);
@@ -41,36 +43,38 @@ export default function TransactionBills({
 
   useEffect(() => {
     async function getBillsSupabase() {
-      const { data, error } = await supabase
+      const { data, error, count } = await supabase
         .from("_bills")
-        .select(`*, _vouchers(*), _notes(*)`)
+        .select(`*, _vouchers(*), _notes(*)`, { count: "exact" })
         .ilike("BILLNO", `%${filterText}%`)
         .eq("accountId", accountId)
         .order("JOURDATE", { ascending: false })
         .lte("JOURDATE", toDate.toLocaleString())
         .gte("JOURDATE", fromDate.toLocaleString())
-        .limit(100);
+        .limit(200);
 
       if (error) return;
       if (data !== null) setAccountBills(data);
+      if (count !== null) setTotalCount(count);
     }
 
     getBillsSupabase();
-  }, [accountId, setAccountBills, fromDate, toDate, filterText]);
+  }, [accountId, setAccountBills, fromDate, toDate, filterText, setTotalCount]);
 
   return (
     <>
       {accountBills && (
         <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel className="h-[70vh]">
+          <ResizablePanel className="h-[80vh] flex flex-col gap-4">
             <TransactionBillsBillList
               accountBills={accountBills}
               handleClickBill={handleClickBill}
               currentBill={currentBill}
             />
+            <TransactionTotalCount totalCount={totalCount} maxSearch={200} />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
-          <ResizablePanel className="h-[70vh]">
+          <ResizablePanel className="h-[80vh]">
             <TransactionBillsItemList
               currentBill={currentBill}
               currentBillItems={currentBillItems}

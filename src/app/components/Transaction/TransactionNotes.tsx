@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { supabase } from "@/app/lib/supabase";
 import { noteType } from "./TransactionProvider";
 import {
@@ -13,6 +13,7 @@ import {
 
 import TransactionNotesNoteList from "./TransactionNotesNoteList";
 import TransactionBillList from "./TransactionBillList";
+import TransactionTotalCount from "./TransactionTotalCount";
 
 type TransactionNotesProps = {
   accountId: string;
@@ -30,6 +31,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
     fromDate,
     filterText,
   } = useContext(TransactionContext) as TransactionContextType;
+  const [totalCount, setTotalCount] = useState(0);
 
   function handleClickNote(note: noteType) {
     setCurrentNote(note);
@@ -38,18 +40,19 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
 
   useEffect(() => {
     async function getNotesSupabase() {
-      const { data, error } = await supabase
+      const { data, error, count } = await supabase
         .from("_notes")
-        .select(`*, _accounts(*)`)
+        .select(`*, _accounts(*)`, { count: "exact" })
         .ilike("NOTENO", `%${filterText}%`)
         .eq("accountId", accountId)
         .order("NOTEDATE", { ascending: false })
         .lte("NOTEDATE", toDate.toLocaleString())
         .gte("NOTEDATE", fromDate.toLocaleString())
-        .limit(100);
+        .limit(200);
 
       if (error) return;
       if (data !== null) setAccountNotes(data);
+      if (count !== null) setTotalCount(count);
     }
 
     getNotesSupabase();
@@ -59,15 +62,16 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
     <>
       {accountNotes && (
         <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel className="h-[70vh]">
+          <ResizablePanel className="h-[80vh] flex flex-col gap-4">
             <TransactionNotesNoteList
               accountNotes={accountNotes}
               handleClickNote={handleClickNote}
               currentNote={currentNote}
             />
+            <TransactionTotalCount totalCount={totalCount} maxSearch={200} />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
-          <ResizablePanel className="h-[70vh] flex flex-col gap-6">
+          <ResizablePanel className="h-[80vh] flex flex-col gap-6">
             {currentNote && (
               <>
                 <div className="flex gap-4 justify-center mt-6 text-lg">

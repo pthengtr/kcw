@@ -9,6 +9,7 @@ import TransactionBills from "./TransactionBills";
 import TransactionNotes from "./TransactionNotes";
 import TransactionVouchers from "./TransactionVouchers";
 import {
+  createLastYearDate,
   TransactionContext,
   TransactionContextType,
 } from "./TransactionProvider";
@@ -31,6 +32,9 @@ export default function TransactionSearchPage() {
     currentNote,
     setScrollVoucher,
     currentVoucher,
+    setToDate,
+    setFromDate,
+    setFilterText,
   } = useContext(TransactionContext) as TransactionContextType;
 
   const accountId = transactionAccountObject
@@ -42,23 +46,36 @@ export default function TransactionSearchPage() {
     setCurrentNote(undefined);
     setCurrentVoucher(undefined);
     setCurrentBillItems(undefined);
+    setFilterText("");
+    setToDate(new Date());
+    setFromDate(createLastYearDate());
   }, [
     setCurrentBill,
     setCurrentNote,
     setCurrentVoucher,
     setCurrentBillItems,
     transactionAccountObject,
+    setFilterText,
+    setToDate,
+    setFromDate,
   ]);
 
   const path = usePathname();
   const acctType = path === "/sales" ? "S" : path === "/purchases" ? "P" : "";
+
+  function handleOnTabChange(value: string) {
+    setCurrentTab(value);
+    setFilterText("");
+    setToDate(new Date());
+    setFromDate(createLastYearDate());
+  }
 
   return (
     <main className="h-[85%] w-full">
       <Tabs
         defaultValue="allItems"
         value={currentTab}
-        onValueChange={setCurrentTab}
+        onValueChange={handleOnTabChange}
       >
         <div className="flex justify-center items-center py-2 bg-gray-100 px-16">
           <div className="flex-1 flex gap-2">

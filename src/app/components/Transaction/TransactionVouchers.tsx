@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { supabase } from "@/app/lib/supabase";
 import { voucherType } from "./TransactionProvider";
 import {
@@ -13,6 +13,7 @@ import {
 
 import TransactionVouchersVoucherList from "./TransactionVouchersVoucherList";
 import TransactionBillList from "./TransactionBillList";
+import TransactionTotalCount from "./TransactionTotalCount";
 
 type TransactionVouchersProps = {
   accountId: string;
@@ -32,6 +33,7 @@ export default function TransactionVouchers({
     currentVoucherBills,
     getCurrentVoucherBillsSupabase,
   } = useContext(TransactionContext) as TransactionContextType;
+  const [totalCount, setTotalCount] = useState(0);
 
   function handleClickVoucher(voucher: voucherType) {
     setCurrentVoucher(voucher);
@@ -40,18 +42,19 @@ export default function TransactionVouchers({
 
   useEffect(() => {
     async function getVouchersSupabase() {
-      const { data, error } = await supabase
+      const { data, error, count } = await supabase
         .from("_vouchers")
-        .select(`*, _accounts(*)`)
+        .select(`*, _accounts(*)`, { count: "exact" })
         .ilike("VOUCNO", `%${filterText}%`)
         .eq("accountId", accountId)
         .lte("VOUCDATE", toDate.toLocaleString())
         .gte("VOUCDATE", fromDate.toLocaleString())
         .order("VOUCDATE", { ascending: false })
-        .limit(100);
+        .limit(200);
 
       if (error) return;
       if (data !== null) setAccountVouchers(data);
+      if (count !== null) setTotalCount(count);
     }
 
     getVouchersSupabase();
@@ -61,15 +64,16 @@ export default function TransactionVouchers({
     <>
       {accountVouchers && (
         <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel className="h-[70vh]">
+          <ResizablePanel className="h-[80vh] flex flex-col gap-4">
             <TransactionVouchersVoucherList
               accountVouchers={accountVouchers}
               currentVoucher={currentVoucher}
               handleClickVoucher={handleClickVoucher}
             />
+            <TransactionTotalCount totalCount={totalCount} maxSearch={200} />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
-          <ResizablePanel className="h-[70vh] flex flex-col gap-6">
+          <ResizablePanel className="h-[80vh] flex flex-col gap-6">
             {currentVoucher && (
               <>
                 <div className="flex gap-4 justify-center mt-6 text-lg">
