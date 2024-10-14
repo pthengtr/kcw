@@ -36,7 +36,13 @@ export default function TransactionSearchPage() {
     setCurrentNote(undefined);
     setCurrentVoucher(undefined);
     setCurrentBillItems(undefined);
-  }, [transactionAccountObject]);
+  }, [
+    setCurrentBill,
+    setCurrentNote,
+    setCurrentVoucher,
+    setCurrentBillItems,
+    transactionAccountObject,
+  ]);
 
   const path = usePathname();
   const acctType = path === "/sales" ? "S" : path === "/purchases" ? "P" : "";

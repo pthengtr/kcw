@@ -36,6 +36,8 @@ export default function TransactionBillsBillList({
         block: "center",
         inline: "start",
       });
+    // auto scroll only needed on first mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
