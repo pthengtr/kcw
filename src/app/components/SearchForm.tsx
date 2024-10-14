@@ -15,7 +15,8 @@ export default function SearchForm() {
     <form onSubmit={handleSubmitForm} className="flex gap-2 items-center">
       <div className="w-[500px] flex flex-auto shadow-lg relative">
         {pathName === "/product" && <ProductSearch />}
-        {pathName === "/transaction" && <TransactionSearch />}
+        {pathName === "/sales" && <TransactionSearch />}
+        {pathName === "/purchases" && <TransactionSearch />}
       </div>
       {pathName === "/product" && (
         <Button className="bg-gray-100 h-full text-gray-800 shadow-lg font-semibold hover:bg-slate-200 hover:scale-[1.02] active:scale-[1]">

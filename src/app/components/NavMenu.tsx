@@ -16,8 +16,12 @@ const menu = [
     path: "/product",
   },
   {
-    name: "บัญชี",
-    path: "/transaction",
+    name: "ซื้อ",
+    path: "/purchases",
+  },
+  {
+    name: "ขาย",
+    path: "/sales",
   },
 ];
 

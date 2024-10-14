@@ -2,6 +2,7 @@
 import React, { useContext } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SearchContext, SearchContextType } from "../SearchProvider";
+import { usePathname } from "next/navigation";
 import TransactionFilter from "./TransactionFilter";
 import TransactionItems from "./TransactionItems";
 import TransactionBills from "./TransactionBills";
@@ -25,6 +26,9 @@ export default function TransactionSearchPage() {
     ? transactionAccountObject.accountId.toString()
     : "";
 
+  const path = usePathname();
+  const acctType = path === "/sales" ? "S" : path === "/purchases" ? "P" : "";
+
   return (
     <main className="h-[85%] w-full">
       <Tabs
@@ -36,9 +40,9 @@ export default function TransactionSearchPage() {
           <div className="flex-1 flex gap-2">
             <span
               className={`font-semibold text-xl text-white px-1 rounded-md ${
-                transactionAccountObject?.ACCTNO.slice(-1) === "P"
+                transactionAccountObject?.ACCTTYPE === "P"
                   ? "bg-red-900"
-                  : transactionAccountObject?.ACCTNO.slice(-1) === "S"
+                  : transactionAccountObject?.ACCTTYPE === "S"
                   ? "bg-green-900"
                   : "bg-primary"
               }`}
@@ -51,9 +55,13 @@ export default function TransactionSearchPage() {
           </div>
           <TabsList>
             <TabsTrigger value="allItems">ดูสินค้าทั้งหมด</TabsTrigger>
-            <TabsTrigger value="bills">บิลซื้อ-ขาย</TabsTrigger>
+            <TabsTrigger value="bills">{`${
+              acctType === "P" ? "บิลซื้อ" : "บิลขาย"
+            }`}</TabsTrigger>
             <TabsTrigger value="notes">วางบิล</TabsTrigger>
-            <TabsTrigger value="vouchers">ใบสำคัญรับ-จ่าย</TabsTrigger>
+            <TabsTrigger value="vouchers">{`${
+              acctType === "P" ? "ใบสำคัญจ่าย" : "ใบสำคัญรับ"
+            }`}</TabsTrigger>
           </TabsList>
           <div className="flex-1">
             <TransactionFilter />

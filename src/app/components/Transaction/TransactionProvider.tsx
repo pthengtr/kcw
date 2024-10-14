@@ -67,6 +67,7 @@ export type itemsType = {
 export type accountsType = {
   accountId: number;
   ACCTNO: string;
+  ACCTTYPE: "P" | "S";
   ACCTNAME: string;
   ADDR1: string;
   ADDR2: string;

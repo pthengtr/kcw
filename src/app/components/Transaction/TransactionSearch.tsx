@@ -7,9 +7,13 @@ import { supabase } from "../../lib/supabase";
 import { accountsType } from "./TransactionProvider";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { SpanValue } from "../ProductDetail";
+import { usePathname } from "next/navigation";
 
 export default function TransactionSearch() {
   const [accountsResult, setAccountsResult] = useState<accountsType[]>();
+
+  const path = usePathname();
+  const acctType = path === "/sales" ? "S" : path === "/purchases" ? "P" : "";
 
   const {
     setSearchKey,
@@ -57,6 +61,8 @@ export default function TransactionSearch() {
       .order("ACCTNAME", { ascending: true })
       .limit(10);
 
+    if (acctType !== "") query = query.eq("ACCTTYPE", acctType);
+
     const orSearchArr = searchWords.map(
       (word) =>
         `ACCTNAME.ilike.%${word}%, \
@@ -78,7 +84,11 @@ export default function TransactionSearch() {
       <Input
         className="rounded-md flex-1"
         type="text"
-        placeholder="รหัส ชื่อลูกค้า หรือเจ้าหนี้..."
+        placeholder={
+          acctType === "P"
+            ? "รหัส หรือ ชื่อเจ้าหนี้..."
+            : "รหัส หรือ ชื่อลูกค้า..."
+        }
         value={searchText}
         onChange={handleSearchTextChange}
       />
@@ -95,11 +105,11 @@ export default function TransactionSearch() {
                   <TableCell>
                     <SpanValue
                       className={`text-white ${
-                        item?.ACCTNO.slice(-1) === "P"
+                        item?.ACCTTYPE === "P"
                           ? "bg-red-900"
-                          : item?.ACCTNO.slice(-1) === "S"
+                          : item?.ACCTTYPE === "S"
                           ? "bg-green-900"
-                          : "bg-primary"
+                          : ""
                       }`}
                     >
                       {item.ACCTNO}
