@@ -29,7 +29,7 @@ export default function TransactionNotesNoteList({
         block: "center",
         inline: "start",
       });
-  }, [currentNote]);
+  }, []);
 
   return (
     <div className="overflow-auto w-full h-full">

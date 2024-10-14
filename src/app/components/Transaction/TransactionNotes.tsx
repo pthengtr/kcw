@@ -37,10 +37,6 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
   }
 
   useEffect(() => {
-    setCurrentNote(undefined);
-  }, [accountId, setCurrentNote]);
-
-  useEffect(() => {
     async function getNotesSupabase() {
       const { data, error } = await supabase
         .from("_notes")

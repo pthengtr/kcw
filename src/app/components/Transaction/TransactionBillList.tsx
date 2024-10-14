@@ -35,10 +35,10 @@ export default function TransactionBillList({
             <TableHead>เลขที่บิล</TableHead>
             <TableHead>ยอดรวม</TableHead>
             <TableHead>
-              {mode === "notes" ? "วันที่ใบสำคัญ" : "วันที่ใบวางบิล"}
+              {mode === "notes" ? "เลขที่ใบสำคัญ" : "เลขที่ใบวางบิล"}
             </TableHead>
             <TableHead>
-              {mode === "notes" ? "เลขที่ใบสำคัญ" : "เลขที่ใบวางบิล"}
+              {mode === "notes" ? "วันที่ใบสำคัญ" : "วันที่ใบวางบิล"}
             </TableHead>
             <TableHead>สถานะ</TableHead>
           </TableRow>
@@ -64,15 +64,6 @@ export default function TransactionBillList({
                   ).toLocaleString()}
                 </TableCell>
 
-                <TableCell>
-                  {mode === "notes"
-                    ? item._vouchers &&
-                      new Date(item._vouchers?.VOUCDATE).toLocaleDateString()
-                    : item._notes &&
-                      new Date(item._notes?.NOTEDATE).toLocaleDateString(
-                        "th-TH"
-                      )}
-                </TableCell>
                 <TableCell
                   onClick={
                     mode === "notes"
@@ -90,6 +81,16 @@ export default function TransactionBillList({
                   {mode === "notes"
                     ? item._vouchers?.VOUCNO
                     : item._notes?.NOTENO}
+                </TableCell>
+
+                <TableCell>
+                  {mode === "notes"
+                    ? item._vouchers &&
+                      new Date(item._vouchers?.VOUCDATE).toLocaleDateString()
+                    : item._notes &&
+                      new Date(item._notes?.NOTEDATE).toLocaleDateString(
+                        "th-TH"
+                      )}
                 </TableCell>
 
                 <TableCell>

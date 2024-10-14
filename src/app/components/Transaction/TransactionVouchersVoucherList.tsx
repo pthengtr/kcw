@@ -29,7 +29,7 @@ export default function TransactionVouchersVoucherList({
         block: "center",
         inline: "start",
       });
-  }, [currentVoucher]);
+  }, []);
   return (
     <div className="overflow-auto w-full h-full">
       <Table>

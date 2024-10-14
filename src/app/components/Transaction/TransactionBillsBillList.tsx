@@ -36,7 +36,7 @@ export default function TransactionBillsBillList({
         block: "center",
         inline: "start",
       });
-  }, [currentBill]);
+  }, []);
 
   return (
     <div className="overflow-auto w-full h-full">
@@ -46,10 +46,10 @@ export default function TransactionBillsBillList({
             <TableHead>วันที่</TableHead>
             <TableHead>เลขที่บิล</TableHead>
             <TableHead>ยอดรวม</TableHead>
-            <TableHead>วันที่ใบวางบิล</TableHead>
             <TableHead>เลขที่ใบวางบิล</TableHead>
-            <TableHead>วันที่ใบสำคัญ</TableHead>
+            <TableHead>วันที่ใบวางบิล</TableHead>
             <TableHead>เลขที่ใบสำคัญ</TableHead>
+            <TableHead>วันที่ใบสำคัญ</TableHead>
             <TableHead>สถานะ</TableHead>
           </TableRow>
         </TableHeader>
@@ -77,10 +77,6 @@ export default function TransactionBillsBillList({
                 ).toLocaleString()}
               </TableCell>
 
-              <TableCell>
-                {item._notes &&
-                  new Date(item._notes?.NOTEDATE).toLocaleDateString("th-TH")}
-              </TableCell>
               <TableCell
                 className={`${
                   item._notes &&
@@ -92,9 +88,10 @@ export default function TransactionBillsBillList({
               </TableCell>
 
               <TableCell>
-                {item._vouchers &&
-                  new Date(item._vouchers?.VOUCDATE).toLocaleDateString()}
+                {item._notes &&
+                  new Date(item._notes?.NOTEDATE).toLocaleDateString("th-TH")}
               </TableCell>
+
               <TableCell
                 onClick={() => handleClickVoucher(item.voucherId)}
                 className={`${
@@ -103,6 +100,11 @@ export default function TransactionBillsBillList({
                 }`}
               >
                 {item._vouchers?.VOUCNO}
+              </TableCell>
+
+              <TableCell>
+                {item._vouchers &&
+                  new Date(item._vouchers?.VOUCDATE).toLocaleDateString()}
               </TableCell>
 
               <TableCell>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SearchContext, SearchContextType } from "../SearchProvider";
 import { usePathname } from "next/navigation";
@@ -18,13 +18,25 @@ export default function TransactionSearchPage() {
     SearchContext
   ) as SearchContextType;
 
-  const { setCurrentTab, currentTab } = useContext(
-    TransactionContext
-  ) as TransactionContextType;
+  const {
+    setCurrentTab,
+    currentTab,
+    setCurrentBill,
+    setCurrentNote,
+    setCurrentVoucher,
+    setCurrentBillItems,
+  } = useContext(TransactionContext) as TransactionContextType;
 
   const accountId = transactionAccountObject
     ? transactionAccountObject.accountId.toString()
     : "";
+
+  useEffect(() => {
+    setCurrentBill(undefined);
+    setCurrentNote(undefined);
+    setCurrentVoucher(undefined);
+    setCurrentBillItems(undefined);
+  }, [transactionAccountObject]);
 
   const path = usePathname();
   const acctType = path === "/sales" ? "S" : path === "/purchases" ? "P" : "";

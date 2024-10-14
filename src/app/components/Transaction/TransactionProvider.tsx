@@ -100,9 +100,9 @@ export type TransactionContextType = {
   accountBills: billsType[] | undefined;
   setAccountBills: (notes: billsType[]) => void;
   currentBill: billsType | undefined;
-  setCurrentBill: (note: billsType) => void;
+  setCurrentBill: (note: billsType | undefined) => void;
   currentBillItems: itemsType[] | undefined;
-  setCurrentBillItems: (bills: itemsType[]) => void;
+  setCurrentBillItems: (bills: itemsType[] | undefined) => void;
   getCurrentBillItemsSupabase: (billNo: string) => void;
   //Notes tab state
   accountNotes: noteType[] | undefined;
