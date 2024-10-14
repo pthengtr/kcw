@@ -98,7 +98,7 @@ export default function TransactionBillsBillList({
               <TableCell
                 onClick={() => handleClickVoucher(item.voucherId)}
                 className={`${
-                  item._notes &&
+                  item._vouchers &&
                   "hover:cursor-pointer hover:underline hover:italic"
                 }`}
               >
