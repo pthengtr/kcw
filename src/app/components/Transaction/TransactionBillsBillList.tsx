@@ -24,21 +24,19 @@ export default function TransactionBillsBillList({
   currentBill,
   handleClickBill,
 }: TransactionBillsBillListProps) {
-  const { handleClickNote, handleClickVoucher } = useContext(
+  const { handleClickNote, handleClickVoucher, scrollBill } = useContext(
     TransactionContext
   ) as TransactionContextType;
 
   useEffect(() => {
-    if (!currentBill) return;
-    const element = document.getElementById(currentBill.BILLNO);
+    if (!scrollBill) return;
+    const element = document.getElementById(scrollBill.BILLNO);
     if (element !== null)
       element.scrollIntoView({
         block: "center",
         inline: "start",
       });
-    // auto scroll only needed on first mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [scrollBill]);
 
   return (
     <div className="overflow-auto w-full h-full">

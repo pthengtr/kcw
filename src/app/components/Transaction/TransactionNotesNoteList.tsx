@@ -1,5 +1,9 @@
-import { noteType } from "./TransactionProvider";
-import { useEffect } from "react";
+import {
+  noteType,
+  TransactionContext,
+  TransactionContextType,
+} from "./TransactionProvider";
+import { useContext, useEffect } from "react";
 
 import {
   Table,
@@ -21,17 +25,19 @@ export default function TransactionNotesNoteList({
   handleClickNote,
   currentNote,
 }: TransactionNotesNoteListProps) {
+  const { scrollNote } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
+
   useEffect(() => {
-    if (!currentNote) return;
-    const element = document.getElementById(currentNote.NOTENO);
+    if (!scrollNote) return;
+    const element = document.getElementById(scrollNote.NOTENO);
     if (element !== null)
       element.scrollIntoView({
         block: "center",
         inline: "start",
       });
-    // auto scroll only needed on first mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [scrollNote]);
 
   return (
     <div className="overflow-auto w-full h-full">

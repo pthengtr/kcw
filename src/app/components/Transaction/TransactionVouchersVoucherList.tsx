@@ -1,5 +1,9 @@
-import { voucherType } from "./TransactionProvider";
-import { useEffect } from "react";
+import {
+  TransactionContext,
+  TransactionContextType,
+  voucherType,
+} from "./TransactionProvider";
+import { useContext, useEffect } from "react";
 
 import {
   Table,
@@ -21,17 +25,20 @@ export default function TransactionVouchersVoucherList({
   handleClickVoucher,
   currentVoucher,
 }: TransactionVouchersVoucherListProps) {
+  const { scrollVoucher } = useContext(
+    TransactionContext
+  ) as TransactionContextType;
+
   useEffect(() => {
-    if (!currentVoucher) return;
-    const element = document.getElementById(currentVoucher.VOUCNO);
-    if (element !== null)
+    if (!scrollVoucher) return;
+    const element = document.getElementById(scrollVoucher.VOUCNO);
+    if (element !== null) {
       element.scrollIntoView({
         block: "center",
         inline: "start",
       });
-    // auto scroll only needed on first mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    }
+  }, [scrollVoucher]);
   return (
     <div className="overflow-auto w-full h-full">
       <Table>

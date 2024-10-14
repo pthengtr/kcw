@@ -25,6 +25,12 @@ export default function TransactionSearchPage() {
     setCurrentNote,
     setCurrentVoucher,
     setCurrentBillItems,
+    setScrollBill,
+    currentBill,
+    setScrollNote,
+    currentNote,
+    setScrollVoucher,
+    currentVoucher,
   } = useContext(TransactionContext) as TransactionContextType;
 
   const accountId = transactionAccountObject
@@ -73,11 +79,20 @@ export default function TransactionSearchPage() {
           </div>
           <TabsList>
             <TabsTrigger value="allItems">ดูสินค้าทั้งหมด</TabsTrigger>
-            <TabsTrigger value="bills">{`${
-              acctType === "P" ? "บิลซื้อ" : "บิลขาย"
-            }`}</TabsTrigger>
-            <TabsTrigger value="notes">วางบิล</TabsTrigger>
-            <TabsTrigger value="vouchers">{`${
+            <TabsTrigger
+              onClick={() => setScrollBill(currentBill)}
+              value="bills"
+            >{`${acctType === "P" ? "บิลซื้อ" : "บิลขาย"}`}</TabsTrigger>
+            <TabsTrigger
+              onClick={() => setScrollNote(currentNote)}
+              value="notes"
+            >
+              วางบิล
+            </TabsTrigger>
+            <TabsTrigger
+              onClick={() => setScrollVoucher(currentVoucher)}
+              value="vouchers"
+            >{`${
               acctType === "P" ? "ใบสำคัญจ่าย" : "ใบสำคัญรับ"
             }`}</TabsTrigger>
           </TabsList>

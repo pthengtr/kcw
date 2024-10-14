@@ -101,6 +101,8 @@ export type TransactionContextType = {
   setAccountBills: (notes: billsType[]) => void;
   currentBill: billsType | undefined;
   setCurrentBill: (note: billsType | undefined) => void;
+  scrollBill: billsType | undefined;
+  setScrollBill: (bill: billsType | undefined) => void;
   currentBillItems: itemsType[] | undefined;
   setCurrentBillItems: (bills: itemsType[] | undefined) => void;
   getCurrentBillItemsSupabase: (billNo: string) => void;
@@ -109,6 +111,8 @@ export type TransactionContextType = {
   setAccountNotes: (notes: noteType[]) => void;
   currentNote: noteType | undefined;
   setCurrentNote: (note: noteType | undefined) => void;
+  scrollNote: noteType | undefined;
+  setScrollNote: (note: noteType | undefined) => void;
   currentNoteBills: billsType[] | undefined;
   setCurrentNoteBills: (bills: billsType[]) => void;
   getCurrentNoteBillsSupabase: (noteId: number) => void;
@@ -117,6 +121,8 @@ export type TransactionContextType = {
   setAccountVouchers: (vouchers: voucherType[]) => void;
   currentVoucher: voucherType | undefined;
   setCurrentVoucher: (voucher: voucherType | undefined) => void;
+  scrollVoucher: voucherType | undefined;
+  setScrollVoucher: (voucher: voucherType | undefined) => void;
   currentVoucherBills: billsType[] | undefined;
   setCurrentVoucherBills: (bills: billsType[]) => void;
   getCurrentVoucherBillsSupabase: (voucherId: number) => void;
@@ -149,14 +155,17 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   //Bills tab states
   const [accountBills, setAccountBills] = useState<billsType[]>();
   const [currentBill, setCurrentBill] = useState<billsType>();
+  const [scrollBill, setScrollBill] = useState<billsType>();
   const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
   //Notes tab states
   const [accountNotes, setAccountNotes] = useState<noteType[]>();
   const [currentNote, setCurrentNote] = useState<noteType>();
+  const [scrollNote, setScrollNote] = useState<noteType>();
   const [currentNoteBills, setCurrentNoteBills] = useState<billsType[]>();
   //Vouchers tab states
   const [accountVouchers, setAccountVouchers] = useState<voucherType[]>();
   const [currentVoucher, setCurrentVoucher] = useState<voucherType>();
+  const [scrollVoucher, setScrollVoucher] = useState<voucherType>();
   const [currentVoucherBills, setCurrentVoucherBills] = useState<billsType[]>();
 
   async function getCurrentNoteBillsSupabase(noteId: number) {
@@ -204,7 +213,10 @@ export default function TransactionProvider({ children }: TransactionProvider) {
         .limit(100);
 
       if (error) return;
-      if (data !== null) setCurrentBill(data[0]);
+      if (data !== null) {
+        setCurrentBill(data[0]);
+        setScrollBill(data[0]);
+      }
     }
 
     if (!billNo) return;
@@ -223,7 +235,10 @@ export default function TransactionProvider({ children }: TransactionProvider) {
         .limit(100);
 
       if (error) return;
-      if (data !== null) setCurrentNote(data[0]);
+      if (data !== null) {
+        setCurrentNote(data[0]);
+        setScrollNote(data[0]);
+      }
     }
 
     if (!noteId) return;
@@ -242,7 +257,10 @@ export default function TransactionProvider({ children }: TransactionProvider) {
         .limit(100);
 
       if (error) return;
-      if (data !== null) setCurrentVoucher(data[0]);
+      if (data !== null) {
+        setCurrentVoucher(data[0]);
+        setScrollVoucher(data[0]);
+      }
     }
 
     if (!voucherId) return;
@@ -269,6 +287,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     setAccountNotes,
     currentNote,
     setCurrentNote,
+    scrollNote,
+    setScrollNote,
     currentNoteBills,
     setCurrentNoteBills,
     getCurrentNoteBillsSupabase,
@@ -276,6 +296,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     setAccountVouchers,
     currentVoucher,
     setCurrentVoucher,
+    scrollVoucher,
+    setScrollVoucher,
     currentVoucherBills,
     setCurrentVoucherBills,
     getCurrentVoucherBillsSupabase,
@@ -283,6 +305,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     setAccountBills,
     currentBill,
     setCurrentBill,
+    scrollBill,
+    setScrollBill,
     currentBillItems,
     setCurrentBillItems,
     getCurrentBillItemsSupabase,
