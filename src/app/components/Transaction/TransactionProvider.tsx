@@ -137,7 +137,7 @@ export const TransactionContext = createContext<TransactionContextType | null>(
 
 export function createLastYearDate() {
   const date = new Date();
-  date.setFullYear(date.getFullYear() - 1);
+  date.setFullYear(date.getFullYear() - 2);
   return date;
 }
 
