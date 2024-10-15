@@ -14,7 +14,7 @@ import {
 
 import TransactionBillsBillList from "./TransactionBillsBillList";
 import TransactionBillsItemList from "./TransactionBillsItemList";
-import TransactionTotalCount from "./TransactionTotalCount";
+import TransactionTotalCount from "../TotalCount";
 
 type TransactionAccountBillsProps = {
   accountId: string;
@@ -35,6 +35,7 @@ export default function TransactionBills({
     getCurrentBillItemsSupabase,
   } = useContext(TransactionContext) as TransactionContextType;
   const [totalCount, setTotalCount] = useState(0);
+  const [limit, setLimit] = useState("50");
 
   function handleClickBill(bill: billsType) {
     setCurrentBill(bill);
@@ -51,7 +52,7 @@ export default function TransactionBills({
         .order("JOURDATE", { ascending: false })
         .lte("JOURDATE", toDate.toLocaleString())
         .gte("JOURDATE", fromDate.toLocaleString())
-        .limit(200);
+        .limit(parseInt(limit));
 
       if (error) return;
       if (data !== null) setAccountBills(data);
@@ -59,7 +60,15 @@ export default function TransactionBills({
     }
 
     getBillsSupabase();
-  }, [accountId, setAccountBills, fromDate, toDate, filterText, setTotalCount]);
+  }, [
+    accountId,
+    setAccountBills,
+    fromDate,
+    toDate,
+    filterText,
+    setTotalCount,
+    limit,
+  ]);
 
   return (
     <>
@@ -71,7 +80,11 @@ export default function TransactionBills({
               handleClickBill={handleClickBill}
               currentBill={currentBill}
             />
-            <TransactionTotalCount totalCount={totalCount} maxSearch={200} />
+            <TransactionTotalCount
+              totalCount={totalCount}
+              limit={limit}
+              setLimit={setLimit}
+            />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
           <ResizablePanel className="h-[80vh]">

@@ -23,7 +23,12 @@ export default function ProductCardProductTransaction({
               </Button>
             </DrawerTrigger>
             <DrawerContent>
-              <div className="grid grid-cols-2 justify-items-center gap-8 m-16">
+              <div className="flex justify-center gap-4 text-2xl mt-8">
+                <span>{itemDetail.BCODE}</span>
+                <span className="font-semibold">{itemDetail.DESCR}</span>
+                <span>{itemDetail.MODEL}</span>
+              </div>
+              <div className="grid grid-cols-2 justify-items-center gap-8 m-8">
                 <ProductCardBuy itemDetail={itemDetail} />
                 <ProductCardSell itemDetail={itemDetail} />
               </div>

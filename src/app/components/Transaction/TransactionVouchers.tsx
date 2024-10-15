@@ -13,7 +13,7 @@ import {
 
 import TransactionVouchersVoucherList from "./TransactionVouchersVoucherList";
 import TransactionBillList from "./TransactionBillList";
-import TransactionTotalCount from "./TransactionTotalCount";
+import TransactionTotalCount from "../TotalCount";
 
 type TransactionVouchersProps = {
   accountId: string;
@@ -34,6 +34,7 @@ export default function TransactionVouchers({
     getCurrentVoucherBillsSupabase,
   } = useContext(TransactionContext) as TransactionContextType;
   const [totalCount, setTotalCount] = useState(0);
+  const [limit, setLimit] = useState("50");
 
   function handleClickVoucher(voucher: voucherType) {
     setCurrentVoucher(voucher);
@@ -50,7 +51,7 @@ export default function TransactionVouchers({
         .lte("VOUCDATE", toDate.toLocaleString())
         .gte("VOUCDATE", fromDate.toLocaleString())
         .order("VOUCDATE", { ascending: false })
-        .limit(200);
+        .limit(parseInt(limit));
 
       if (error) return;
       if (data !== null) setAccountVouchers(data);
@@ -58,7 +59,7 @@ export default function TransactionVouchers({
     }
 
     getVouchersSupabase();
-  }, [accountId, setAccountVouchers, fromDate, toDate, filterText]);
+  }, [accountId, setAccountVouchers, fromDate, toDate, filterText, limit]);
 
   return (
     <>
@@ -70,7 +71,11 @@ export default function TransactionVouchers({
               currentVoucher={currentVoucher}
               handleClickVoucher={handleClickVoucher}
             />
-            <TransactionTotalCount totalCount={totalCount} maxSearch={200} />
+            <TransactionTotalCount
+              totalCount={totalCount}
+              limit={limit}
+              setLimit={setLimit}
+            />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
           <ResizablePanel className="h-[80vh] flex flex-col gap-6">

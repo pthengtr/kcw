@@ -13,7 +13,7 @@ import {
   TransactionContext,
   TransactionContextType,
 } from "./TransactionProvider";
-import TransactionTotalCount from "./TransactionTotalCount";
+import TransactionTotalCount from "../TotalCount";
 
 type TransactionCustomerItemsProps = {
   accountId: string;
@@ -24,6 +24,8 @@ export default function TransactionItems({
 }: TransactionCustomerItemsProps) {
   const [accountItems, setAccountItems] = useState<itemsType[]>();
   const [totalCount, setTotalCount] = useState(0);
+  const [limit, setLimit] = useState("50");
+
   const { toDate, fromDate, filterText, handleClickBill } = useContext(
     TransactionContext
   ) as TransactionContextType;
@@ -35,7 +37,9 @@ export default function TransactionItems({
       if (filterText === "") {
         query = supabase
           .from("_items")
-          .select(`*, productInfo(*)`, { count: "exact" });
+          .select(`*, productInfo!inner(*), _bills!inner(*)`, {
+            count: "exact",
+          });
       } else {
         query = supabase
           .from("_items")
@@ -53,7 +57,7 @@ export default function TransactionItems({
         .lte("JOURDATE", toDate.toLocaleString())
         .gte("JOURDATE", fromDate.toLocaleString())
         .order("JOURDATE", { ascending: false })
-        .limit(200);
+        .limit(parseInt(limit));
 
       const { data, error, count } = await query;
 
@@ -63,7 +67,15 @@ export default function TransactionItems({
     }
 
     getAccountItemsSupabase();
-  }, [setAccountItems, accountId, fromDate, toDate, filterText, setTotalCount]);
+  }, [
+    setAccountItems,
+    accountId,
+    fromDate,
+    toDate,
+    filterText,
+    setTotalCount,
+    limit,
+  ]);
 
   return (
     <>
@@ -120,7 +132,11 @@ export default function TransactionItems({
               </TableBody>
             </Table>
           </div>
-          <TransactionTotalCount totalCount={totalCount} maxSearch={200} />
+          <TransactionTotalCount
+            totalCount={totalCount}
+            limit={limit}
+            setLimit={setLimit}
+          />
         </div>
       )}
     </>

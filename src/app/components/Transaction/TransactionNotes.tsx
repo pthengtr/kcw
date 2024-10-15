@@ -13,7 +13,7 @@ import {
 
 import TransactionNotesNoteList from "./TransactionNotesNoteList";
 import TransactionBillList from "./TransactionBillList";
-import TransactionTotalCount from "./TransactionTotalCount";
+import TransactionTotalCount from "../TotalCount";
 
 type TransactionNotesProps = {
   accountId: string;
@@ -32,6 +32,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
     filterText,
   } = useContext(TransactionContext) as TransactionContextType;
   const [totalCount, setTotalCount] = useState(0);
+  const [limit, setLimit] = useState("50");
 
   function handleClickNote(note: noteType) {
     setCurrentNote(note);
@@ -48,7 +49,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
         .order("NOTEDATE", { ascending: false })
         .lte("NOTEDATE", toDate.toLocaleString())
         .gte("NOTEDATE", fromDate.toLocaleString())
-        .limit(200);
+        .limit(parseInt(limit));
 
       if (error) return;
       if (data !== null) setAccountNotes(data);
@@ -56,7 +57,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
     }
 
     getNotesSupabase();
-  }, [accountId, setAccountNotes, fromDate, toDate, filterText]);
+  }, [accountId, setAccountNotes, fromDate, toDate, filterText, limit]);
 
   return (
     <>
@@ -68,7 +69,11 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
               handleClickNote={handleClickNote}
               currentNote={currentNote}
             />
-            <TransactionTotalCount totalCount={totalCount} maxSearch={200} />
+            <TransactionTotalCount
+              totalCount={totalCount}
+              limit={limit}
+              setLimit={setLimit}
+            />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
           <ResizablePanel className="h-[80vh] flex flex-col gap-6">
