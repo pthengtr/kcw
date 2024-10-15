@@ -18,12 +18,14 @@ type TransactionNotesNoteListProps = {
   accountNotes: noteType[];
   currentNote: noteType | undefined;
   handleClickNote: (note: noteType) => void;
+  handleClickColumn: (value: string) => void;
 };
 
 export default function TransactionNotesNoteList({
   accountNotes,
   handleClickNote,
   currentNote,
+  handleClickColumn,
 }: TransactionNotesNoteListProps) {
   const { scrollNote } = useContext(
     TransactionContext
@@ -44,11 +46,30 @@ export default function TransactionNotesNoteList({
       <Table>
         <TableHeader className="sticky top-0 bg-white">
           <TableRow className="w-full">
-            <TableHead>วันที่</TableHead>
-            <TableHead>เลขที่ใบวางบิล</TableHead>
-            <TableHead>ชื่อ</TableHead>
-            <TableHead>จำนวนเงิน</TableHead>
-            <TableHead>ส่วนลด</TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("NOTEDATE")}
+            >
+              วันที่
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("NOTENO")}
+            >
+              เลขที่ใบวางบิล
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("BILLAMT")}
+            >
+              จำนวนเงิน
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("DISCOUNT")}
+            >
+              ส่วนลด
+            </TableHead>
             <TableHead>ยอดรวม</TableHead>
           </TableRow>
         </TableHeader>
@@ -68,7 +89,6 @@ export default function TransactionNotesNoteList({
                 {new Date(item.NOTEDATE).toLocaleDateString("th-TH")}
               </TableCell>
               <TableCell>{item.NOTENO}</TableCell>
-              <TableCell>{item._accounts?.ACCTNAME}</TableCell>
               <TableCell>
                 {parseFloat(item.BILLAMT ? item.BILLAMT : "0").toLocaleString()}
               </TableCell>

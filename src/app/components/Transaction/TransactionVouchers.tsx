@@ -36,6 +36,19 @@ export default function TransactionVouchers({
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
 
+  const [sortBy, setSortBy] = useState("VOUCDATE");
+  const [sortAsc, setSortAsc] = useState(false);
+
+  function handleClickColumn(column: string) {
+    if (sortBy === column) {
+      setSortAsc((cur) => !cur);
+      return;
+    } else {
+      setSortBy(column);
+      setSortAsc(true);
+    }
+  }
+
   function handleClickVoucher(voucher: voucherType) {
     setCurrentVoucher(voucher);
     getCurrentVoucherBillsSupabase(voucher.voucherId);
@@ -50,7 +63,7 @@ export default function TransactionVouchers({
         .eq("accountId", accountId)
         .lte("VOUCDATE", toDate.toLocaleString())
         .gte("VOUCDATE", fromDate.toLocaleString())
-        .order("VOUCDATE", { ascending: false })
+        .order(sortBy, { ascending: sortAsc })
         .limit(parseInt(limit));
 
       if (error) return;
@@ -59,7 +72,16 @@ export default function TransactionVouchers({
     }
 
     getVouchersSupabase();
-  }, [accountId, setAccountVouchers, fromDate, toDate, filterText, limit]);
+  }, [
+    accountId,
+    setAccountVouchers,
+    fromDate,
+    toDate,
+    filterText,
+    limit,
+    sortBy,
+    sortAsc,
+  ]);
 
   return (
     <>
@@ -70,6 +92,7 @@ export default function TransactionVouchers({
               accountVouchers={accountVouchers}
               currentVoucher={currentVoucher}
               handleClickVoucher={handleClickVoucher}
+              handleClickColumn={handleClickColumn}
             />
             <TransactionTotalCount
               totalCount={totalCount}

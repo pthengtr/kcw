@@ -37,6 +37,19 @@ export default function TransactionBills({
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
 
+  const [sortBy, setSortBy] = useState("JOURDATE");
+  const [sortAsc, setSortAsc] = useState(false);
+
+  function handleClickColumn(column: string) {
+    if (sortBy === column) {
+      setSortAsc((cur) => !cur);
+      return;
+    } else {
+      setSortBy(column);
+      setSortAsc(true);
+    }
+  }
+
   function handleClickBill(bill: billsType) {
     setCurrentBill(bill);
     getCurrentBillItemsSupabase(bill.BILLNO);
@@ -49,7 +62,7 @@ export default function TransactionBills({
         .select(`*, _vouchers(*), _notes(*)`, { count: "exact" })
         .ilike("BILLNO", `%${filterText}%`)
         .eq("accountId", accountId)
-        .order("JOURDATE", { ascending: false })
+        .order(sortBy, { ascending: sortAsc })
         .lte("JOURDATE", toDate.toLocaleString())
         .gte("JOURDATE", fromDate.toLocaleString())
         .limit(parseInt(limit));
@@ -68,6 +81,8 @@ export default function TransactionBills({
     filterText,
     setTotalCount,
     limit,
+    sortBy,
+    sortAsc,
   ]);
 
   return (
@@ -79,6 +94,7 @@ export default function TransactionBills({
               accountBills={accountBills}
               handleClickBill={handleClickBill}
               currentBill={currentBill}
+              handleClickColumn={handleClickColumn}
             />
             <TransactionTotalCount
               totalCount={totalCount}

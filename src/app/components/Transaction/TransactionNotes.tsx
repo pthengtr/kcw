@@ -34,6 +34,19 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
 
+  const [sortBy, setSortBy] = useState("NOTEDATE");
+  const [sortAsc, setSortAsc] = useState(false);
+
+  function handleClickColumn(column: string) {
+    if (sortBy === column) {
+      setSortAsc((cur) => !cur);
+      return;
+    } else {
+      setSortBy(column);
+      setSortAsc(true);
+    }
+  }
+
   function handleClickNote(note: noteType) {
     setCurrentNote(note);
     getCurrentNoteBillsSupabase(note.noteId);
@@ -46,7 +59,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
         .select(`*, _accounts(*)`, { count: "exact" })
         .ilike("NOTENO", `%${filterText}%`)
         .eq("accountId", accountId)
-        .order("NOTEDATE", { ascending: false })
+        .order(sortBy, { ascending: sortAsc })
         .lte("NOTEDATE", toDate.toLocaleString())
         .gte("NOTEDATE", fromDate.toLocaleString())
         .limit(parseInt(limit));
@@ -57,7 +70,16 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
     }
 
     getNotesSupabase();
-  }, [accountId, setAccountNotes, fromDate, toDate, filterText, limit]);
+  }, [
+    accountId,
+    setAccountNotes,
+    fromDate,
+    toDate,
+    filterText,
+    limit,
+    sortBy,
+    sortAsc,
+  ]);
 
   return (
     <>
@@ -68,6 +90,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
               accountNotes={accountNotes}
               handleClickNote={handleClickNote}
               currentNote={currentNote}
+              handleClickColumn={handleClickColumn}
             />
             <TransactionTotalCount
               totalCount={totalCount}

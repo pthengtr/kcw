@@ -26,24 +26,37 @@ export default function TransactionItems({
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
 
+  const [sortBy, setSortBy] = useState("JOURDATE");
+  const [sortAsc, setSortAsc] = useState(false);
+
   const { toDate, fromDate, filterText, handleClickBill } = useContext(
     TransactionContext
   ) as TransactionContextType;
+
+  function handleClickColumn(column: string) {
+    if (sortBy === column) {
+      setSortAsc((cur) => !cur);
+      return;
+    } else {
+      setSortBy(column);
+      setSortAsc(true);
+    }
+  }
 
   useEffect(() => {
     async function getAccountItemsSupabase() {
       let query;
 
       if (filterText === "") {
-        query = supabase
-          .from("_items")
-          .select(`*, productInfo!inner(*), _bills!inner(*)`, {
-            count: "exact",
-          });
+        query = supabase.from("_items").select(`*, productInfo(*), _bills(*)`, {
+          count: "exact",
+        });
       } else {
         query = supabase
           .from("_items")
-          .select(`*, productInfo!inner(*)`, { count: "exact" })
+          .select(`*, productInfo!inner(*),  _bills(*)`, {
+            count: "exact",
+          })
           .or(
             `DESCR.ilike.%${filterText}%, MODEL.ilike.%${filterText}%, BCODE.ilike.%${filterText}%`,
             {
@@ -56,7 +69,7 @@ export default function TransactionItems({
         .eq("accountId", accountId)
         .lte("JOURDATE", toDate.toLocaleString())
         .gte("JOURDATE", fromDate.toLocaleString())
-        .order("JOURDATE", { ascending: false })
+        .order(sortBy, { ascending: sortAsc, nullsFirst: sortAsc })
         .limit(parseInt(limit));
 
       const { data, error, count } = await query;
@@ -75,6 +88,8 @@ export default function TransactionItems({
     filterText,
     setTotalCount,
     limit,
+    sortAsc,
+    sortBy,
   ]);
 
   return (
@@ -85,15 +100,60 @@ export default function TransactionItems({
             <Table>
               <TableHeader className="sticky top-0 bg-white">
                 <TableRow>
-                  <TableHead>วันที่</TableHead>
-                  <TableHead>รหัสสินค้า</TableHead>
-                  <TableHead>ชื่อสินค้า</TableHead>
-                  <TableHead>จำนวน</TableHead>
-                  <TableHead>หน่วย</TableHead>
-                  <TableHead>ราคา</TableHead>
-                  <TableHead>ส่วนลด</TableHead>
-                  <TableHead>จำนวนเงิน</TableHead>
-                  <TableHead>เลขที่บิล</TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("JOURDATE")}
+                  >
+                    วันที่
+                  </TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("BCODE")}
+                  >
+                    รหัสสินค้า
+                  </TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("productInfo(DESCR)")}
+                  >
+                    ชื่อสินค้า
+                  </TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("QTY")}
+                  >
+                    จำนวน
+                  </TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("UI")}
+                  >
+                    หน่วย
+                  </TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("PRICE")}
+                  >
+                    ราคา
+                  </TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("DISCNT1")}
+                  >
+                    ส่วนลด
+                  </TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("AMOUNT")}
+                  >
+                    จำนวนเงิน
+                  </TableHead>
+                  <TableHead
+                    className="hover:underline hover:cursor-pointer"
+                    onClick={() => handleClickColumn("_bills(BILLNO)")}
+                  >
+                    เลขที่บิล
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

@@ -17,12 +17,14 @@ type TransactionBillsBillListProps = {
   accountBills: billsType[];
   currentBill: billsType | undefined;
   handleClickBill: (bill: billsType) => void;
+  handleClickColumn: (value: string) => void;
 };
 
 export default function TransactionBillsBillList({
   accountBills,
   currentBill,
   handleClickBill,
+  handleClickColumn,
 }: TransactionBillsBillListProps) {
   const { handleClickNote, handleClickVoucher, scrollBill } = useContext(
     TransactionContext
@@ -43,13 +45,48 @@ export default function TransactionBillsBillList({
       <Table>
         <TableHeader className="sticky top-0 bg-white">
           <TableRow className="w-full">
-            <TableHead>วันที่</TableHead>
-            <TableHead>เลขที่บิล</TableHead>
-            <TableHead>ยอดรวม</TableHead>
-            <TableHead>เลขที่ใบวางบิล</TableHead>
-            <TableHead>วันที่ใบวางบิล</TableHead>
-            <TableHead>เลขที่ใบสำคัญ</TableHead>
-            <TableHead>วันที่ใบสำคัญ</TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("JOURDATE")}
+            >
+              วันที่
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("BILLNO")}
+            >
+              เลขที่บิล
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("DUEAMT")}
+            >
+              ยอดรวม
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("_notes(NOTENO)")}
+            >
+              เลขที่ใบวางบิล
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("_notes(NOTEDATE)")}
+            >
+              วันที่ใบวางบิล
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("_vouchers(VOUCNO)")}
+            >
+              เลขที่ใบสำคัญ
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("_vouchers(VOUCDATE)")}
+            >
+              วันที่ใบสำคัญ
+            </TableHead>
             <TableHead>สถานะ</TableHead>
           </TableRow>
         </TableHeader>

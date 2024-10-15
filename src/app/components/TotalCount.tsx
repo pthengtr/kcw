@@ -21,7 +21,7 @@ export default function TotalCount({
 }: TransactionTotalCountProps) {
   return (
     <div className="flex justify-end gap-2 items-center mt-auto p-2 ">
-      <div className="flex">{`แสดงผลท้ั้งหมด ${
+      <div className="flex">{`แสดงผลทั้งหมด ${
         totalCount <= parseInt(limit)
           ? totalCount.toLocaleString()
           : limit.toLocaleString()

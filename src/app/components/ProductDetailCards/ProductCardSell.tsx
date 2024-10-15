@@ -29,6 +29,19 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
   const [limit, setLimit] = useState("50");
   const [totalCount, setTotalCount] = useState(0);
 
+  const [sortBy, setSortBy] = useState("_bills(JOURDATE)");
+  const [sortAsc, setSortAsc] = useState(false);
+
+  function handleClickColumn(column: string) {
+    if (sortBy === column) {
+      setSortAsc((cur) => !cur);
+      return;
+    } else {
+      setSortBy(column);
+      setSortAsc(true);
+    }
+  }
+
   const cardId = useId();
   useEffect(() => {
     async function getSalesItems(bcode: string) {
@@ -37,20 +50,32 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
         .select(`*, _bills!inner(*), _accounts(*)`, { count: "exact" });
 
       if (filterText != "") {
+        const searchWords = filterText
+          .split(/[\s,]+/)
+          .map((word) => word.trim());
+
+        const orSearchArr = searchWords.map(
+          (word) => `ACCTNO.ilike.%${word}%, ACCTNAME.ilike.%${word}%`
+        );
+
         query = supabase
           .from("_items")
-          .select(`*, _bills!inner(*), _accounts!inner(*)`, { count: "exact" })
-          .or(`ACCTNO.ilike.%${filterText}%, ACCTNAME.ilike.%${filterText}%`, {
-            referencedTable: "_accounts",
-          });
+          .select(`*, _bills!inner(*), _accounts!inner(*)`, { count: "exact" });
+
+        orSearchArr.forEach(
+          (orSearch) =>
+            (query = query.or(orSearch, {
+              referencedTable: "_accounts",
+            }))
+        );
       }
 
       query = query
         .eq("BCODE", bcode)
         .ilike("_bills.BILLTYPE", "%S%")
-        .order("_bills(JOURDATE)", { ascending: false })
-        .lte("JOURDATE", toDate.toLocaleString())
-        .gte("JOURDATE", fromDate.toLocaleString())
+        .order(sortBy, { ascending: sortAsc })
+        .lte("_bills.JOURDATE", toDate.toLocaleString())
+        .gte("_bills.JOURDATE", fromDate.toLocaleString())
         .limit(parseInt(limit));
 
       const { data, error, count } = await query;
@@ -61,7 +86,7 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
       if (count !== null) setTotalCount(count);
     }
     getSalesItems(itemDetail.BCODE);
-  }, [itemDetail, limit, fromDate, toDate, filterText]);
+  }, [itemDetail, limit, fromDate, toDate, filterText, sortBy, sortAsc]);
 
   const sumQty = productItems?.reduce(
     (acc, item) => parseInt(item.QTY) * parseInt(item.MTP) + acc,
@@ -98,12 +123,42 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
               <Table>
                 <TableHeader className="sticky top-0 bg-white">
                   <TableRow>
-                    <TableHead>วันที่</TableHead>
-                    <TableHead>เลขที่บิล</TableHead>
-                    <TableHead>ลูกค้า</TableHead>
-                    <TableHead>จำนวน</TableHead>
-                    <TableHead>ราคา/หน่วย</TableHead>
-                    <TableHead>ราคารวม</TableHead>
+                    <TableHead
+                      className="hover:underline hover:cursor-pointer"
+                      onClick={() => handleClickColumn("_bills(JOURDATE)")}
+                    >
+                      วันที่
+                    </TableHead>
+                    <TableHead
+                      className="hover:underline hover:cursor-pointer"
+                      onClick={() => handleClickColumn("BILLNO")}
+                    >
+                      เลขที่บิล
+                    </TableHead>
+                    <TableHead
+                      className="hover:underline hover:cursor-pointer"
+                      onClick={() => handleClickColumn("_accounts(ACCTNAME)")}
+                    >
+                      ลูกค้า
+                    </TableHead>
+                    <TableHead
+                      className="hover:underline hover:cursor-pointer"
+                      onClick={() => handleClickColumn("QTY")}
+                    >
+                      จำนวน
+                    </TableHead>
+                    <TableHead
+                      className="hover:underline hover:cursor-pointer"
+                      onClick={() => handleClickColumn("PRICE")}
+                    >
+                      ราคา/หน่วย
+                    </TableHead>
+                    <TableHead
+                      className="hover:underline hover:cursor-pointer"
+                      onClick={() => handleClickColumn("AMOUNT")}
+                    >
+                      ราคารวม
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -150,7 +205,7 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
                   <TabsTrigger value="sumAmt">ราคารวม</TabsTrigger>
                 </TabsList>
                 <TabsContent value="avgPrice" className="w-24 text-center">
-                  {avgPrice?.toFixed(2)}
+                  {avgPrice?.toLocaleString()}
                 </TabsContent>
                 <TabsContent value="sumQty" className="w-24 text-center">
                   {sumQty?.toLocaleString()}

@@ -18,12 +18,14 @@ type TransactionVouchersVoucherListProps = {
   accountVouchers: voucherType[];
   handleClickVoucher: (voucher: voucherType) => void;
   currentVoucher: voucherType | undefined;
+  handleClickColumn: (value: string) => void;
 };
 
 export default function TransactionVouchersVoucherList({
   accountVouchers,
   handleClickVoucher,
   currentVoucher,
+  handleClickColumn,
 }: TransactionVouchersVoucherListProps) {
   const { scrollVoucher } = useContext(
     TransactionContext
@@ -44,14 +46,49 @@ export default function TransactionVouchersVoucherList({
       <Table>
         <TableHeader className="sticky top-0 bg-white">
           <TableRow className="w-full">
-            <TableHead>วันที่</TableHead>
-            <TableHead>เลขที่ใบสำคัญ</TableHead>
-            <TableHead>ชื่อ</TableHead>
-            <TableHead>จำนวนเงิน</TableHead>
-            <TableHead>ส่วนลด</TableHead>
-            <TableHead>ยอดรวม</TableHead>
-            <TableHead>เงินสด</TableHead>
-            <TableHead>เช็ค</TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("VOUCDATE")}
+            >
+              วันที่
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("VOUCNO")}
+            >
+              เลขที่ใบสำคัญ
+            </TableHead>
+
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("BILLAMT")}
+            >
+              จำนวนเงิน
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("DISCOUNT")}
+            >
+              ส่วนลด
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("NETAMT")}
+            >
+              ยอดรวม
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("CASHAMT")}
+            >
+              เงินสด
+            </TableHead>
+            <TableHead
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleClickColumn("CHKAMT")}
+            >
+              เช็ค
+            </TableHead>
             <TableHead>ชำระแล้ว</TableHead>
           </TableRow>
         </TableHeader>
@@ -71,7 +108,6 @@ export default function TransactionVouchersVoucherList({
                 {new Date(item.VOUCDATE).toLocaleDateString("th-TH")}
               </TableCell>
               <TableCell>{item.VOUCNO}</TableCell>
-              <TableCell>{item._accounts?.ACCTNAME}</TableCell>
               <TableCell>
                 {parseFloat(item.BILLAMT ? item.BILLAMT : "0").toLocaleString()}
               </TableCell>

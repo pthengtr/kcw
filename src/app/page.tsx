@@ -6,6 +6,8 @@ export default async function Home() {
   const session = await auth();
   const userName = session?.user?.name;
 
+  console.log("session", session);
+
   if (process.env.ALLOW_USER?.split(" ").includes(userName ? userName : "")) {
     redirect("/product");
   }
