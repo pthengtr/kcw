@@ -20,7 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
 export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
-  const [itemBillInfo, setItemBillInfo] = useState<itemsType[]>();
+  const [productItems, setProductItems] = useState<itemsType[]>();
   const [isLoading, setIsLoading] = useState(true);
 
   const [filterText, setFilterText] = useState("");
@@ -58,7 +58,7 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
       setIsLoading(false);
 
       if (error) return;
-      if (data !== null) setItemBillInfo(data);
+      if (data !== null) setProductItems(data);
       if (count !== null) setTotalCount(count);
     }
     getBillItems(itemDetail.BCODE);
@@ -79,26 +79,30 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
     ).toLocaleString();
   }
 
-  const sumQty = itemBillInfo?.reduce(
-    (acc, bill) => parseInt(bill.QTY) * parseInt(bill.MTP) + acc,
+  const sumAmt = productItems?.reduce(
+    (acc, item) => parseFloat(item.AMOUNT) + acc,
     0
   );
-  const avgCost = itemBillInfo?.reduce(
-    (acc, bill) =>
+  const sumQty = productItems?.reduce(
+    (acc, item) => parseInt(item.QTY) * parseInt(item.MTP) + acc,
+    0
+  );
+  const avgCost = productItems?.reduce(
+    (acc, item) =>
       parseFloat(
         calculateCostnet(
           [
-            parseFloat(bill.DISCNT1 ? bill.DISCNT1 : "0"),
-            parseFloat(bill.DISCNT2 ? bill.DISCNT2 : "0"),
-            parseFloat(bill.DISCNT3 ? bill.DISCNT3 : "0"),
-            parseFloat(bill.DISCNT4 ? bill.DISCNT4 : "0"),
+            parseFloat(item.DISCNT1 ? item.DISCNT1 : "0"),
+            parseFloat(item.DISCNT2 ? item.DISCNT2 : "0"),
+            parseFloat(item.DISCNT3 ? item.DISCNT3 : "0"),
+            parseFloat(item.DISCNT4 ? item.DISCNT4 : "0"),
           ],
-          parseFloat(bill.PRICE ? bill.PRICE : "0"),
-          parseFloat(bill.MTP ? bill.MTP : "0"),
-          bill._accounts?.ACCTNO.charAt(0) === "7"
+          parseFloat(item.PRICE ? item.PRICE : "0"),
+          parseFloat(item.MTP ? item.MTP : "0"),
+          item._accounts?.ACCTNO.charAt(0) === "7"
         )
       ) /
-        itemBillInfo.length +
+        productItems.length +
       acc,
     0
   );
@@ -128,41 +132,43 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
                     <TableHead>วันที่</TableHead>
                     <TableHead>เลขที่บิล</TableHead>
                     <TableHead>บริษัท</TableHead>
-                    <TableHead>ชื่อย่อ</TableHead>
-                    <TableHead>ทุน/หน่วย</TableHead>
                     <TableHead>จำนวน</TableHead>
+                    <TableHead>ทุน/หน่วย</TableHead>
+                    <TableHead>ทุนรวม</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {itemBillInfo &&
-                    itemBillInfo.map((bill, index) => (
+                  {productItems &&
+                    productItems.map((item, index) => (
                       <TableRow
                         className="even:bg-gray-100"
-                        key={`${bill.BILLNO}${cardId}${index}`}
+                        key={`${item.BILLNO}${cardId}${index}`}
                       >
                         <TableCell>
-                          {new Date(bill._bills?.BILLDATE).toLocaleDateString(
+                          {new Date(item._bills?.BILLDATE).toLocaleDateString(
                             "th-TH"
                           )}
                         </TableCell>
-                        <TableCell>{bill.BILLNO}</TableCell>
-                        <TableCell>{bill._accounts?.ACCTNAME}</TableCell>
-                        <TableCell>{bill._accounts?.ACCTNO}</TableCell>
-                        <TableCell>
+                        <TableCell>{item.BILLNO}</TableCell>
+                        <TableCell>{item._accounts?.ACCTNAME}</TableCell>
+                        <TableCell className="text-right">
+                          {parseInt(item.QTY) * parseInt(item.MTP)}
+                        </TableCell>
+                        <TableCell className="text-right">
                           {calculateCostnet(
                             [
-                              parseFloat(bill.DISCNT1 ? bill.DISCNT1 : "0"),
-                              parseFloat(bill.DISCNT2 ? bill.DISCNT2 : "0"),
-                              parseFloat(bill.DISCNT3 ? bill.DISCNT3 : "0"),
-                              parseFloat(bill.DISCNT4 ? bill.DISCNT4 : "0"),
+                              parseFloat(item.DISCNT1 ? item.DISCNT1 : "0"),
+                              parseFloat(item.DISCNT2 ? item.DISCNT2 : "0"),
+                              parseFloat(item.DISCNT3 ? item.DISCNT3 : "0"),
+                              parseFloat(item.DISCNT4 ? item.DISCNT4 : "0"),
                             ],
-                            parseFloat(bill.PRICE ? bill.PRICE : "0"),
-                            parseFloat(bill.MTP ? bill.MTP : "0"),
-                            bill._accounts?.ACCTNO.charAt(0) === "7"
+                            parseFloat(item.PRICE ? item.PRICE : "0"),
+                            parseFloat(item.MTP ? item.MTP : "0"),
+                            item._accounts?.ACCTNO.charAt(0) === "7"
                           )}
                         </TableCell>
-                        <TableCell>
-                          {parseInt(bill.QTY) * parseInt(bill.MTP)}
+                        <TableCell className="text-right">
+                          {parseFloat(item.AMOUNT).toLocaleString()}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -180,14 +186,18 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
               />
               <Tabs defaultValue="sumQty" className="flex gap-2 justify-end">
                 <TabsList>
-                  <TabsTrigger value="avgCost">ทุนเฉลี่ย</TabsTrigger>
                   <TabsTrigger value="sumQty">ซื้อทั้งหมด</TabsTrigger>
+                  <TabsTrigger value="avgCost">ทุนเฉลี่ย</TabsTrigger>
+                  <TabsTrigger value="sumAmt">ทุนรวม</TabsTrigger>
                 </TabsList>
                 <TabsContent value="avgCost" className="w-24 text-center">
                   {avgCost?.toFixed(2)}
                 </TabsContent>
                 <TabsContent value="sumQty" className="w-24 text-center">
                   {sumQty?.toLocaleString()}
+                </TabsContent>
+                <TabsContent value="sumAmt" className="w-24 text-center">
+                  {sumAmt?.toLocaleString()}
                 </TabsContent>
               </Tabs>
             </div>

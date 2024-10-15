@@ -20,7 +20,7 @@ import TotalCount from "../TotalCount";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
-  const [itemSalesInfo, setItemSalesInfo] = useState<itemsType[]>();
+  const [productItems, setProductItems] = useState<itemsType[]>();
   const [isLoading, setIsLoading] = useState(true);
 
   const [filterText, setFilterText] = useState("");
@@ -57,18 +57,22 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
 
       setIsLoading(false);
       if (error) return;
-      if (data !== null) setItemSalesInfo(data);
+      if (data !== null) setProductItems(data);
       if (count !== null) setTotalCount(count);
     }
     getSalesItems(itemDetail.BCODE);
   }, [itemDetail, limit, fromDate, toDate, filterText]);
 
-  const sumQty = itemSalesInfo?.reduce(
-    (acc, bill) => parseInt(bill.QTY) * parseInt(bill.MTP) + acc,
+  const sumQty = productItems?.reduce(
+    (acc, item) => parseInt(item.QTY) * parseInt(item.MTP) + acc,
     0
   );
-  const avgPrice = itemSalesInfo?.reduce(
-    (acc, bill) => parseFloat(bill.PRICE) / itemSalesInfo.length + acc,
+  const avgPrice = productItems?.reduce(
+    (acc, item) => parseFloat(item.PRICE) / productItems.length + acc,
+    0
+  );
+  const sumAmt = productItems?.reduce(
+    (acc, item) => parseFloat(item.AMOUNT) + acc,
     0
   );
 
@@ -97,30 +101,33 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
                     <TableHead>วันที่</TableHead>
                     <TableHead>เลขที่บิล</TableHead>
                     <TableHead>ลูกค้า</TableHead>
-                    <TableHead>ราคา/หน่วย</TableHead>
                     <TableHead>จำนวน</TableHead>
+                    <TableHead>ราคา/หน่วย</TableHead>
+                    <TableHead>ราคารวม</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {itemSalesInfo &&
-                    itemSalesInfo.map((sale, index) => (
+                  {productItems &&
+                    productItems.map((item, index) => (
                       <TableRow
                         className="even:bg-gray-100"
-                        key={`${sale.BILLNO}${cardId}${index}`}
+                        key={`${item.BILLNO}${cardId}${index}`}
                       >
                         <TableCell>
-                          {new Date(sale._bills.BILLDATE).toLocaleDateString(
+                          {new Date(item._bills.BILLDATE).toLocaleDateString(
                             "th-TH"
                           )}
                         </TableCell>
-                        <TableCell>{sale.BILLNO}</TableCell>
-                        <TableCell>{sale._accounts?.ACCTNAME}</TableCell>
-
-                        <TableCell>
-                          {parseFloat(sale.PRICE).toLocaleString()}
+                        <TableCell>{item.BILLNO}</TableCell>
+                        <TableCell>{item._accounts?.ACCTNAME}</TableCell>
+                        <TableCell className="text-right">
+                          {parseInt(item.QTY) * parseInt(item.MTP)}
                         </TableCell>
-                        <TableCell>
-                          {parseInt(sale.QTY) * parseInt(sale.MTP)}
+                        <TableCell className="text-right">
+                          {parseFloat(item.PRICE).toLocaleString()}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {parseFloat(item.AMOUNT).toLocaleString()}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -138,14 +145,18 @@ export default function ProductCardSale({ itemDetail }: ProductDetailProps) {
               />
               <Tabs defaultValue="sumQty" className="flex gap-2 justify-end">
                 <TabsList>
-                  <TabsTrigger value="avgPrice">ราคาเฉลี่ย</TabsTrigger>
                   <TabsTrigger value="sumQty">ขายทั้งหมด</TabsTrigger>
+                  <TabsTrigger value="avgPrice">ราคาเฉลี่ย</TabsTrigger>
+                  <TabsTrigger value="sumAmt">ราคารวม</TabsTrigger>
                 </TabsList>
                 <TabsContent value="avgPrice" className="w-24 text-center">
                   {avgPrice?.toFixed(2)}
                 </TabsContent>
                 <TabsContent value="sumQty" className="w-24 text-center">
                   {sumQty?.toLocaleString()}
+                </TabsContent>
+                <TabsContent value="sumAmt" className="w-24 text-center">
+                  {sumAmt?.toLocaleString()}
                 </TabsContent>
               </Tabs>
             </div>

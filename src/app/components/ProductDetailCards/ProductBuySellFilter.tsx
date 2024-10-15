@@ -33,7 +33,7 @@ export default function ProductBuySellFilter({
           <Input
             className="roundeก-md"
             type="text"
-            placeholder="กรองผลการค้นหา..."
+            placeholder="รหัส หรือ ชื่อ..."
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
           ></Input>

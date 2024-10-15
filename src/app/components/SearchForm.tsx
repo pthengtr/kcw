@@ -19,7 +19,7 @@ export default function SearchForm() {
         {pathName === "/purchases" && <TransactionSearch />}
       </div>
       {pathName === "/product" && (
-        <Button className="bg-gray-100 h-full text-gray-800 shadow-lg font-semibold hover:bg-slate-200 hover:scale-[1.02] active:scale-[1]">
+        <Button className="bg-gray-100 text-gray-800 shadow-lg font-semibold hover:bg-slate-200 hover:scale-[1.02] active:scale-[1]">
           ค้นหา
         </Button>
       )}
