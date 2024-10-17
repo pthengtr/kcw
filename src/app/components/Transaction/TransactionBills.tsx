@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { billsType } from "./TransactionProvider";
+import { billType } from "./TransactionProvider";
 import {
   TransactionContext,
   TransactionContextType,
@@ -50,7 +50,7 @@ export default function TransactionBills({
     }
   }
 
-  function handleClickBill(bill: billsType) {
+  function handleClickBill(bill: billType) {
     setCurrentBill(bill);
     getCurrentBillItemsSupabase(bill.BILLNO);
   }
@@ -58,8 +58,8 @@ export default function TransactionBills({
   useEffect(() => {
     async function getBillsSupabase() {
       const { data, error, count } = await supabase
-        .from("_bills")
-        .select(`*, _vouchers(*), _notes(*)`, { count: "exact" })
+        .from("bills")
+        .select(`*, vouchers(*), notes(*)`, { count: "exact" })
         .ilike("BILLNO", `%${filterText}%`)
         .eq("accountId", accountId)
         .order(sortBy, { ascending: sortAsc })

@@ -48,19 +48,19 @@ export default function TransactionItems({
       let query;
 
       if (filterText === "") {
-        query = supabase.from("_items").select(`*, productInfo(*), _bills(*)`, {
+        query = supabase.from("items").select(`*, products(*), bills(*)`, {
           count: "exact",
         });
       } else {
         query = supabase
-          .from("_items")
-          .select(`*, productInfo!inner(*),  _bills(*)`, {
+          .from("items")
+          .select(`*, products!inner(*),  bills(*)`, {
             count: "exact",
           })
           .or(
             `DESCR.ilike.%${filterText}%, MODEL.ilike.%${filterText}%, BCODE.ilike.%${filterText}%`,
             {
-              referencedTable: "productInfo",
+              referencedTable: "products",
             }
           );
       }
@@ -150,7 +150,7 @@ export default function TransactionItems({
                   </TableHead>
                   <TableHead
                     className="hover:underline hover:cursor-pointer"
-                    onClick={() => handleClickColumn("_bills(BILLNO)")}
+                    onClick={() => handleClickColumn("bills(BILLNO)")}
                   >
                     เลขที่บิล
                   </TableHead>
@@ -164,22 +164,29 @@ export default function TransactionItems({
                     </TableCell>
                     <TableCell>{item.BCODE}</TableCell>
                     <TableCell>
-                      {item.productInfo
-                        ? `${item.productInfo.DESCR}, ${item.productInfo.MODEL}`
+                      {item.products
+                        ? `${item.products.DESCR}, ${item.products.MODEL}`
                         : ""}
                     </TableCell>
-                    <TableCell>{parseInt(item.QTY ? item.QTY : "0")}</TableCell>
+                    <TableCell>{item.QTY}</TableCell>
                     <TableCell>{item.UI}</TableCell>
                     <TableCell>
-                      {parseFloat(
-                        item.PRICE ? item.PRICE : "0"
-                      ).toLocaleString()}
+                      {item.PRICE.toLocaleString("th-TH", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </TableCell>
-                    <TableCell>{item.DISCNT1}</TableCell>
                     <TableCell>
-                      {parseFloat(
-                        item.AMOUNT ? item.AMOUNT : "0"
-                      ).toLocaleString()}
+                      {item.DISCNT1.toLocaleString("th-TH", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      {item.AMOUNT.toLocaleString("th-TH", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </TableCell>
                     <TableCell
                       onClick={() => handleClickBill(item.BILLNO)}

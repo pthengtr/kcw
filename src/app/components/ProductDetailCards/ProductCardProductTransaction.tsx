@@ -7,7 +7,7 @@ import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 
 export default function ProductCardProductTransaction({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
   return (
     <Card className="max-h-fit">
@@ -24,13 +24,13 @@ export default function ProductCardProductTransaction({
             </DrawerTrigger>
             <DrawerContent>
               <div className="flex justify-center gap-4 text-2xl mt-8">
-                <span>{itemDetail.BCODE}</span>
-                <span className="font-semibold">{itemDetail.DESCR}</span>
-                <span>{itemDetail.MODEL}</span>
+                <span>{productDetail.BCODE}</span>
+                <span className="font-semibold">{productDetail.DESCR}</span>
+                <span>{productDetail.MODEL}</span>
               </div>
               <div className="grid grid-cols-2 justify-items-center gap-8 m-8">
-                <ProductCardBuy itemDetail={itemDetail} />
-                <ProductCardSell itemDetail={itemDetail} />
+                <ProductCardBuy productDetail={productDetail} />
+                <ProductCardSell productDetail={productDetail} />
               </div>
             </DrawerContent>
           </Drawer>

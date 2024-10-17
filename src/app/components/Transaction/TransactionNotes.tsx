@@ -55,8 +55,8 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
   useEffect(() => {
     async function getNotesSupabase() {
       const { data, error, count } = await supabase
-        .from("_notes")
-        .select(`*, _accounts(*)`, { count: "exact" })
+        .from("notes")
+        .select(`*, accounts(*)`, { count: "exact" })
         .ilike("NOTENO", `%${filterText}%`)
         .eq("accountId", accountId)
         .order(sortBy, { ascending: sortAsc })

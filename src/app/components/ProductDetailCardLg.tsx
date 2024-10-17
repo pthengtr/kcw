@@ -6,14 +6,14 @@ import ProductCardProductTransaction from "./ProductDetailCards/ProductCardProdu
 import { ProductDetailProps } from "./ProductDetail";
 
 export default function ProductDetailCardLg({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
   return (
     <div className="grid gap-6 auto-rows-min mb-12 @[1024px]:grid-cols-[auto_auto]">
-      <ProductCardProductInfo itemDetail={itemDetail} />
-      <ProductCardProductCode itemDetail={itemDetail} />
-      <ProductCardProductImage itemDetail={itemDetail} />
-      <ProductCardProductTransaction itemDetail={itemDetail} />
+      <ProductCardProductInfo productDetail={productDetail} />
+      <ProductCardProductCode productDetail={productDetail} />
+      <ProductCardProductImage productDetail={productDetail} />
+      <ProductCardProductTransaction productDetail={productDetail} />
     </div>
   );
 }

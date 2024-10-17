@@ -90,17 +90,22 @@ export default function TransactionNotesNoteList({
               </TableCell>
               <TableCell>{item.NOTENO}</TableCell>
               <TableCell>
-                {parseFloat(item.BILLAMT ? item.BILLAMT : "0").toLocaleString()}
+                {item.BILLAMT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
               <TableCell>
-                {parseFloat(
-                  item.DISCOUNT ? item.DISCOUNT : "0"
-                ).toLocaleString()}
+                {item.DISCOUNT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
               <TableCell>
-                {parseFloat(
-                  item.NETAMT ? item.NETAMT : item.BILLAMT
-                ).toLocaleString()}
+                {item.NETAMT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
             </TableRow>
           ))}

@@ -6,87 +6,57 @@ import ProductDetailCardSm from "./ProductDetailCardSm";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { supabase } from "../lib/supabase";
 
-export type ItemDetailType = {
-  MAIN: number;
+export type productType = {
   BCODE: string;
-  DESCR: string;
-  ACODE: string;
   XCODE: string;
-  PCODE: string;
   MCODE: string;
+  PCODE: string;
+  ACODE: string;
+  DESCR: string;
   MODEL: string;
   BRAND: string;
+  OEM: string;
   VENDOR: string;
-  COSTSET1: string;
-  PRICENET1: string;
-  QTYOH2: string;
-  QTYMIN: string;
-  QTYMAX: string;
-  QTYGET: string;
+  MAIN: number;
+  UI1: string;
+  UI2: string;
+  MTP2: number;
+  STATUS: number;
+  LOCATION1: string;
+  LOCATION2: string;
   CODE1: string;
   SIZE1: string;
   SIZE2: string;
   SIZE3: string;
-  DATEUPDATE: string;
-  DATEAUDIT: string;
+  PRICE1: number;
+  PRICE2: number;
+  PRICE3: number;
+  PRICE4: number;
+  PRICE5: number;
+  MARKUP1: number;
+  MARKUP2: number;
+  MARKUP3: number;
+  MARKUP4: number;
+  MARKUP5: number;
+  PRICEM1: number;
+  PRICEM2: number;
+  PRICEM3: number;
+  PRICEM4: number;
+  PRICEM5: number;
+  QTYOH2: number;
+  QTYMIN: number;
+  QTYMAX: number;
+  QTYGET: number;
+  QTYPUT: number;
+  DATEUPDATE: Date;
+  DATEAUDIT: Date;
   REMARKS: string;
-  LOCATION1: string;
-  productCost: {
-    BCODE: string;
-    ISVAT: string;
-    COSTSET1: string;
-    DISCNT: string;
-    DISCNT1: string;
-    DISCNT2: string;
-    DISCNT3: string;
-    DISCNT4: string;
-    COSTNET: string;
-  };
-  productLocation: {
-    BCODE: string;
-    Attribute: string;
-    Value: string;
-  }[];
-  productPrice: {
-    BCODE: string;
-    Attribute: string;
-    Markup: string;
-    Value: string;
-  }[];
-  productPriceM: {
-    BCODE: string;
-    Attribute: string;
-    Markup: string;
-    Value: string;
-  }[];
-  productUnit: {
-    BCODE: string;
-    Attribute: string;
-    Value: string;
-    NumberPerUnit: string;
-  }[];
-  billItemInfo: {
-    id: number;
-    BCODE: string;
-    JOURDATE: Date;
-    BILLDATE: Date;
-    BILLNO: string;
-    QTY: string;
-    UI: string;
-    MTP: string;
-    PRICE: string;
-    DISCNT1: string;
-    DISCNT2: string;
-    DISCNT3: string;
-    DISCNT4: string;
-    AMOUNT: string;
-  }[];
 };
 
-export type ProductDetailProps = { itemDetail: ItemDetailType };
+export type ProductDetailProps = { productDetail: productType };
 
 export default function ProductDetail() {
-  const { selectedItem, itemDetail, setItemDetail } = useContext(
+  const { selectedItem, productDetail, setProductDetail } = useContext(
     ProductContext
   ) as ProductContextType;
 
@@ -94,34 +64,32 @@ export default function ProductDetail() {
 
   useEffect(() => {
     productDetailRef.current?.scrollTo(0, 0);
-  }, [itemDetail]);
+  }, [productDetail]);
 
   useEffect(() => {
     async function getDataSupabase() {
       const { data, error } = await supabase
-        .from("productInfo")
-        .select(
-          `*, productCost(*), productUnit(*), productLocation(*), productPrice(*), productPriceM(*), _items(*)`
-        )
+        .from("products")
+        .select(`*`)
         .eq("BCODE", selectedItem)
         .limit(10);
 
       if (error) return;
-      if (data !== null) setItemDetail(data[0]);
+      if (data !== null) setProductDetail(data[0]);
     }
     if (selectedItem !== "") getDataSupabase();
-  }, [selectedItem, setItemDetail]);
+  }, [selectedItem, setProductDetail]);
 
   return (
     <div className="w-full h-full">
-      {itemDetail && (
+      {productDetail && (
         <div
           ref={productDetailRef}
           className="h-full overflow-auto @container mx-8"
         >
           <div className="grid w-full gap-6 @[768px]:grid-cols-[auto_auto] justify-items-center @container">
-            <ProductDetailCardLg itemDetail={itemDetail} />
-            <ProductDetailCardSm itemDetail={itemDetail} />
+            <ProductDetailCardLg productDetail={productDetail} />
+            <ProductDetailCardSm productDetail={productDetail} />
             <div className="border w-full col-span-full mr-16"></div>
           </div>
         </div>

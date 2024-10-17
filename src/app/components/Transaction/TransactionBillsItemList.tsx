@@ -1,9 +1,9 @@
 import TransactionItemList from "./TransactionItemList";
-import { itemsType, billsType } from "./TransactionProvider";
+import { itemsType, billType } from "./TransactionProvider";
 
 type TransactionBillsItemListProps = {
   currentBillItems: itemsType[] | undefined;
-  currentBill: billsType | undefined;
+  currentBill: billType | undefined;
 };
 
 export default function TransactionBillsItemList({
@@ -32,17 +32,19 @@ export default function TransactionBillsItemList({
               <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg">
                 <span>จำนวนเงิน</span>
                 <span className="font-semibold">
-                  {parseFloat(
-                    currentBill.BEFORETAX ? currentBill.BEFORETAX : "0"
-                  ).toLocaleString()}
+                  {currentBill.BEFORETAX.toLocaleString("th-TH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </span>
                 <span>ภาษี</span>
                 <span className="font-semibold">{currentBill.VAT}%</span>
                 <span>ยอดรวม</span>
                 <span className="font-semibold">
-                  {parseFloat(
-                    currentBill.AFTERTAX ? currentBill.AFTERTAX : "0"
-                  ).toLocaleString()}
+                  {currentBill.AFTERTAX.toLocaleString("th-TH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </span>
               </div>
             </div>

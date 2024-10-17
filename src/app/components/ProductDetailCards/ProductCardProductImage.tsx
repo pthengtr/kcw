@@ -4,7 +4,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductImage({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
   return (
     <Card>
@@ -13,8 +13,8 @@ export default function ProductCardProductImage({
       </CardHeader>
       <CardContent>
         <ImageWithFallback
-          src={`https://pthengtr.github.io/kcw-product-pictures/pictures/${itemDetail.BCODE}.jpg`}
-          alt={`kcw bcode ${itemDetail.BCODE} image`}
+          src={`https://pthengtr.github.io/kcw-product-pictures/pictures/${productDetail.BCODE}.jpg`}
+          alt={`kcw bcode ${productDetail.BCODE} image`}
         />
       </CardContent>
     </Card>

@@ -19,7 +19,7 @@ import TotalCount from "../TotalCount";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
-export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
+export default function ProductCardBuy({ productDetail }: ProductDetailProps) {
   const [productItems, setProductItems] = useState<itemsType[]>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,7 +28,7 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
   const [toDate, setToDate] = useState<Date>(new Date());
   const [limit, setLimit] = useState("50");
   const [totalCount, setTotalCount] = useState(0);
-  const [sortBy, setSortBy] = useState("_bills(JOURDATE)");
+  const [sortBy, setSortBy] = useState("bills(JOURDATE)");
   const [sortAsc, setSortAsc] = useState(false);
 
   function handleClickColumn(column: string) {
@@ -45,8 +45,8 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
   useEffect(() => {
     async function getBillItems(bcode: string) {
       let query = supabase
-        .from("_items")
-        .select(`*, _bills!inner(*), _accounts(*)`, { count: "exact" });
+        .from("items")
+        .select(`*, bills!inner(*), accounts(*)`, { count: "exact" });
 
       if (filterText != "") {
         const searchWords = filterText
@@ -58,23 +58,23 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
         );
 
         query = supabase
-          .from("_items")
-          .select(`*, _bills!inner(*), _accounts!inner(*)`, { count: "exact" });
+          .from("items")
+          .select(`*, bills!inner(*), accounts!inner(*)`, { count: "exact" });
 
         orSearchArr.forEach(
           (orSearch) =>
             (query = query.or(orSearch, {
-              referencedTable: "_accounts",
+              referencedTable: "accounts",
             }))
         );
       }
 
       query = query
         .eq("BCODE", bcode)
-        .ilike("_bills.BILLTYPE", "%P%")
+        .ilike("bills.BILLTYPE", "%P%")
         .order(sortBy, { ascending: sortAsc })
-        .lte("_bills.JOURDATE", toDate.toLocaleString())
-        .gte("_bills.JOURDATE", fromDate.toLocaleString())
+        .lte("bills.JOURDATE", toDate.toLocaleString())
+        .gte("bills.JOURDATE", fromDate.toLocaleString())
         .limit(parseInt(limit));
 
       const { data, error, count } = await query;
@@ -85,8 +85,8 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
       if (data !== null) setProductItems(data);
       if (count !== null) setTotalCount(count);
     }
-    getBillItems(itemDetail.BCODE);
-  }, [itemDetail, limit, fromDate, toDate, filterText, sortAsc, sortBy]);
+    getBillItems(productDetail.BCODE);
+  }, [productDetail, limit, fromDate, toDate, filterText, sortAsc, sortBy]);
 
   function calculateCostnet(
     [...discnt]: number[],
@@ -102,33 +102,23 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
     return (costnet * (isVat ? 1.07 : 1)) / numberPerQty;
   }
 
-  const sumAmt = productItems?.reduce(
-    (acc, item) => parseFloat(item.AMOUNT) + acc,
-    0
-  );
+  const sumAmt = productItems?.reduce((acc, item) => item.AMOUNT + acc, 0);
   const sumQty = productItems?.reduce(
-    (acc, item) => parseInt(item.QTY) * parseInt(item.MTP) + acc,
+    (acc, item) => item.QTY * item.MTP + acc,
     0
   );
   const avgCost = productItems?.reduce((acc, item) => {
     return (
       calculateCostnet(
-        [
-          parseFloat(item.DISCNT1 ? item.DISCNT1 : "0"),
-          parseFloat(item.DISCNT2 ? item.DISCNT2 : "0"),
-          parseFloat(item.DISCNT3 ? item.DISCNT3 : "0"),
-          parseFloat(item.DISCNT4 ? item.DISCNT4 : "0"),
-        ],
-        parseFloat(item.PRICE ? item.PRICE : "0"),
-        parseFloat(item.MTP ? item.MTP : "0"),
-        item._accounts?.ACCTNO.charAt(0) === "7"
+        [item.DISCNT1, item.DISCNT2, item.DISCNT3, item.DISCNT4],
+        item.PRICE,
+        item.MTP,
+        item.accounts?.ACCTNO.charAt(0) === "7"
       ) /
         productItems.length +
       acc
     );
   }, 0);
-
-  console.log();
 
   return (
     <Card className="max-h-fit">
@@ -154,7 +144,7 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
                   <TableRow>
                     <TableHead
                       className="hover:underline hover:cursor-pointer"
-                      onClick={() => handleClickColumn("_bills(JOURDATE)")}
+                      onClick={() => handleClickColumn("bills(JOURDATE)")}
                     >
                       วันที่
                     </TableHead>
@@ -166,7 +156,7 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
                     </TableHead>
                     <TableHead
                       className="hover:underline hover:cursor-pointer"
-                      onClick={() => handleClickColumn("_accounts(ACCTNAME)")}
+                      onClick={() => handleClickColumn("accounts(ACCTNAME)")}
                     >
                       บริษัท
                     </TableHead>
@@ -198,30 +188,36 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
                         key={`${item.BILLNO}${cardId}${index}`}
                       >
                         <TableCell>
-                          {new Date(item._bills?.BILLDATE).toLocaleDateString(
+                          {new Date(item.bills?.BILLDATE).toLocaleDateString(
                             "th-TH"
                           )}
                         </TableCell>
                         <TableCell>{item.BILLNO}</TableCell>
-                        <TableCell>{item._accounts?.ACCTNAME}</TableCell>
+                        <TableCell>{item.accounts?.ACCTNAME}</TableCell>
                         <TableCell className="text-right">
-                          {parseInt(item.QTY) * parseInt(item.MTP)}
+                          {item.QTY * item.MTP}
                         </TableCell>
                         <TableCell className="text-right">
                           {calculateCostnet(
                             [
-                              parseFloat(item.DISCNT1 ? item.DISCNT1 : "0"),
-                              parseFloat(item.DISCNT2 ? item.DISCNT2 : "0"),
-                              parseFloat(item.DISCNT3 ? item.DISCNT3 : "0"),
-                              parseFloat(item.DISCNT4 ? item.DISCNT4 : "0"),
+                              item.DISCNT1,
+                              item.DISCNT2,
+                              item.DISCNT3,
+                              item.DISCNT4,
                             ],
-                            parseFloat(item.PRICE ? item.PRICE : "0"),
-                            parseFloat(item.MTP ? item.MTP : "0"),
-                            item._accounts?.ACCTNO.charAt(0) === "7"
-                          ).toLocaleString()}
+                            item.PRICE,
+                            item.MTP,
+                            item.accounts?.ACCTNO.charAt(0) === "7"
+                          ).toLocaleString("th-TH", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                         </TableCell>
                         <TableCell className="text-right">
-                          {parseFloat(item.AMOUNT).toLocaleString()}
+                          {item.AMOUNT.toLocaleString("th-TH", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -244,13 +240,19 @@ export default function ProductCardBuy({ itemDetail }: ProductDetailProps) {
                   <TabsTrigger value="sumAmt">ทุนรวม</TabsTrigger>
                 </TabsList>
                 <TabsContent value="avgCost" className="w-24 text-center">
-                  {avgCost?.toLocaleString()}
+                  {avgCost?.toLocaleString("th-TH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </TabsContent>
                 <TabsContent value="sumQty" className="w-24 text-center">
                   {sumQty?.toLocaleString()}
                 </TabsContent>
                 <TabsContent value="sumAmt" className="w-24 text-center">
-                  {sumAmt?.toLocaleString()}
+                  {sumAmt?.toLocaleString("th-TH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </TabsContent>
               </Tabs>
             </div>

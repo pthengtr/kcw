@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { billsType } from "./TransactionProvider";
+import { billType } from "./TransactionProvider";
 import {
   TransactionContext,
   TransactionContextType,
@@ -14,9 +14,9 @@ import {
 import { useContext, useEffect } from "react";
 
 type TransactionBillsBillListProps = {
-  accountBills: billsType[];
-  currentBill: billsType | undefined;
-  handleClickBill: (bill: billsType) => void;
+  accountBills: billType[];
+  currentBill: billType | undefined;
+  handleClickBill: (bill: billType) => void;
   handleClickColumn: (value: string) => void;
 };
 
@@ -107,47 +107,46 @@ export default function TransactionBillsBillList({
               </TableCell>
               <TableCell>{item.BILLNO}</TableCell>
               <TableCell>
-                {(
-                  parseFloat(item.CASHAMT ? item.CASHAMT : "0") +
-                  parseFloat(item.CHKAMT ? item.CHKAMT : "0") +
-                  parseFloat(item.DUEAMT ? item.DUEAMT : "0")
-                ).toLocaleString()}
+                {item.AFTERTAX.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
 
               <TableCell
                 className={`${
-                  item._notes &&
+                  item.notes &&
                   "hover:cursor-pointer hover:underline hover:italic"
                 }`}
                 onClick={() => handleClickNote(item.noteId)}
               >
-                {item._notes?.NOTENO}
+                {item.notes?.NOTENO}
               </TableCell>
 
               <TableCell>
-                {item._notes &&
-                  new Date(item._notes?.NOTEDATE).toLocaleDateString("th-TH")}
+                {item.notes &&
+                  new Date(item.notes?.NOTEDATE).toLocaleDateString("th-TH")}
               </TableCell>
 
               <TableCell
                 onClick={() => handleClickVoucher(item.voucherId)}
                 className={`${
-                  item._vouchers &&
+                  item.vouchers &&
                   "hover:cursor-pointer hover:underline hover:italic"
                 }`}
               >
-                {item._vouchers?.VOUCNO}
+                {item.vouchers?.VOUCNO}
               </TableCell>
 
               <TableCell>
-                {item._vouchers &&
-                  new Date(item._vouchers?.VOUCDATE).toLocaleDateString()}
+                {item.vouchers &&
+                  new Date(item.vouchers?.VOUCDATE).toLocaleDateString()}
               </TableCell>
 
               <TableCell>
-                {item._vouchers
+                {item.vouchers
                   ? "ชำระแล้ว"
-                  : item._notes
+                  : item.notes
                   ? "วางบิลแล้ว"
                   : "ยังไม่วางบิล"}
               </TableCell>

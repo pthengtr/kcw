@@ -3,14 +3,14 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductDate({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>หมายเหตุ</CardTitle>
       </CardHeader>
-      <CardContent>{itemDetail.REMARKS}</CardContent>
+      <CardContent>{productDetail.REMARKS}</CardContent>
     </Card>
   );
 }

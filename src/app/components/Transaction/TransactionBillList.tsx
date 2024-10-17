@@ -7,14 +7,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  billsType,
+  billType,
   TransactionContext,
   TransactionContextType,
 } from "./TransactionProvider";
 import { useContext } from "react";
 
 type TransactionBillListProps = {
-  currentBills: billsType[] | undefined;
+  currentBills: billType[] | undefined;
   mode: "notes" | "vouchers";
 };
 
@@ -57,11 +57,10 @@ export default function TransactionBillList({
                   {item.BILLNO}
                 </TableCell>
                 <TableCell>
-                  {(
-                    parseFloat(item.CASHAMT ? item.CASHAMT : "0") +
-                    parseFloat(item.CHKAMT ? item.CHKAMT : "0") +
-                    parseFloat(item.DUEAMT ? item.DUEAMT : "0")
-                  ).toLocaleString()}
+                  {item.AFTERTAX.toLocaleString("th-TH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </TableCell>
 
                 <TableCell
@@ -72,31 +71,31 @@ export default function TransactionBillList({
                   }
                   className={`${
                     mode === "notes"
-                      ? item._notes &&
+                      ? item.notes &&
                         "hover:cursor-pointer hover:underline hover:italic"
-                      : item._vouchers &&
+                      : item.vouchers &&
                         "hover:cursor-pointer hover:underline hover:italic"
                   }`}
                 >
                   {mode === "notes"
-                    ? item._vouchers?.VOUCNO
-                    : item._notes?.NOTENO}
+                    ? item.vouchers?.VOUCNO
+                    : item.notes?.NOTENO}
                 </TableCell>
 
                 <TableCell>
                   {mode === "notes"
-                    ? item._vouchers &&
-                      new Date(item._vouchers?.VOUCDATE).toLocaleDateString()
-                    : item._notes &&
-                      new Date(item._notes?.NOTEDATE).toLocaleDateString(
+                    ? item.vouchers &&
+                      new Date(item.vouchers?.VOUCDATE).toLocaleDateString()
+                    : item.notes &&
+                      new Date(item.notes?.NOTEDATE).toLocaleDateString(
                         "th-TH"
                       )}
                 </TableCell>
 
                 <TableCell>
-                  {item._vouchers
+                  {item.vouchers
                     ? "ชำระแล้ว"
-                    : item._notes
+                    : item.notes
                     ? "วางบิลแล้ว"
                     : "ยังไม่วางบิล"}
                 </TableCell>

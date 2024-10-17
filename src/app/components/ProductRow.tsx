@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SearchContext, SearchContextType } from "./SearchProvider";
-import { ItemDetailType } from "./ProductDetail";
+import { productType } from "./ProductDetail";
 
 type ProductRowProps = {
-  item: ItemDetailType;
+  item: productType;
 };
 
 export default function ProductRow({ item }: ProductRowProps) {
@@ -20,7 +20,7 @@ export default function ProductRow({ item }: ProductRowProps) {
     activeRow,
   } = useContext(ProductContext) as ProductContextType;
   const optCol = [column1, column2, column3];
-  const columnArray: (keyof ItemDetailType)[] =
+  const columnArray: (keyof productType)[] =
     tableSearchKey === "SIZE"
       ? ([
           "BCODE",
@@ -31,7 +31,7 @@ export default function ProductRow({ item }: ProductRowProps) {
           "SIZE3",
           optCol[0],
           optCol[1],
-        ] as (keyof ItemDetailType)[])
+        ] as (keyof productType)[])
       : ([
           "BCODE",
           "DESCR",
@@ -39,7 +39,7 @@ export default function ProductRow({ item }: ProductRowProps) {
           optCol[0],
           optCol[1],
           optCol[2],
-        ] as (keyof ItemDetailType)[]);
+        ] as (keyof productType)[]);
 
   return (
     <TableRow
@@ -62,8 +62,8 @@ export default function ProductRow({ item }: ProductRowProps) {
             "bg-red-50"
           }`}
         >
-          {col === "PRICENET1"
-            ? parseFloat(item[col]).toLocaleString()
+          {col === "PRICE1"
+            ? item[col].toLocaleString()
             : item[col as keyof typeof item]?.toString()}
         </TableCell>
       ))}

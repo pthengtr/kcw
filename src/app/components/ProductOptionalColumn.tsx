@@ -15,7 +15,7 @@ const columnName: Record<string, string> = {
   PCODE: "เบอร์แท้",
   BRAND: "ยี่ห้อ",
   VENDOR: "บริษัท",
-  PRICENET1: "ราคา",
+  PRICE1: "ราคา",
   LOCATION1: "ที่เก็บ",
   SIZE1: "ขนาด1",
   SIZE2: "ขนาด2",

@@ -54,7 +54,7 @@ export default function TransactionSearch() {
       .map((word) => word.trim());
 
     let query = supabase
-      .from("_accounts")
+      .from("accounts")
       .select("*", {
         count: "exact",
       })

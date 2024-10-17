@@ -1,7 +1,7 @@
 "use client";
 import { createContext } from "react";
 import React from "react";
-import { ItemDetailType } from "./ProductDetail";
+import { productType } from "./ProductDetail";
 
 export type ProductContextType = {
   selectedItem: string;
@@ -16,8 +16,8 @@ export type ProductContextType = {
   setColumn3: (column: string) => void;
   activeRow: string;
   setActiveRow: (row: string) => void;
-  itemDetail: ItemDetailType | undefined;
-  setItemDetail: (itemDetail: ItemDetailType | undefined) => void;
+  productDetail: productType | undefined;
+  setProductDetail: (productDetail: productType | undefined) => void;
   handleSelectItem: (item: string) => void;
 };
 
@@ -32,9 +32,9 @@ export default function ProductProvider({ children }: ProductProvider) {
   const [sortBy, setSortBy] = React.useState("BCODE");
   const [column1, setColumn1] = React.useState("BRAND");
   const [column2, setColumn2] = React.useState("LOCATION1");
-  const [column3, setColumn3] = React.useState("PRICENET1");
+  const [column3, setColumn3] = React.useState("PRICE1");
   const [activeRow, setActiveRow] = React.useState("");
-  const [itemDetail, setItemDetail] = React.useState<ItemDetailType>();
+  const [productDetail, setProductDetail] = React.useState<productType>();
 
   function handleSelectItem(bcode: string) {
     setSelectedItem(bcode);
@@ -55,8 +55,8 @@ export default function ProductProvider({ children }: ProductProvider) {
     activeRow,
     setActiveRow,
     handleSelectItem,
-    itemDetail,
-    setItemDetail,
+    productDetail,
+    setProductDetail,
   };
 
   return (

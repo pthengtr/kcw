@@ -5,29 +5,32 @@ import { sizeCategory, sizeType } from "../../lib/util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductSize({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
   return (
     <>
-      {itemDetail.CODE1 &&
-        Object.keys(sizeCategory).includes(itemDetail.CODE1) && (
+      {productDetail.CODE1 &&
+        Object.keys(sizeCategory).includes(productDetail.CODE1) && (
           <Card>
             <CardHeader>
               <CardTitle>ขนาด</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-[1fr_2fr] gap-x-2 gap-1">
-              <SpanName> {sizeType[itemDetail.CODE1.toString()][0]} </SpanName>
-              <SpanValue> {itemDetail.SIZE1} </SpanValue>
+              <SpanName>
+                {" "}
+                {sizeType[productDetail.CODE1.toString()][0]}{" "}
+              </SpanName>
+              <SpanValue> {productDetail.SIZE1} </SpanValue>
 
-              <SpanName>{sizeType[itemDetail.CODE1.toString()][1]}</SpanName>
-              <SpanValue>{itemDetail.SIZE2}</SpanValue>
+              <SpanName>{sizeType[productDetail.CODE1.toString()][1]}</SpanName>
+              <SpanValue>{productDetail.SIZE2}</SpanValue>
 
-              {sizeType[itemDetail.CODE1.toString()][2] && (
+              {sizeType[productDetail.CODE1.toString()][2] && (
                 <>
                   <SpanName>
-                    {sizeType[itemDetail.CODE1.toString()][2]}
+                    {sizeType[productDetail.CODE1.toString()][2]}
                   </SpanName>
-                  <SpanValue>{itemDetail.SIZE3}</SpanValue>
+                  <SpanValue>{productDetail.SIZE3}</SpanValue>
                 </>
               )}
             </CardContent>

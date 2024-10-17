@@ -4,7 +4,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductDate({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
   return (
     <Card>
@@ -12,25 +12,21 @@ export default function ProductCardProductDate({
         <CardTitle>ข้อมูลล่าสุด</CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-[1fr_2fr] gap-x-2 gap-1">
-        {itemDetail.DATEUPDATE !== null ? (
+        {productDetail.DATEUPDATE !== null ? (
           <>
             <SpanName>ซื้อเข้า</SpanName>
             <SpanValue>
-              {new Date(Date.parse(itemDetail.DATEUPDATE)).toLocaleDateString(
-                "th-TH"
-              )}
+              {new Date(productDetail.DATEUPDATE).toLocaleDateString("th-TH")}
             </SpanValue>
           </>
         ) : (
           <></>
         )}
-        {itemDetail.DATEAUDIT !== null ? (
+        {productDetail.DATEAUDIT !== null ? (
           <>
             <SpanName>เช็คสต๊อก</SpanName>
             <SpanValue>
-              {new Date(Date.parse(itemDetail.DATEAUDIT)).toLocaleDateString(
-                "th-TH"
-              )}
+              {new Date(productDetail.DATEAUDIT).toLocaleDateString("th-TH")}
             </SpanValue>
           </>
         ) : (

@@ -9,17 +9,17 @@ import { ProductDetailProps } from "./ProductDetail";
 import React from "react";
 
 export default function ProductDetailSection2({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
   return (
     <div className="grid grid-cols-2 gap-6 @[760px]:grid-cols-1 @[768px]:items-start @[768px]:auto-rows-min @[1024px]:grid-cols-[auto_auto]">
-      <ProductCardProductPrice itemDetail={itemDetail} />
-      <ProductCardProductSize itemDetail={itemDetail} />
-      <ProductCardProductStock itemDetail={itemDetail} />
-      <ProductCardProductUnit itemDetail={itemDetail} />
-      <ProductCardProductCost itemDetail={itemDetail} />
-      <ProductCardProductDate itemDetail={itemDetail} />
-      <ProductCardProductRemark itemDetail={itemDetail} />
+      <ProductCardProductPrice productDetail={productDetail} />
+      <ProductCardProductSize productDetail={productDetail} />
+      <ProductCardProductStock productDetail={productDetail} />
+      <ProductCardProductUnit productDetail={productDetail} />
+      <ProductCardProductCost productDetail={productDetail} />
+      <ProductCardProductDate productDetail={productDetail} />
+      <ProductCardProductRemark productDetail={productDetail} />
     </div>
   );
 }

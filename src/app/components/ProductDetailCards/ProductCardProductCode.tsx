@@ -4,7 +4,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductCode({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
   return (
     <Card>
@@ -13,13 +13,13 @@ export default function ProductCardProductCode({
       </CardHeader>
       <CardContent className="grid grid-cols-[1fr_2fr] gap-y-1 gap-x-4">
         <SpanName>เบอร์ 1 (แท้)</SpanName>
-        <SpanValue>{itemDetail.PCODE}</SpanValue>
+        <SpanValue>{productDetail.PCODE}</SpanValue>
         <SpanName>เบอร์ 2 (โรงงาน)</SpanName>
-        <SpanValue>{itemDetail.MCODE}</SpanValue>
+        <SpanValue>{productDetail.MCODE}</SpanValue>
         <SpanName>เบอร์ 3 (ชื่อย่อ)</SpanName>
-        <SpanValue>{itemDetail.ACODE}</SpanValue>
+        <SpanValue>{productDetail.ACODE}</SpanValue>
         <SpanName>เบอร์ 4 (กลุ่ม)</SpanName>
-        <SpanValue>{itemDetail.XCODE}</SpanValue>
+        <SpanValue>{productDetail.XCODE}</SpanValue>
       </CardContent>
     </Card>
   );

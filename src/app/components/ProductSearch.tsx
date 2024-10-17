@@ -12,7 +12,7 @@ export default function ProductSearch() {
     SearchContext
   ) as SearchContextType;
 
-  const { setItemDetail, setSelectedItem } = useContext(
+  const { setProductDetail, setSelectedItem } = useContext(
     ProductContext
   ) as ProductContextType;
 
@@ -20,13 +20,13 @@ export default function ProductSearch() {
     setSearchText("");
     setSearchKey("CODE");
     setItemList("");
-    setItemDetail(undefined);
+    setProductDetail(undefined);
     setSelectedItem("");
   }, [
     setSearchText,
     setSearchKey,
     setItemList,
-    setItemDetail,
+    setProductDetail,
     setSelectedItem,
   ]);
 

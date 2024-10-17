@@ -1,67 +1,63 @@
 "use client";
 import React, { useState, createContext } from "react";
-import { ItemDetailType } from "../ProductDetail";
+import { productType } from "../ProductDetail";
 import { supabase } from "@/app/lib/supabase";
 
 export type voucherType = {
   voucherId: number;
-  VOUCDATE: string;
+  VOUCDATE: Date;
   VOUCNO: string;
-  BILLAMT: string;
-  DISCOUNT: string;
-  NETAMT: string;
-  CASHAMT: string;
-  CHKAMT: string;
-  PAYAMT: string;
-  _accounts: accountsType;
+  BILLAMT: number;
+  DISCOUNT: number;
+  NETAMT: number;
+  CASHAMT: number;
+  CHKAMT: number;
+  PAYAMT: number;
+  accounts: accountsType;
 };
 
 export type noteType = {
   noteId: number;
-  NOTEDATE: string;
+  NOTEDATE: Date;
   NOTENO: string;
-  BILLAMT: string;
-  DISCOUNT: string;
-  NETAMT: string;
-  _accounts: accountsType;
+  BILLAMT: number;
+  DISCOUNT: number;
+  NETAMT: number;
+  accounts: accountsType;
 };
 
-export type billsType = {
+export type billType = {
   BILLNO: string;
   JOURDATE: Date;
-  BILLDATE: string;
-  DEDUCT: string;
-  BEFORETAX: string;
-  VAT: string;
-  AFTERTAX: string;
-  CASHAMT: string;
-  CHKAMT: string;
-  DUEAMT: string;
+  BILLDATE: Date;
+  DEDUCT: number;
+  BEFORETAX: number;
+  VAT: number;
+  AFTERTAX: number;
   accountId: number;
-  _accounts: accountsType;
+  accounts: accountsType;
   voucherId: number;
-  _vouchers: voucherType;
+  vouchers: voucherType;
   noteId: number;
-  _notes: noteType;
-  salesItems: itemsType;
+  notes: noteType;
 };
 
 export type itemsType = {
   BILLNO: string;
-  JOURDATE: string;
+  JOURDATE: Date;
   BCODE: string;
-  QTY: string;
+  QTY: number;
   UI: string;
-  MTP: string;
-  DISCNT1: string;
-  DISCNT2: string;
-  DISCNT3: string;
-  DISCNT4: string;
-  PRICE: string;
-  AMOUNT: string;
-  _accounts: accountsType;
-  _bills: billsType;
-  productInfo: ItemDetailType;
+  MTP: number;
+  DISCNT1: number;
+  DISCNT2: number;
+  DISCNT3: number;
+  DISCNT4: number;
+  PRICE: number;
+  AMOUNT: number;
+  accounts: accountsType;
+  bills: billType;
+  products: productType;
 };
 
 export type accountsType = {
@@ -76,10 +72,10 @@ export type accountsType = {
   FAX: string;
   CONTACT: string;
   EMAIL: string;
-  TERM: string;
-  ALLOW: string;
-  ATPRICE: string;
-  ENDDATE: string;
+  TERM: number;
+  ALLOW: number;
+  ATPRICE: number;
+  ENDDATE: number;
   REMARKS: string;
 };
 
@@ -97,12 +93,12 @@ export type TransactionContextType = {
   currentTab: string;
   setCurrentTab: (tab: string) => void;
   //Bills tab state
-  accountBills: billsType[] | undefined;
-  setAccountBills: (notes: billsType[]) => void;
-  currentBill: billsType | undefined;
-  setCurrentBill: (note: billsType | undefined) => void;
-  scrollBill: billsType | undefined;
-  setScrollBill: (bill: billsType | undefined) => void;
+  accountBills: billType[] | undefined;
+  setAccountBills: (notes: billType[]) => void;
+  currentBill: billType | undefined;
+  setCurrentBill: (note: billType | undefined) => void;
+  scrollBill: billType | undefined;
+  setScrollBill: (bill: billType | undefined) => void;
   currentBillItems: itemsType[] | undefined;
   setCurrentBillItems: (bills: itemsType[] | undefined) => void;
   getCurrentBillItemsSupabase: (billNo: string) => void;
@@ -113,8 +109,8 @@ export type TransactionContextType = {
   setCurrentNote: (note: noteType | undefined) => void;
   scrollNote: noteType | undefined;
   setScrollNote: (note: noteType | undefined) => void;
-  currentNoteBills: billsType[] | undefined;
-  setCurrentNoteBills: (bills: billsType[]) => void;
+  currentNoteBills: billType[] | undefined;
+  setCurrentNoteBills: (bills: billType[]) => void;
   getCurrentNoteBillsSupabase: (noteId: number) => void;
   //Vouchers tab state
   accountVouchers: voucherType[] | undefined;
@@ -123,8 +119,8 @@ export type TransactionContextType = {
   setCurrentVoucher: (voucher: voucherType | undefined) => void;
   scrollVoucher: voucherType | undefined;
   setScrollVoucher: (voucher: voucherType | undefined) => void;
-  currentVoucherBills: billsType[] | undefined;
-  setCurrentVoucherBills: (bills: billsType[]) => void;
+  currentVoucherBills: billType[] | undefined;
+  setCurrentVoucherBills: (bills: billType[]) => void;
   getCurrentVoucherBillsSupabase: (voucherId: number) => void;
   handleClickNote: (noteId: number) => void;
   handleClickVoucher: (voucherId: number) => void;
@@ -153,25 +149,25 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   const [toDate, setToDate] = useState<Date>(new Date());
   const [currentTab, setCurrentTab] = useState("allItems");
   //Bills tab states
-  const [accountBills, setAccountBills] = useState<billsType[]>();
-  const [currentBill, setCurrentBill] = useState<billsType>();
-  const [scrollBill, setScrollBill] = useState<billsType>();
+  const [accountBills, setAccountBills] = useState<billType[]>();
+  const [currentBill, setCurrentBill] = useState<billType>();
+  const [scrollBill, setScrollBill] = useState<billType>();
   const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
   //Notes tab states
   const [accountNotes, setAccountNotes] = useState<noteType[]>();
   const [currentNote, setCurrentNote] = useState<noteType>();
   const [scrollNote, setScrollNote] = useState<noteType>();
-  const [currentNoteBills, setCurrentNoteBills] = useState<billsType[]>();
+  const [currentNoteBills, setCurrentNoteBills] = useState<billType[]>();
   //Vouchers tab states
   const [accountVouchers, setAccountVouchers] = useState<voucherType[]>();
   const [currentVoucher, setCurrentVoucher] = useState<voucherType>();
   const [scrollVoucher, setScrollVoucher] = useState<voucherType>();
-  const [currentVoucherBills, setCurrentVoucherBills] = useState<billsType[]>();
+  const [currentVoucherBills, setCurrentVoucherBills] = useState<billType[]>();
 
   async function getCurrentNoteBillsSupabase(noteId: number) {
     const { data, error } = await supabase
-      .from("_bills")
-      .select(`*, _vouchers(*), _notes(*)`)
+      .from("bills")
+      .select(`*, vouchers(*), notes(*)`)
       .eq("noteId", noteId)
       .order("JOURDATE", { ascending: false })
       .limit(100);
@@ -182,8 +178,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
 
   async function getCurrentVoucherBillsSupabase(voucherId: number) {
     const { data, error } = await supabase
-      .from("_bills")
-      .select(`*, _vouchers(*), _notes(*)`)
+      .from("bills")
+      .select(`*, vouchers(*), notes(*)`)
       .eq("voucherId", voucherId)
       .order("JOURDATE", { ascending: false })
       .limit(100);
@@ -194,8 +190,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
 
   async function getCurrentBillItemsSupabase(billNo: string) {
     const { data, error } = await supabase
-      .from("_items")
-      .select(`*, productInfo(*)`)
+      .from("items")
+      .select(`*, products(*)`)
       .eq("BILLNO", billNo)
       .order("JOURDATE", { ascending: false })
       .limit(100);
@@ -207,8 +203,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   function handleClickBill(billNo: string) {
     async function getBillSupabase(billNo: string) {
       const { data, error } = await supabase
-        .from("_bills")
-        .select(`*,  _vouchers(*), _notes(*)`)
+        .from("bills")
+        .select(`*,  vouchers(*), notes(*)`)
         .eq("BILLNO", billNo)
         .limit(100);
 
@@ -229,8 +225,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   function handleClickNote(noteId: number) {
     async function getNoteSupabase(noteId: number) {
       const { data, error } = await supabase
-        .from("_notes")
-        .select(`*, _accounts(*)`)
+        .from("notes")
+        .select(`*, accounts(*)`)
         .eq("noteId", noteId)
         .limit(100);
 
@@ -251,8 +247,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   function handleClickVoucher(voucherId: number) {
     async function getVoucherSupabase(voucherId: number) {
       const { data, error } = await supabase
-        .from("_vouchers")
-        .select(`*, _accounts(*)`)
+        .from("vouchers")
+        .select(`*, accounts(*)`)
         .eq("voucherId", voucherId)
         .limit(100);
 

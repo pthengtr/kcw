@@ -10,14 +10,8 @@ import {
 } from "@/components/ui/accordion";
 
 export default function ProductCardProductPrice({
-  itemDetail,
+  productDetail,
 }: ProductDetailProps) {
-  let ui2text = "";
-  itemDetail.productUnit.forEach((item) => {
-    if (item.Attribute === "UI2") {
-      ui2text = item.Value;
-    }
-  });
   return (
     <Card>
       <CardHeader className="grid place-content-center">
@@ -25,7 +19,7 @@ export default function ProductCardProductPrice({
       </CardHeader>
       <CardContent className="grid place-content-center">
         <SpanValue className="text-5xl px-4 py-2">
-          {parseFloat(itemDetail.PRICENET1).toLocaleString()}
+          {productDetail.PRICE1.toLocaleString()}
         </SpanValue>
       </CardContent>
 
@@ -36,32 +30,35 @@ export default function ProductCardProductPrice({
               ราคาพิเศษ
             </AccordionTrigger>
             <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
-              {itemDetail.productPrice.map(
-                (price) =>
-                  price.Attribute !== "PRICE1" && (
-                    <React.Fragment key={price.Attribute}>
-                      <SpanName>{price.Attribute}</SpanName>
-                      <SpanValue>
-                        {parseFloat(price.Value).toLocaleString()}
-                      </SpanValue>
-                    </React.Fragment>
-                  )
-              )}
+              <SpanName>PRICE1</SpanName>
+              <SpanValue>{productDetail.PRICE1}</SpanValue>
+              <SpanName>PRICE2</SpanName>
+              <SpanValue>{productDetail.PRICE2}</SpanValue>
+              <SpanName>PRICE3</SpanName>
+              <SpanValue>{productDetail.PRICE3}</SpanValue>
+              <SpanName>PRICE4</SpanName>
+              <SpanValue>{productDetail.PRICE4}</SpanValue>
+              <SpanName>PRICE5</SpanName>
+              <SpanValue>{productDetail.PRICE5}</SpanValue>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="text-gray-500">
-              {`ราคา${ui2text != "" ? ui2text : "หน่วยใหญ่"}`}
+              {`ราคา${
+                productDetail.UI2 != "" ? productDetail.UI2 : "หน่วยใหญ่"
+              }`}
             </AccordionTrigger>
             <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
-              {itemDetail.productPriceM.map((price) => (
-                <React.Fragment key={price.Attribute}>
-                  <SpanName>{price.Attribute}</SpanName>
-                  <SpanValue>
-                    {parseFloat(price.Value).toLocaleString()}
-                  </SpanValue>
-                </React.Fragment>
-              ))}
+              <SpanName>PRICEM1</SpanName>
+              <SpanValue>{productDetail.PRICEM1}</SpanValue>
+              <SpanName>PRICEM2</SpanName>
+              <SpanValue>{productDetail.PRICEM2}</SpanValue>
+              <SpanName>PRICEM3</SpanName>
+              <SpanValue>{productDetail.PRICEM3}</SpanValue>
+              <SpanName>PRICEM4</SpanName>
+              <SpanValue>{productDetail.PRICEM4}</SpanValue>
+              <SpanName>PRICEM5</SpanName>
+              <SpanValue>{productDetail.PRICEM5}</SpanValue>
             </AccordionContent>
           </AccordionItem>
         </Accordion>

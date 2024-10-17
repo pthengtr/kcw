@@ -57,8 +57,8 @@ export default function TransactionVouchers({
   useEffect(() => {
     async function getVouchersSupabase() {
       const { data, error, count } = await supabase
-        .from("_vouchers")
-        .select(`*, _accounts(*)`, { count: "exact" })
+        .from("vouchers")
+        .select(`*, accounts(*)`, { count: "exact" })
         .ilike("VOUCNO", `%${filterText}%`)
         .eq("accountId", accountId)
         .lte("VOUCDATE", toDate.toLocaleString())

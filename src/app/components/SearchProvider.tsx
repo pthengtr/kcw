@@ -73,7 +73,7 @@ export default function SearchProvider({ children }: ProductProvider) {
 
   async function searchCode(page: number, sortOrder: string, sortBy: string) {
     let query = supabase
-      .from("productInfo")
+      .from("products")
       .select("*", { count: "exact" })
       .order(sortBy, { ascending: sortOrder === "asc" })
       .range((page - 1) * dbTake, page * dbTake - 1);
@@ -108,7 +108,7 @@ export default function SearchProvider({ children }: ProductProvider) {
 
   async function searchSize(page: number, sortOrder: string, sortBy: string) {
     let query = supabase
-      .from("productInfo")
+      .from("products")
       .select("*", { count: "exact" })
       .order(sortBy, { ascending: sortOrder === "asc" })
       .range((page - 1) * dbTake, page * dbTake - 1);

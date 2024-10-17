@@ -109,26 +109,40 @@ export default function TransactionVouchersVoucherList({
               </TableCell>
               <TableCell>{item.VOUCNO}</TableCell>
               <TableCell>
-                {parseFloat(item.BILLAMT ? item.BILLAMT : "0").toLocaleString()}
+                {item.BILLAMT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
               <TableCell>
-                {parseFloat(
-                  item.DISCOUNT ? item.DISCOUNT : "0"
-                ).toLocaleString()}
+                {item.DISCOUNT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
               <TableCell>
-                {parseFloat(
-                  item.NETAMT ? item.NETAMT : item.BILLAMT
-                ).toLocaleString()}
+                {item.NETAMT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
               <TableCell>
-                {parseFloat(item.CASHAMT ? item.CASHAMT : "0").toLocaleString()}
+                {item.CASHAMT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
               <TableCell>
-                {parseFloat(item.CHKAMT ? item.CHKAMT : "0").toLocaleString()}
+                {item.CHKAMT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
               <TableCell>
-                {parseFloat(item.PAYAMT ? item.PAYAMT : "0").toLocaleString()}
+                {item.PAYAMT.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </TableCell>
             </TableRow>
           ))}
