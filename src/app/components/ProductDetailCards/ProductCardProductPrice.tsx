@@ -44,9 +44,7 @@ export default function ProductCardProductPrice({
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="text-gray-500">
-              {`ราคา${
-                productDetail.UI2 != "" ? productDetail.UI2 : "หน่วยใหญ่"
-              }`}
+              {`ราคา${productDetail.UI2 ? productDetail.UI2 : "หน่วยใหญ่"}`}
             </AccordionTrigger>
             <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
               <SpanName>PRICEM1</SpanName>
