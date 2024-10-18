@@ -113,7 +113,36 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
                 <TransactionBillList
                   currentBills={currentNoteBills}
                   mode="notes"
+                  acctType={currentNote.accounts.ACCTTYPE}
                 />
+
+                {currentNote && (
+                  <div className="flex justify-end pb-16 px-16 text-base mt-auto  h-fit">
+                    <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg">
+                      <span>จำนวนเงิน</span>
+                      <span className="font-semibold">
+                        {currentNote.BILLAMT.toLocaleString("th-TH", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                      <span>ส่วนลด</span>
+                      <span className="font-semibold">
+                        {currentNote.DISCOUNT.toLocaleString("th-TH", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                      <span>ยอดรวม</span>
+                      <span className="font-semibold">
+                        {currentNote.NETAMT.toLocaleString("th-TH", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </ResizablePanel>

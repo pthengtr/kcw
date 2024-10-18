@@ -3,6 +3,15 @@ import React, { useState, createContext } from "react";
 import { productType } from "../ProductDetail";
 import { supabase } from "@/app/lib/supabase";
 
+export type checkType = {
+  BANKNAME: string;
+  CHKAMT: number;
+  CHKDATE: Date;
+  CHKNO: string;
+  checkId: number;
+  voucherId: string;
+};
+
 export type voucherType = {
   voucherId: number;
   VOUCDATE: Date;
@@ -14,6 +23,7 @@ export type voucherType = {
   CHKAMT: number;
   PAYAMT: number;
   accounts: accountsType;
+  checks: checkType[];
 };
 
 export type noteType = {
@@ -204,7 +214,7 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     async function getBillSupabase(billNo: string) {
       const { data, error } = await supabase
         .from("bills")
-        .select(`*,  vouchers(*), notes(*)`)
+        .select(`*,  vouchers(*), notes(*), accounts(*)`)
         .eq("BILLNO", billNo)
         .limit(100);
 
@@ -248,7 +258,7 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     async function getVoucherSupabase(voucherId: number) {
       const { data, error } = await supabase
         .from("vouchers")
-        .select(`*, accounts(*)`)
+        .select(`*, accounts(*), checks(*)`)
         .eq("voucherId", voucherId)
         .limit(100);
 

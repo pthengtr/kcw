@@ -79,13 +79,25 @@ export default function TransactionBillsBillList({
               className="hover:underline hover:cursor-pointer"
               onClick={() => handleClickColumn("_vouchers(VOUCNO)")}
             >
-              เลขที่ใบสำคัญ
+              {`เลขที่ใบสำคัญ${
+                accountBills[0]
+                  ? accountBills[0].accounts.ACCTTYPE === "P"
+                    ? "จ่าย"
+                    : "รับ"
+                  : ""
+              }`}
             </TableHead>
             <TableHead
               className="hover:underline hover:cursor-pointer"
               onClick={() => handleClickColumn("_vouchers(VOUCDATE)")}
             >
-              วันที่ใบสำคัญ
+              {`วันที่ใบสำคัญ${
+                accountBills
+                  ? accountBills[0].accounts.ACCTTYPE === "P"
+                    ? "จ่าย"
+                    : "รับ"
+                  : ""
+              }`}
             </TableHead>
             <TableHead>สถานะ</TableHead>
           </TableRow>

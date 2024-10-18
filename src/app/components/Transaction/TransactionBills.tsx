@@ -59,7 +59,7 @@ export default function TransactionBills({
     async function getBillsSupabase() {
       const { data, error, count } = await supabase
         .from("bills")
-        .select(`*, vouchers(*), notes(*)`, { count: "exact" })
+        .select(`*, vouchers(*), notes(*), accounts(*)`, { count: "exact" })
         .ilike("BILLNO", `%${filterText}%`)
         .eq("accountId", accountId)
         .order(sortBy, { ascending: sortAsc })
@@ -85,6 +85,10 @@ export default function TransactionBills({
     sortAsc,
   ]);
 
+  const sumAmt = accountBills
+    ? accountBills.reduce((acc, item) => item.AFTERTAX + acc, 0)
+    : 0;
+
   return (
     <>
       {accountBills && (
@@ -96,11 +100,22 @@ export default function TransactionBills({
               currentBill={currentBill}
               handleClickColumn={handleClickColumn}
             />
-            <TransactionTotalCount
-              totalCount={totalCount}
-              limit={limit}
-              setLimit={setLimit}
-            />
+            <div className="flex gap-4 justify-end items-center">
+              <div className="flex gap-2">
+                <span>ยอดรวมทั้งหมด</span>
+                <span className="font-semibold">
+                  {sumAmt.toLocaleString("th-TH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+              <TransactionTotalCount
+                totalCount={totalCount}
+                limit={limit}
+                setLimit={setLimit}
+              />
+            </div>
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
           <ResizablePanel className="h-[80vh]">

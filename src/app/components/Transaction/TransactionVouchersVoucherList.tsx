@@ -56,7 +56,13 @@ export default function TransactionVouchersVoucherList({
               className="hover:underline hover:cursor-pointer"
               onClick={() => handleClickColumn("VOUCNO")}
             >
-              เลขที่ใบสำคัญ
+              {`เลขที่ใบสำคัญ${
+                accountVouchers[0]
+                  ? accountVouchers[0].accounts.ACCTTYPE === "P"
+                    ? "จ่าย"
+                    : "รับ"
+                  : ""
+              }`}
             </TableHead>
 
             <TableHead

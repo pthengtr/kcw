@@ -92,6 +92,10 @@ export default function TransactionItems({
     sortBy,
   ]);
 
+  const sumAmt = accountItems
+    ? accountItems.reduce((acc, item) => item.AMOUNT + acc, 0)
+    : 0;
+
   return (
     <>
       {accountItems && (
@@ -199,11 +203,23 @@ export default function TransactionItems({
               </TableBody>
             </Table>
           </div>
-          <TransactionTotalCount
-            totalCount={totalCount}
-            limit={limit}
-            setLimit={setLimit}
-          />
+
+          <div className="flex gap-4 justify-end items-center">
+            <div className="flex gap-2">
+              <span>จำนวนเงินทั้งหมด</span>
+              <span className="font-semibold">
+                {sumAmt.toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
+            </div>
+            <TransactionTotalCount
+              totalCount={totalCount}
+              limit={limit}
+              setLimit={setLimit}
+            />
+          </div>
         </div>
       )}
     </>

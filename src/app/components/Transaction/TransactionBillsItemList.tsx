@@ -18,9 +18,18 @@ export default function TransactionBillsItemList({
             <div className="flex gap-4 justify-center">
               <span>บิลเลขที่</span>
               <span className="font-semibold">{currentBill.BILLNO}</span>
-              <span>วันที่</span>
+              {currentBill.accounts.ACCTTYPE === "P" && (
+                <>
+                  <span>วันที่ของเข้า</span>
+                  <span className="font-semibold">
+                    {new Date(currentBill.JOURDATE).toLocaleDateString("th-TH")}
+                  </span>
+                </>
+              )}
+
+              <span>วันที่หน้าบิล</span>
               <span className="font-semibold">
-                {new Date(currentBill.JOURDATE).toLocaleDateString("th-TH")}
+                {new Date(currentBill.BILLDATE).toLocaleDateString("th-TH")}
               </span>
             </div>
           )}

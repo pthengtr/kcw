@@ -16,11 +16,18 @@ import { useContext } from "react";
 type TransactionBillListProps = {
   currentBills: billType[] | undefined;
   mode: "notes" | "vouchers";
+  acctType: "P" | "S";
+};
+
+const accountType = {
+  P: "จ่าย",
+  S: "รับ",
 };
 
 export default function TransactionBillList({
   currentBills,
   mode = "notes",
+  acctType,
 }: TransactionBillListProps) {
   const { handleClickNote, handleClickVoucher, handleClickBill } = useContext(
     TransactionContext
@@ -35,10 +42,14 @@ export default function TransactionBillList({
             <TableHead>เลขที่บิล</TableHead>
             <TableHead>ยอดรวม</TableHead>
             <TableHead>
-              {mode === "notes" ? "เลขที่ใบสำคัญ" : "เลขที่ใบวางบิล"}
+              {mode === "notes"
+                ? `เลขที่ใบสำคัญ${accountType[acctType]}`
+                : "เลขที่ใบวางบิล"}
             </TableHead>
             <TableHead>
-              {mode === "notes" ? "วันที่ใบสำคัญ" : "วันที่ใบวางบิล"}
+              {mode === "notes"
+                ? `วันที่ใบสำคัญ${accountType[acctType]}`
+                : "วันที่ใบวางบิล"}
             </TableHead>
             <TableHead>สถานะ</TableHead>
           </TableRow>
