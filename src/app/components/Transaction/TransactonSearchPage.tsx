@@ -13,6 +13,23 @@ import {
   TransactionContext,
   TransactionContextType,
 } from "./TransactionProvider";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+const accountInfo = {
+  ADDR1: "ที่อยู่",
+  PHONE: "โทรศัพท์",
+  MOBILE: "เลขประจำตัวผู้เสียภาษี",
+  FAX: "แฟกซ์",
+  CONTACT: "ติดต่อ",
+  EMAIL: "อีเมล",
+  TERM: "เครดิต",
+  ALLOW: "วงเงิน",
+  REMARKS: "หมายเหตุ",
+};
 
 export default function TransactionSearchPage() {
   const { transactionAccountObject } = useContext(
@@ -78,21 +95,55 @@ export default function TransactionSearchPage() {
         onValueChange={handleOnTabChange}
       >
         <div className="flex justify-center items-center py-2 bg-gray-100 px-16">
-          <div className="flex-1 flex gap-2">
-            <span
-              className={`font-semibold text-xl text-white px-1 rounded-md ${
-                transactionAccountObject?.ACCTTYPE === "P"
-                  ? "bg-red-900"
-                  : transactionAccountObject?.ACCTTYPE === "S"
-                  ? "bg-green-900"
-                  : "bg-primary"
-              }`}
-            >
-              {transactionAccountObject?.ACCTNO}
-            </span>
-            <span className="font-semibold text-xl">
-              {transactionAccountObject?.ACCTNAME}
-            </span>
+          <div className="flex-1 flex gap-2 items-center">
+            {transactionAccountObject && (
+              <Popover>
+                <PopoverTrigger>
+                  <div className="flex gap-2">
+                    <span
+                      className={`font-semibold text-xl text-white px-1 rounded-md ${
+                        transactionAccountObject?.ACCTTYPE === "P"
+                          ? "bg-red-900"
+                          : transactionAccountObject?.ACCTTYPE === "S"
+                          ? "bg-green-900"
+                          : "bg-primary"
+                      }`}
+                    >
+                      {transactionAccountObject?.ACCTNO}
+                    </span>
+                    <span className="font-semibold text-xl">
+                      {transactionAccountObject?.ACCTNAME}
+                    </span>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="grid grid-cols-[auto_auto] w-full max-w-[500px] gap-x-6 gap-y-2">
+                  {Object.keys(accountInfo).map((key) => (
+                    <React.Fragment key={key}>
+                      {!!transactionAccountObject[
+                        key as keyof typeof accountInfo
+                      ] && (
+                        <>
+                          <span className="text-gray-500">
+                            {accountInfo[key as keyof typeof accountInfo]}
+                          </span>
+                          <span>
+                            {`${
+                              transactionAccountObject[
+                                key as keyof typeof accountInfo
+                              ]
+                            }  ${
+                              key === "ADDR1"
+                                ? transactionAccountObject.ADDR2
+                                : ""
+                            }`}
+                          </span>
+                        </>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
           <TabsList>
             <TabsTrigger value="allItems">ดูสินค้าทั้งหมด</TabsTrigger>
