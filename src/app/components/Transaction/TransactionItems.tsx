@@ -58,7 +58,16 @@ export default function TransactionItems({
             count: "exact",
           })
           .or(
-            `DESCR.ilike.%${filterText}%, MODEL.ilike.%${filterText}%, BCODE.ilike.%${filterText}%`,
+            ` \
+      BCODE.ilike.%${filterText}%, \
+      DESCR.ilike.%${filterText}%, \
+      XCODE.ilike.%${filterText}%, \
+      MCODE.ilike.%${filterText}%, \
+      PCODE.ilike.%${filterText}%, \
+      ACODE.ilike.%${filterText}%, \
+      BRAND.ilike.%${filterText}%, \
+      MODEL.ilike.%${filterText}%, \
+      VENDOR.ilike.%${filterText}%`,
             {
               referencedTable: "products",
             }

@@ -12,6 +12,13 @@ import {
   TransactionContext,
   TransactionContextType,
 } from "./TransactionProvider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { usePathname } from "next/navigation";
 
 const filterPlaceholder = {
   allItems: "ชื่อ หรือ รหัสสินค้า...",
@@ -21,6 +28,8 @@ const filterPlaceholder = {
 };
 
 export default function TransactionFilter() {
+  const pathName = usePathname();
+
   const {
     fromDate,
     setFromDate,
@@ -29,13 +38,52 @@ export default function TransactionFilter() {
     filterText,
     setFilterText,
     currentTab,
+    billType,
+    setBillType,
   } = React.useContext(TransactionContext) as TransactionContextType;
+
+  function handleClickBillType(type: string) {
+    setBillType(type);
+  }
+
+  const billTypeName = {
+    บิลทั่วไป: "1",
+    ใบลดหนี้: "2",
+    ใบเพิ่มหนี้: "3",
+    คงค้าง: pathName === "/sales" ? "R" : "P",
+  };
 
   return (
     <div className="flex gap-2 items-center justify-end">
-      <div className="w-64">
+      <div className="w-72 flex">
+        {currentTab === "bills" && (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="bg-gray-300 py-1 px-2 rounded-l-md text-sm w-28">
+              {Object.keys(billTypeName).filter(
+                (key) =>
+                  billTypeName[key as keyof typeof billTypeName] === billType
+              )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {Object.keys(billTypeName).map((key) => (
+                <DropdownMenuItem
+                  key={key}
+                  onClick={() =>
+                    handleClickBillType(
+                      billTypeName[key as keyof typeof billTypeName]
+                    )
+                  }
+                >
+                  {key}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         <Input
-          className="roundeก-md"
+          className={`rounded-r-md ${
+            currentTab === "bills" ? "rounded-l-none" : "rounded-l-md"
+          }`}
           type="text"
           placeholder={
             filterPlaceholder[currentTab as keyof typeof filterPlaceholder]

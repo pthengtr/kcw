@@ -33,6 +33,7 @@ export default function TransactionBills({
     setCurrentBill,
     currentBillItems,
     getCurrentBillItemsSupabase,
+    billType,
   } = useContext(TransactionContext) as TransactionContextType;
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
@@ -61,6 +62,7 @@ export default function TransactionBills({
         .from("bills")
         .select(`*, vouchers(*), notes(*), accounts(*)`, { count: "exact" })
         .ilike("BILLNO", `%${filterText}%`)
+        .ilike("BILLTYPE", `${billType}%`)
         .eq("accountId", accountId)
         .order(sortBy, { ascending: sortAsc })
         .lte("JOURDATE", toDate.toLocaleString())
@@ -83,6 +85,7 @@ export default function TransactionBills({
     limit,
     sortBy,
     sortAsc,
+    billType,
   ]);
 
   const sumAmt = accountBills

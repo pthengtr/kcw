@@ -102,6 +102,8 @@ export type TransactionContextType = {
   setFromDate: (fromDate: Date) => void;
   currentTab: string;
   setCurrentTab: (tab: string) => void;
+  billType: string;
+  setBillType: (type: string) => void;
   //Bills tab state
   accountBills: billType[] | undefined;
   setAccountBills: (notes: billType[]) => void;
@@ -143,7 +145,7 @@ export const TransactionContext = createContext<TransactionContextType | null>(
 
 export function createLastYearDate() {
   const date = new Date();
-  date.setFullYear(date.getFullYear() - 2);
+  date.setFullYear(date.getFullYear() - 3);
   return date;
 }
 
@@ -158,6 +160,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   const [fromDate, setFromDate] = useState<Date>(createLastYearDate());
   const [toDate, setToDate] = useState<Date>(new Date());
   const [currentTab, setCurrentTab] = useState("allItems");
+  const [billType, setBillType] = useState("1");
+
   //Bills tab states
   const [accountBills, setAccountBills] = useState<billType[]>();
   const [currentBill, setCurrentBill] = useState<billType>();
@@ -288,6 +292,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     toDate,
     setToDate,
     currentTab,
+    billType,
+    setBillType,
     setCurrentTab,
     accountNotes,
     setAccountNotes,

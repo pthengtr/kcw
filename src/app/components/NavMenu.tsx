@@ -17,11 +17,11 @@ const menu = [
     path: "/product",
   },
   {
-    name: "ซื้อ",
+    name: "เจ้าหนี้",
     path: "/purchases",
   },
   {
-    name: "ขาย",
+    name: "ลูกหนี้",
     path: "/sales",
   },
 ];
