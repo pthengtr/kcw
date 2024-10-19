@@ -6,7 +6,8 @@ import { dbTake } from "../lib/util";
 import ProductProvider, {
   ProductContext,
   ProductContextType,
-} from "./ProductProvider";
+  productType,
+} from "./Product/ProductProvider";
 import { accountsType } from "./Transaction/TransactionProvider";
 
 export type SearchContextType = {
@@ -22,8 +23,8 @@ export type SearchContextType = {
   setSize2: (size: string) => void;
   size3: string;
   setSize3: (size: string) => void;
-  itemList: string;
-  setItemList: (itemList: string) => void;
+  itemList: productType[] | undefined;
+  setItemList: (itemList: productType[] | undefined) => void;
   sortOrder: string;
   setSortOrder: (order: string) => void;
   tableSearchKey: string;
@@ -59,7 +60,7 @@ export default function SearchProvider({ children }: ProductProvider) {
   const [size2, setSize2] = React.useState("");
   const [size3, setSize3] = React.useState("");
   const [category, setCategory] = React.useState("I");
-  const [itemList, setItemList] = React.useState("");
+  const [itemList, setItemList] = React.useState<productType[]>();
   const [totalFound, setTotalFound] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [sortOrder, setSortOrder] = React.useState("asc");
@@ -102,7 +103,7 @@ export default function SearchProvider({ children }: ProductProvider) {
     const { data, error, count } = await query;
 
     if (error) return;
-    if (data !== null) setItemList(JSON.stringify(data));
+    if (data !== null) setItemList(data);
     if (count !== null) setTotalFound(count);
   }
 
@@ -125,7 +126,7 @@ export default function SearchProvider({ children }: ProductProvider) {
 
     if (error) return;
     if (count !== null) setTotalFound(count);
-    if (data !== null) setItemList(JSON.stringify(data));
+    if (data !== null) setItemList(data);
   }
 
   function getDataFromSearch(page: number, sortOrder: string, sortBy: string) {

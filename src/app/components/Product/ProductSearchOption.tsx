@@ -11,8 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { groupName, sizeCategory, groupProducts } from "../lib/util";
-import { SearchContext, SearchContextType } from "./SearchProvider";
+import { groupName, sizeCategory, groupProducts } from "../../lib/util";
+import { SearchContext, SearchContextType } from "../SearchProvider";
 
 export default function ProductSearchOption() {
   const {

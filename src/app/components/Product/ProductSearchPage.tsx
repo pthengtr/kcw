@@ -1,30 +1,24 @@
 "use client";
+import React, { useContext } from "react";
 import ProductTable from "./ProductTable";
-import ProductPagination from "@/app/components/ProductPagination";
+import ProductPagination from "@/app/components/Product/ProductPagination";
 import ProductDetail from "./ProductDetail";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import React from "react";
+import { SearchContext, SearchContextType } from "../SearchProvider";
 
-type ProductMainProps = {
-  itemListJson: string;
-  totalFound: number;
-};
-
-export default function ProductMain({
-  itemListJson,
-  totalFound,
-}: ProductMainProps) {
-  const itemList = itemListJson ? JSON.parse(itemListJson) : "";
-
+export default function ProductSearchPage() {
+  const { itemList, totalFound } = useContext(
+    SearchContext
+  ) as SearchContextType;
   return (
     <main className="h-[90%]">
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel className="w-1/2 flex flex-col items-center h-full  overflow-auto">
-          {itemList !== "" && (
+          {!!itemList && itemList.length > 0 && (
             <>
               <div className="w-full overflow-auto">
                 <ProductTable itemList={itemList} />

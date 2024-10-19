@@ -1,9 +1,9 @@
 import { useEffect, useId, useState } from "react";
-import { ProductDetailProps } from "../ProductDetail";
+import { ProductDetailProps } from "@/app/components/Product/ProductDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "../../lib/supabase";
-import { itemsType } from "../Transaction/TransactionProvider";
-import { createLastYearDate } from "../Transaction/TransactionProvider";
+import { supabase } from "@/app/lib/supabase";
+import { itemsType } from "@/app/components/Transaction/TransactionProvider";
+import { createLastYearDate } from "@/app/components/Transaction/TransactionProvider";
 import { Separator } from "@/components/ui/separator";
 
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 import ProductCardLoading from "./ProductCardLoading";
 import ProductBuySellFilter from "./ProductBuySellFilter";
-import TotalCount from "../TotalCount";
+import TotalCount from "@/app/components/TotalCount";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProductCardSale({ productDetail }: ProductDetailProps) {

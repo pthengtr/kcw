@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { accountsType } from "./TransactionProvider";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { SpanValue } from "../ProductDetail";
+import { SpanValue } from "../Product/ProductDetail";
 import { usePathname } from "next/navigation";
 
 export default function TransactionSearch() {

@@ -1,7 +1,7 @@
-import { SpanValue, SpanName } from "../ProductDetail";
-import { ProductDetailProps } from "../ProductDetail";
+import { SpanValue, SpanName } from "@/app/components/Product/ProductDetail";
+import { ProductDetailProps } from "@/app/components/Product/ProductDetail";
 import React from "react";
-import { sizeCategory, sizeType } from "../../lib/util";
+import { sizeCategory, sizeType } from "@/app/lib/util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProductCardProductSize({

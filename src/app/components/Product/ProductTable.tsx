@@ -3,7 +3,7 @@ import ProductRow from "./ProductRow";
 import ProductColumnHeader from "./ProductColumnHeader";
 import { Table, TableBody } from "@/components/ui/table";
 import { ProductContext, ProductContextType } from "./ProductProvider";
-import { productType } from "./ProductDetail";
+import { productType } from "./ProductProvider";
 
 type ProductTableProps = {
   itemList: productType[];

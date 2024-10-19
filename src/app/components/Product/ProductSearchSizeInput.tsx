@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
-import { sizeType } from "../lib/util";
-import { SearchContext, SearchContextType } from "./SearchProvider";
+import { sizeType } from "../../lib/util";
+import { SearchContext, SearchContextType } from "../SearchProvider";
 import React, { useContext } from "react";
 
 export default function ProductSearchSizeInput() {

@@ -1,6 +1,6 @@
-import { SpanValue, SpanName } from "../ProductDetail";
-import { groupName } from "../../lib/util";
-import { ProductDetailProps } from "../ProductDetail";
+import { SpanValue, SpanName } from "@/app/components/Product/ProductDetail";
+import { groupName } from "@/app/lib/util";
+import { ProductDetailProps } from "@/app/components/Product/ProductDetail";
 import React from "react";
 import {
   Accordion,

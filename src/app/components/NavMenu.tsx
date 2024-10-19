@@ -13,16 +13,24 @@ import { authSignOut } from "@/app/lib/authUtils";
 
 const menu = [
   {
+    name: "POS",
+    path: "/pos",
+    classes: "bg-secondary py-1 px-2 rounded-md font-semibold",
+  },
+  {
     name: "สินค้า",
     path: "/product",
+    classes: "",
   },
   {
     name: "เจ้าหนี้",
     path: "/purchases",
+    classes: "",
   },
   {
     name: "ลูกหนี้",
     path: "/sales",
+    classes: "",
   },
 ];
 
@@ -34,7 +42,7 @@ export default function NavMenu() {
       <NavigationMenuList className="flex gap-4">
         {menu.map((menu) => (
           <React.Fragment key={menu.name}>
-            <NavigationMenuItem>
+            <NavigationMenuItem className={menu.classes}>
               <Link href={menu.path} legacyBehavior passHref>
                 <NavigationMenuLink>{menu.name}</NavigationMenuLink>
               </Link>

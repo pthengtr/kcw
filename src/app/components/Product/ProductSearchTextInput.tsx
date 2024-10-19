@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { SearchContext, SearchContextType } from "./SearchProvider";
+import { SearchContext, SearchContextType } from "../SearchProvider";
 import React, { useContext } from "react";
 
 export default function ProductSearchTextInput() {

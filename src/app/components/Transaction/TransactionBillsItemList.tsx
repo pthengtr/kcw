@@ -55,6 +55,12 @@ export default function TransactionBillsItemList({
                     maximumFractionDigits: 2,
                   })}
                 </span>
+                {!!currentBill.REMARKS && (
+                  <>
+                    <span>หมายเหตุ</span>
+                    <span>{currentBill.REMARKS}</span>
+                  </>
+                )}
               </div>
             </div>
           )}

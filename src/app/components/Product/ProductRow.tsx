@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { SearchContext, SearchContextType } from "./SearchProvider";
-import { productType } from "./ProductDetail";
+import { SearchContext, SearchContextType } from "../SearchProvider";
+import { productType } from "./ProductProvider";
 
 type ProductRowProps = {
   item: productType;

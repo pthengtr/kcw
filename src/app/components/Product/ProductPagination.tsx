@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import PaginationNext from "@/app/components/PaginationNext";
-import PaginationPrev from "@/app/components/PaginationPrev";
-import { SearchContext, SearchContextType } from "./SearchProvider";
-import { dbTake } from "../lib/util";
+import PaginationNext from "@/app/components/Product/PaginationNext";
+import PaginationPrev from "@/app/components/Product/PaginationPrev";
+import { SearchContext, SearchContextType } from "../SearchProvider";
+import { dbTake } from "../../lib/util";
 
 import {
   Pagination,

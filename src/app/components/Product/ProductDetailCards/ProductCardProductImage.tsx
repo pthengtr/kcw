@@ -1,4 +1,4 @@
-import { ProductDetailProps } from "../ProductDetail";
+import { ProductDetailProps } from "@/app/components/Product/ProductDetail";
 import ImageWithFallback from "./ImageWithFallback";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

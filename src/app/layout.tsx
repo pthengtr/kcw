@@ -1,7 +1,7 @@
 import { Prompt } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
-import ProductProvider from "./components/ProductProvider";
+import ProductProvider from "./components/Product/ProductProvider";
 import SearchProvider from "./components/SearchProvider";
 import Header from "./components/Header";
 import AuthProvider from "./components/AuthProvider";

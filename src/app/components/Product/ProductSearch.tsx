@@ -4,7 +4,7 @@ import ProductSearchOption from "./ProductSearchOption";
 import ProductSearchSizeInput from "./ProductSearchSizeInput";
 import ProductSearchTextInput from "./ProductSearchTextInput";
 
-import { SearchContext, SearchContextType } from "./SearchProvider";
+import { SearchContext, SearchContextType } from "../SearchProvider";
 import React, { useContext, useEffect } from "react";
 
 export default function ProductSearch() {
@@ -19,7 +19,7 @@ export default function ProductSearch() {
   useEffect(() => {
     setSearchText("");
     setSearchKey("CODE");
-    setItemList("");
+    setItemList(undefined);
     setProductDetail(undefined);
     setSelectedItem("");
   }, [

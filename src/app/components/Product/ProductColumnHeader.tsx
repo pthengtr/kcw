@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import ProductOptionalColumn from "./ProductOptionalColumn";
 import { ProductContext, ProductContextType } from "./ProductProvider";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { sizeType } from "../lib/util";
-import { SearchContext, SearchContextType } from "./SearchProvider";
+import { sizeType } from "../../lib/util";
+import { SearchContext, SearchContextType } from "../SearchProvider";
 
 export default function ProductColumnHeder() {
   const { column1, column2, column3, setColumn1, setColumn2, setColumn3 } =
