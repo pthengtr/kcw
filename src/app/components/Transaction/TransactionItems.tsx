@@ -45,33 +45,42 @@ export default function TransactionItems({
 
   useEffect(() => {
     async function getAccountItemsSupabase() {
-      let query;
+      let query = supabase.from("items").select(`*, products(*), bills(*)`, {
+        count: "exact",
+      });
 
-      if (filterText === "") {
-        query = supabase.from("items").select(`*, products(*), bills(*)`, {
-          count: "exact",
-        });
-      } else {
+      if (filterText !== "") {
+        const searchWords = filterText
+          .split(/[\s,]+/)
+          .map((word) => word.trim());
+
+        console.log(searchWords);
+        const orSearchArr = searchWords.map(
+          (word) => ` \
+      BCODE.ilike.%${word}%, \
+      DESCR.ilike.%${word}%, \
+      XCODE.ilike.%${word}%, \
+      MCODE.ilike.%${word}%, \
+      PCODE.ilike.%${word}%, \
+      ACODE.ilike.%${word}%, \
+      BRAND.ilike.%${word}%, \
+      MODEL.ilike.%${word}%, \
+      VENDOR.ilike.%${word}%`
+        );
+
+        console.log(orSearchArr);
         query = supabase
           .from("items")
           .select(`*, products!inner(*),  bills(*)`, {
             count: "exact",
-          })
-          .or(
-            ` \
-      BCODE.ilike.%${filterText}%, \
-      DESCR.ilike.%${filterText}%, \
-      XCODE.ilike.%${filterText}%, \
-      MCODE.ilike.%${filterText}%, \
-      PCODE.ilike.%${filterText}%, \
-      ACODE.ilike.%${filterText}%, \
-      BRAND.ilike.%${filterText}%, \
-      MODEL.ilike.%${filterText}%, \
-      VENDOR.ilike.%${filterText}%`,
-            {
+          });
+
+        orSearchArr.forEach(
+          (orSearch) =>
+            (query = query.or(orSearch, {
               referencedTable: "products",
-            }
-          );
+            }))
+        );
       }
 
       query = query
@@ -83,6 +92,7 @@ export default function TransactionItems({
 
       const { data, error, count } = await query;
 
+      console.log(data);
       if (error) return;
       if (data !== null) setAccountItems(data);
       if (count !== null) setTotalCount(count);
