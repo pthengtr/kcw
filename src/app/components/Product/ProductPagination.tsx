@@ -26,7 +26,7 @@ export default function ProductPagination({
     useContext(SearchContext) as SearchContextType;
 
   return (
-    <section className="flex items-center p-2 bg-gray-100 w-full mt-auto">
+    <section className="flex items-center py-1 px-2 bg-gray-100 w-full mt-auto shadow-lg">
       <Pagination>
         <PaginationContent>
           <PaginationItem>

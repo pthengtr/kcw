@@ -18,7 +18,7 @@ export default function ProductCardProductPrice({
         <CardTitle>ราคาสินค้า</CardTitle>
       </CardHeader>
       <CardContent className="grid place-content-center">
-        <SpanValue className="text-5xl px-4 py-2">
+        <SpanValue className="text-5xl px-4 py-2 bg-primary text-white">
           {productDetail.PRICE1.toLocaleString()}
         </SpanValue>
       </CardContent>

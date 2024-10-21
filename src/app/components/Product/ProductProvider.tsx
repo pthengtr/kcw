@@ -18,6 +18,7 @@ export type productType = {
   UI2: string;
   MTP2: number;
   STATUS: number;
+  ISVAT: string;
   LOCATION1: string;
   LOCATION2: string;
   CODE1: string;

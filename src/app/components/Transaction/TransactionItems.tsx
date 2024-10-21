@@ -85,8 +85,8 @@ export default function TransactionItems({
 
       query = query
         .eq("accountId", accountId)
-        .lte("JOURDATE", toDate.toLocaleString())
-        .gte("JOURDATE", fromDate.toLocaleString())
+        .lte("JOURDATE", toDate.toLocaleString("en-SG"))
+        .gte("JOURDATE", fromDate.toLocaleString("en-SG"))
         .order(sortBy, { ascending: sortAsc, nullsFirst: sortAsc })
         .limit(parseInt(limit));
 

@@ -60,8 +60,8 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
         .ilike("NOTENO", `%${filterText}%`)
         .eq("accountId", accountId)
         .order(sortBy, { ascending: sortAsc })
-        .lte("NOTEDATE", toDate.toLocaleString())
-        .gte("NOTEDATE", fromDate.toLocaleString())
+        .lte("NOTEDATE", toDate.toLocaleString("en-SG"))
+        .gte("NOTEDATE", fromDate.toLocaleString("en-SG"))
         .limit(parseInt(limit));
 
       if (error) return;

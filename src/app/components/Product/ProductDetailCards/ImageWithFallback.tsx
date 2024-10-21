@@ -19,7 +19,7 @@ export default function ImageWithFallback({
 
   useEffect(() => setError(false), [src]);
   return (
-    <div className="relative max-w-full min-w-fit h-full rounded-lg overflow-hidden grid place-content-center mt-8">
+    <div className="relative max-w-full min-w-fit h-full rounded-lg overflow-hidden grid place-content-center">
       <Image
         alt={alt}
         onError={() => setError(true)}

@@ -18,6 +18,8 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.1",
+    "@radix-ui/react-toggle": "^1.1.0",
+    "@radix-ui/react-toggle-group": "^1.1.0",
     "@supabase/supabase-js": "^2.45.4",
     "@tailwindcss/container-queries": "^0.1.1",
     "@vercel/postgres": "^0.10.0",

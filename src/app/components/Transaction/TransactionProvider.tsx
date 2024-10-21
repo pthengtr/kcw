@@ -64,6 +64,8 @@ export type itemsType = {
   DISCNT2: number;
   DISCNT3: number;
   DISCNT4: number;
+  DED: number;
+  VAT: number;
   PRICE: number;
   AMOUNT: number;
   accounts: accountsType;

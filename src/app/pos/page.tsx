@@ -1,7 +1,8 @@
 import React from "react";
-import ProductSearchPage from "../components/Product/ProductSearchPage";
+import PosPage from "@/app/components/Pos/PosPage";
 import { auth } from "@/app/auth";
 import { redirect } from "next/navigation";
+import PosProvider from "../components/Pos/PosProvider";
 
 export default async function Pos() {
   const session = await auth();
@@ -11,5 +12,9 @@ export default async function Pos() {
     return redirect("/");
   }
 
-  return <ProductSearchPage />;
+  return (
+    <PosProvider>
+      <PosPage />
+    </PosProvider>
+  );
 }
