@@ -73,8 +73,8 @@ export default function ProductCardBuy({ productDetail }: ProductDetailProps) {
         .eq("BCODE", bcode)
         .ilike("bills.BILLTYPE", "%P%")
         .order(sortBy, { ascending: sortAsc })
-        .lte("bills.JOURDATE", toDate.toLocaleString("en-SG"))
-        .gte("bills.JOURDATE", fromDate.toLocaleString("en-SG"))
+        .lte("bills.JOURDATE", toDate.toLocaleString("en-US"))
+        .gte("bills.JOURDATE", fromDate.toLocaleString("en-US"))
         .limit(parseInt(limit));
 
       const { data, error, count } = await query;

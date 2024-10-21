@@ -62,8 +62,8 @@ export default function TransactionVouchers({
         .select(`*, accounts(*), checks(*)`, { count: "exact" })
         .ilike("VOUCNO", `%${filterText}%`)
         .eq("accountId", accountId)
-        .lte("VOUCDATE", toDate.toLocaleString("en-SG"))
-        .gte("VOUCDATE", fromDate.toLocaleString("en-SG"))
+        .lte("VOUCDATE", toDate.toLocaleString("en-US"))
+        .gte("VOUCDATE", fromDate.toLocaleString("en-US"))
         .order(sortBy, { ascending: sortAsc })
         .limit(parseInt(limit));
 

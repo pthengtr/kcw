@@ -65,8 +65,8 @@ export default function TransactionBills({
         .ilike("BILLTYPE", `${billType}%`)
         .eq("accountId", accountId)
         .order(sortBy, { ascending: sortAsc })
-        .lte("JOURDATE", toDate.toLocaleString("en-SG"))
-        .gte("JOURDATE", fromDate.toLocaleString("en-SG"))
+        .lte("JOURDATE", toDate.toLocaleString("en-US"))
+        .gte("JOURDATE", fromDate.toLocaleString("en-US"))
         .limit(parseInt(limit));
 
       if (error) return;
