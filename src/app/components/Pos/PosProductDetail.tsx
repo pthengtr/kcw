@@ -50,7 +50,7 @@ export default function PosProductDetail() {
           ref={productDetailRef}
           className="h-full flex gap-4 justify-center items-start overflow-auto mt-4"
         >
-          <div className="flex flex-col gap-4 w-96">
+          <div className="flex flex-col gap-4 min-w-96">
             <PosProductImage productDetail={productDetail} />
           </div>
           <div className="flex flex-col gap-4 w-54">

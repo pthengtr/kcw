@@ -8,9 +8,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import ProductTable from "@/app/components/Product/ProductTable";
+import ProductPagination from "@/app/components/Product/ProductPagination";
+import ProductSearch from "../Product/ProductSearch";
+import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
+import { SearchContext, SearchContextType } from "../SearchProvider";
+import PosProductDetail from "./PosProductDetail";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export default function PosBillItemsCard() {
   const {
@@ -21,11 +34,55 @@ export default function PosBillItemsCard() {
     getSumAmount,
     vat,
   } = useContext(PosContext) as PosContextType;
+  const { itemList, totalFound, handleSubmitForm } = useContext(
+    SearchContext
+  ) as SearchContextType;
 
   return (
     <Card className="w-full h-[80vh] pb-8">
       <CardHeader>
-        <CardTitle className="text-center">รายการสินค้า</CardTitle>
+        <CardTitle className="text-center items-center flex">
+          <div className="flex-1 text-left">
+            <Sheet>
+              <SheetTrigger className="bg-gray-300 text-base p-2 rounded-md">
+                ค้นหาสินค้า
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="sm:max-w-[1024px] overflow-auto"
+              >
+                <SheetHeader>
+                  <SheetTitle className="w-[500px] mx-auto">
+                    <form
+                      onSubmit={handleSubmitForm}
+                      className="flex gap-2 items-center"
+                    >
+                      <div className="w-[500px] flex flex-auto shadow-lg relative">
+                        <ProductSearch />
+                      </div>
+                      <Button className="bg-gray-100 text-gray-800 shadow-lg font-semibold hover:bg-slate-200 hover:scale-[1.02] active:scale-[1]">
+                        ค้นหา
+                      </Button>
+                    </form>
+                  </SheetTitle>
+                  <SheetDescription>
+                    {!!itemList && itemList.length > 0 && (
+                      <>
+                        <div className="w-full h-[40vh] overflow-auto">
+                          <ProductTable itemList={itemList} />
+                        </div>
+                        <ProductPagination totalFound={totalFound} />
+                        <PosProductDetail />
+                      </>
+                    )}
+                  </SheetDescription>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+          </div>
+          <span>รายการสินค้า</span>
+          <span className="flex-1"></span>
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col h-[70vh]">
         <div className="overflow-auto">

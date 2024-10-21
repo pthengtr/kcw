@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function PosBill() {
   return (
-    <div className="w-full flex gap-4 p-4">
+    <div className="w-[1280px] flex gap-4 p-4">
       <div className="flex flex-1 justify-center gap-8">
         <PosBillItemsCard />
       </div>
