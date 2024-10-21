@@ -12,6 +12,9 @@ import {
   TransactionContextType,
 } from "./TransactionProvider";
 import { useContext, useEffect } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import TransactionVouchersBillList from "./TransactionVouchersBillList";
+import TransactionNotesBillList from "./TransactionNotesBillList";
 
 type TransactionBillsBillListProps = {
   accountBills: billType[];
@@ -26,9 +29,15 @@ export default function TransactionBillsBillList({
   handleClickBill,
   handleClickColumn,
 }: TransactionBillsBillListProps) {
-  const { handleClickNote, handleClickVoucher, scrollBill } = useContext(
-    TransactionContext
-  ) as TransactionContextType;
+  const {
+    handleClickNote,
+    handleClickVoucher,
+    scrollBill,
+    currentVoucher,
+    currentVoucherBills,
+    currentNote,
+    currentNoteBills,
+  } = useContext(TransactionContext) as TransactionContextType;
 
   useEffect(() => {
     if (!scrollBill) return;
@@ -133,7 +142,24 @@ export default function TransactionBillsBillList({
                   }`}
                   onClick={() => handleClickNote(item.noteId)}
                 >
-                  {item.notes?.NOTENO}
+                  {!!item.notes && (
+                    <Dialog>
+                      <DialogTrigger
+                        className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
+                        onClick={() => handleClickVoucher(item.voucherId)}
+                      >
+                        {item.notes?.NOTENO}
+                      </DialogTrigger>
+                      <DialogContent className="h-[80vh] sm:max-w-[1280px]">
+                        {!!currentNote && (
+                          <TransactionNotesBillList
+                            currentNote={currentNote}
+                            currentNoteBills={currentNoteBills}
+                          />
+                        )}
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </TableCell>
 
                 <TableCell>
@@ -141,14 +167,25 @@ export default function TransactionBillsBillList({
                     new Date(item.notes?.NOTEDATE).toLocaleDateString("th-TH")}
                 </TableCell>
 
-                <TableCell
-                  onClick={() => handleClickVoucher(item.voucherId)}
-                  className={`${
-                    item.vouchers &&
-                    "hover:cursor-pointer hover:underline hover:italic"
-                  }`}
-                >
-                  {item.vouchers?.VOUCNO}
+                <TableCell>
+                  {!!item.vouchers && (
+                    <Dialog>
+                      <DialogTrigger
+                        className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
+                        onClick={() => handleClickVoucher(item.voucherId)}
+                      >
+                        {item.vouchers?.VOUCNO}
+                      </DialogTrigger>
+                      <DialogContent className="h-[80vh] sm:max-w-[1280px]">
+                        {!!currentVoucher && (
+                          <TransactionVouchersBillList
+                            currentVoucher={currentVoucher}
+                            currentVoucherBills={currentVoucherBills}
+                          />
+                        )}
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </TableCell>
 
                 <TableCell>

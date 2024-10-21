@@ -236,7 +236,6 @@ export default function TransactionProvider({ children }: TransactionProvider) {
 
     getBillSupabase(billNo);
     getCurrentBillItemsSupabase(billNo);
-    setCurrentTab("bills");
   }
 
   function handleClickNote(noteId: number) {
@@ -258,7 +257,6 @@ export default function TransactionProvider({ children }: TransactionProvider) {
 
     getNoteSupabase(noteId);
     getCurrentNoteBillsSupabase(noteId);
-    setCurrentTab("notes");
   }
 
   function handleClickVoucher(voucherId: number) {
@@ -280,7 +278,6 @@ export default function TransactionProvider({ children }: TransactionProvider) {
 
     getVoucherSupabase(voucherId);
     getCurrentVoucherBillsSupabase(voucherId);
-    setCurrentTab("vouchers");
   }
 
   const value = {

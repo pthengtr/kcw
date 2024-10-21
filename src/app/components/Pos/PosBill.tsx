@@ -10,7 +10,7 @@ export default function PosBill() {
       <div className="flex flex-1 justify-center gap-8">
         <PosBillItemsCard />
       </div>
-      <div className="flex flex-col justify-start gap-8 min-w-72">
+      <div className="flex flex-col justify-between gap-4 min-w-72">
         <PosBillTotalCard />
         <PosBillHeaderCard />
         <PosBillPaymentOptionsCard />

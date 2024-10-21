@@ -14,6 +14,13 @@ import {
   TransactionContextType,
 } from "./TransactionProvider";
 import TransactionTotalCount from "../TotalCount";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import TransactionBillsItemList from "./TransactionBillsItemList";
 
 type TransactionCustomerItemsProps = {
   accountId: string;
@@ -29,9 +36,14 @@ export default function TransactionItems({
   const [sortBy, setSortBy] = useState("JOURDATE");
   const [sortAsc, setSortAsc] = useState(false);
 
-  const { toDate, fromDate, filterText, handleClickBill } = useContext(
-    TransactionContext
-  ) as TransactionContextType;
+  const {
+    toDate,
+    fromDate,
+    filterText,
+    handleClickBill,
+    currentBill,
+    currentBillItems,
+  } = useContext(TransactionContext) as TransactionContextType;
 
   function handleClickColumn(column: string) {
     if (sortBy === column) {
@@ -211,11 +223,23 @@ export default function TransactionItems({
                         maximumFractionDigits: 2,
                       })}
                     </TableCell>
-                    <TableCell
-                      onClick={() => handleClickBill(item.BILLNO)}
-                      className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
-                    >
-                      {item.BILLNO}
+                    <TableCell>
+                      <Dialog>
+                        <DialogTrigger
+                          className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
+                          onClick={() => handleClickBill(item.BILLNO)}
+                        >
+                          {item.BILLNO}
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[1280px]">
+                          <DialogHeader>
+                            <TransactionBillsItemList
+                              currentBill={currentBill}
+                              currentBillItems={currentBillItems}
+                            />
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
                     </TableCell>
                   </TableRow>
                 ))}

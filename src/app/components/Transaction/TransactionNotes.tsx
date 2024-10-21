@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/resizable";
 
 import TransactionNotesNoteList from "./TransactionNotesNoteList";
-import TransactionBillList from "./TransactionBillList";
 import TransactionTotalCount from "../TotalCount";
+import TransactionNoteBillList from "./TransactionNotesBillList";
 
 type TransactionNotesProps = {
   accountId: string;
@@ -99,51 +99,12 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
             />
           </ResizablePanel>
           <ResizableHandle className="p-0.5 m-1 bg-slate-100" />
-          <ResizablePanel className="h-[80vh] flex flex-col gap-6">
+          <ResizablePanel className="h-[80vh]">
             {currentNote && (
-              <>
-                <div className="flex gap-4 justify-center mt-6 text-lg">
-                  <span>ใบวางบิลเลขที่</span>
-                  <span className="font-semibold">{currentNote.NOTENO}</span>
-                  <span>วันที่</span>
-                  <span className="font-semibold">
-                    {new Date(currentNote.NOTEDATE).toLocaleDateString("th-TH")}
-                  </span>
-                </div>
-                <TransactionBillList
-                  currentBills={currentNoteBills}
-                  mode="notes"
-                  acctType={currentNote.accounts.ACCTTYPE}
-                />
-
-                {currentNote && (
-                  <div className="flex justify-end pb-16 px-16 text-base mt-auto  h-fit">
-                    <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg">
-                      <span>จำนวนเงิน</span>
-                      <span className="font-semibold">
-                        {currentNote.BILLAMT.toLocaleString("th-TH", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </span>
-                      <span>ส่วนลด</span>
-                      <span className="font-semibold">
-                        {currentNote.DISCOUNT.toLocaleString("th-TH", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </span>
-                      <span>ยอดรวม</span>
-                      <span className="font-semibold">
-                        {currentNote.NETAMT.toLocaleString("th-TH", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </>
+              <TransactionNoteBillList
+                currentNote={currentNote}
+                currentNoteBills={currentNoteBills}
+              />
             )}
           </ResizablePanel>
         </ResizablePanelGroup>

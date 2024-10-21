@@ -37,7 +37,7 @@ type PosProviderProps = {
 export default function PosProvider({ children }: PosProviderProps) {
   const [posItems, setPosItems] = React.useState<posItemsType[]>();
   const [payment, setPayment] = React.useState("cash");
-  const [vat, setVat] = React.useState("vat");
+  const [vat, setVat] = React.useState("novat");
 
   function getSumAmount() {
     return !!posItems

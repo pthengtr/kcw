@@ -12,6 +12,15 @@ import {
   TransactionContextType,
 } from "./TransactionProvider";
 import { useContext } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import TransactionBillsItemList from "./TransactionBillsItemList";
+import TransactionVouchersBillList from "./TransactionVouchersBillList";
+import TransactionNotesBillList from "./TransactionNotesBillList";
 
 type TransactionBillListProps = {
   currentBills: billType[] | undefined;
@@ -29,9 +38,17 @@ export default function TransactionBillList({
   mode = "notes",
   acctType,
 }: TransactionBillListProps) {
-  const { handleClickNote, handleClickVoucher, handleClickBill } = useContext(
-    TransactionContext
-  ) as TransactionContextType;
+  const {
+    handleClickNote,
+    handleClickVoucher,
+    handleClickBill,
+    currentBill,
+    currentBillItems,
+    currentVoucher,
+    currentVoucherBills,
+    currentNote,
+    currentNoteBills,
+  } = useContext(TransactionContext) as TransactionContextType;
 
   return (
     <div className="overflow-auto w-full h-full">
@@ -61,11 +78,23 @@ export default function TransactionBillList({
                 <TableCell>
                   {new Date(item.JOURDATE).toLocaleDateString("th-TH")}
                 </TableCell>
-                <TableCell
-                  onClick={() => handleClickBill(item.BILLNO)}
-                  className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
-                >
-                  {item.BILLNO}
+                <TableCell>
+                  <Dialog>
+                    <DialogTrigger
+                      className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
+                      onClick={() => handleClickBill(item.BILLNO)}
+                    >
+                      {item.BILLNO}
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[1280px]">
+                      <DialogHeader>
+                        <TransactionBillsItemList
+                          currentBill={currentBill}
+                          currentBillItems={currentBillItems}
+                        />
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 </TableCell>
                 <TableCell>
                   {item.AFTERTAX.toLocaleString("th-TH", {
@@ -89,8 +118,42 @@ export default function TransactionBillList({
                   }`}
                 >
                   {mode === "notes"
-                    ? item.vouchers?.VOUCNO
-                    : item.notes?.NOTENO}
+                    ? !!item.vouchers && (
+                        <Dialog>
+                          <DialogTrigger
+                            className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
+                            onClick={() => handleClickVoucher(item.voucherId)}
+                          >
+                            {item.vouchers?.VOUCNO}
+                          </DialogTrigger>
+                          <DialogContent className="h-[80vh] sm:max-w-[1280px]">
+                            {!!currentVoucher && (
+                              <TransactionVouchersBillList
+                                currentVoucher={currentVoucher}
+                                currentVoucherBills={currentVoucherBills}
+                              />
+                            )}
+                          </DialogContent>
+                        </Dialog>
+                      )
+                    : !!item.notes && (
+                        <Dialog>
+                          <DialogTrigger
+                            className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
+                            onClick={() => handleClickVoucher(item.voucherId)}
+                          >
+                            {item.notes?.NOTENO}
+                          </DialogTrigger>
+                          <DialogContent className="h-[80vh] sm:max-w-[1280px]">
+                            {!!currentNote && (
+                              <TransactionNotesBillList
+                                currentNote={currentNote}
+                                currentNoteBills={currentNoteBills}
+                              />
+                            )}
+                          </DialogContent>
+                        </Dialog>
+                      )}
                 </TableCell>
 
                 <TableCell>

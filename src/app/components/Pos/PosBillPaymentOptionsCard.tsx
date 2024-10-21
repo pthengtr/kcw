@@ -48,15 +48,15 @@ export default function PosBillPaymentOptionsCard() {
         >
           <ToggleGroupItem
             className="w-full data-[state=on]:bg-gray-300 data-[state=on]:text-black text-gray-400"
-            value="vat"
-          >
-            VAT
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            className="w-full data-[state=on]:bg-gray-300 data-[state=on]:text-black text-gray-400"
             value="novat"
           >
             ไม่รวม VAT
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            className="w-full data-[state=on]:bg-gray-300 data-[state=on]:text-black text-gray-400"
+            value="vat"
+          >
+            VAT
           </ToggleGroupItem>
         </ToggleGroup>
       </CardContent>
