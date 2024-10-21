@@ -99,7 +99,7 @@ export default function ProductCardSale({ productDetail }: ProductDetailProps) {
   const sumAmt = productItems?.reduce((acc, item) => item.AMOUNT + acc, 0);
 
   return (
-    <Card className="max-h-fit">
+    <Card className="max-h-fit shadow-md">
       <CardHeader className="flex flex-row items-center justify-around">
         <CardTitle>ประวัติขาย</CardTitle>
         <ProductBuySellFilter

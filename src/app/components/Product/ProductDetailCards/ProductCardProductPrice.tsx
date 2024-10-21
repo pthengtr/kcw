@@ -13,7 +13,7 @@ export default function ProductCardProductPrice({
   productDetail,
 }: ProductDetailProps) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader className="grid place-content-center">
         <CardTitle>ราคาสินค้า</CardTitle>
       </CardHeader>

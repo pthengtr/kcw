@@ -14,7 +14,7 @@ export default function ProductCardProductInfo({
   productDetail,
 }: ProductDetailProps) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle>ข้อมูลสินค้า</CardTitle>
       </CardHeader>

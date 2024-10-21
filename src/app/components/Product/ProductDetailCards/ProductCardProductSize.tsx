@@ -11,7 +11,7 @@ export default function ProductCardProductSize({
     <>
       {productDetail.CODE1 &&
         Object.keys(sizeCategory).includes(productDetail.CODE1) && (
-          <Card>
+          <Card className="shadow-md">
             <CardHeader>
               <CardTitle>ขนาด</CardTitle>
             </CardHeader>

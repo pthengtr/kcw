@@ -39,7 +39,7 @@ export default function PosBillItemsCard() {
   ) as SearchContextType;
 
   return (
-    <Card className="w-full pb-8">
+    <Card className="w-full pb-8 shadow-md">
       <CardHeader>
         <CardTitle className="text-center items-center flex">
           <div className="flex-1 text-left">

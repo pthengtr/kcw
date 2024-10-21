@@ -10,7 +10,7 @@ export default function ProductCardProductTransaction({
   productDetail,
 }: ProductDetailProps) {
   return (
-    <Card className="max-h-fit">
+    <Card className="max-h-fit shadow-md">
       <CardHeader className="grid place-content-center">
         <CardTitle>ประวัติสินค้า</CardTitle>
       </CardHeader>

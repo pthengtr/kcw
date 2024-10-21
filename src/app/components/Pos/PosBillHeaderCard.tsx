@@ -5,7 +5,7 @@ export default function PosBillHeaderCard() {
   const { data: session } = useSession();
 
   return (
-    <Card className="w-full">
+    <Card className="w-full shadow-md">
       <CardHeader className="text-center">
         <CardTitle>รายละเอียดบิล</CardTitle>
       </CardHeader>

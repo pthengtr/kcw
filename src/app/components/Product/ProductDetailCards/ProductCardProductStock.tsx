@@ -7,7 +7,7 @@ export default function ProductCardProductStock({
   productDetail,
 }: ProductDetailProps) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle>สต๊อกสินค้า</CardTitle>
       </CardHeader>

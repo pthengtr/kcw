@@ -60,7 +60,7 @@ export default function PosProductDetail() {
           <div className="flex flex-col gap-4 w-48">
             <Button
               onClick={() => handleClickAddToCart(productDetail)}
-              className="h-16 text-xl bg-secondary font-semibold hover:bg-red-700 flex gap-2"
+              className="h-16 text-xl bg-secondary font-semibold hover:bg-red-700 flex gap-2 shadow-md"
             >
               <ShoppingCart />
               <span>เพิ่มสินค้า</span>

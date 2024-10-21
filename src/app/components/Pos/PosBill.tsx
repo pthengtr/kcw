@@ -14,7 +14,7 @@ export default function PosBill() {
         <PosBillTotalCard />
         <PosBillHeaderCard />
         <PosBillPaymentOptionsCard />
-        <Button className="bg-secondary hover:bg-red-700 text-4xl py-10">
+        <Button className="bg-secondary hover:bg-red-700 text-4xl py-10 shadow-md">
           <div className="flex gap-4 items-center">
             <span>บันทึก</span>
           </div>

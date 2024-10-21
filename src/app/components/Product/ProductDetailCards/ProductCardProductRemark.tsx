@@ -6,7 +6,7 @@ export default function ProductCardProductDate({
   productDetail,
 }: ProductDetailProps) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle>หมายเหตุ</CardTitle>
       </CardHeader>

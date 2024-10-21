@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function PosProductImage({ productDetail }: ProductDetailProps) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader className="p-4">
         <CardTitle className="text-xl flex gap-2 font-normal justify-center">
           <span className="font-semibold">{productDetail.DESCR} | </span>

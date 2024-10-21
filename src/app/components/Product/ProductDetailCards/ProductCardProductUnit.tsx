@@ -7,7 +7,7 @@ export default function ProductCardProductUnit({
   productDetail,
 }: ProductDetailProps) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle>หน่วยสินค้า</CardTitle>
       </CardHeader>

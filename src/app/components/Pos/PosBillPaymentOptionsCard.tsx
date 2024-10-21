@@ -9,7 +9,7 @@ export default function PosBillPaymentOptionsCard() {
     PosContext
   ) as PosContextType;
   return (
-    <Card className="w-full">
+    <Card className="w-full shadow-md">
       <CardHeader className="text-center">
         <CardTitle>ตัวเลือกการชำระ</CardTitle>
       </CardHeader>

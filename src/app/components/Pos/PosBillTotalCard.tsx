@@ -5,7 +5,7 @@ import { PosContext, PosContextType } from "./PosProvider";
 export default function PosBillTotalCard() {
   const { getSumAmount } = useContext(PosContext) as PosContextType;
   return (
-    <Card className="W-full">
+    <Card className="W-full shadow-md">
       <CardHeader>
         <CardTitle className="text-center">ยอดรวม</CardTitle>
       </CardHeader>

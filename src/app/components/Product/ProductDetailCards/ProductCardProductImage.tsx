@@ -7,7 +7,7 @@ export default function ProductCardProductImage({
   productDetail,
 }: ProductDetailProps) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle>รูปสินค้า</CardTitle>
       </CardHeader>

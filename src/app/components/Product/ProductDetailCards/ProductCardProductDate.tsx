@@ -7,7 +7,7 @@ export default function ProductCardProductDate({
   productDetail,
 }: ProductDetailProps) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardHeader>
         <CardTitle>ข้อมูลล่าสุด</CardTitle>
       </CardHeader>

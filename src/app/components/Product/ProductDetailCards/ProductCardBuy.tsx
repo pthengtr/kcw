@@ -121,7 +121,7 @@ export default function ProductCardBuy({ productDetail }: ProductDetailProps) {
   }, 0);
 
   return (
-    <Card className="max-h-fit">
+    <Card className="max-h-fit shadow-md">
       <CardHeader className="flex flex-row justify-around items-center">
         <CardTitle>ประวัติซื้อ</CardTitle>
         <ProductBuySellFilter
