@@ -2,6 +2,18 @@
 import { createContext } from "react";
 import React from "react";
 
+export type pricesType = {
+  BCODE: string;
+  Attribute: string;
+  Value: number;
+};
+
+export type prices_mType = {
+  BCODE: string;
+  Attribute: string;
+  Value: number;
+};
+
 export type productType = {
   BCODE: string;
   XCODE: string;
@@ -26,20 +38,6 @@ export type productType = {
   SIZE2: string;
   SIZE3: string;
   PRICE1: number;
-  PRICE2: number;
-  PRICE3: number;
-  PRICE4: number;
-  PRICE5: number;
-  MARKUP1: number;
-  MARKUP2: number;
-  MARKUP3: number;
-  MARKUP4: number;
-  MARKUP5: number;
-  PRICEM1: number;
-  PRICEM2: number;
-  PRICEM3: number;
-  PRICEM4: number;
-  PRICEM5: number;
   QTYOH2: number;
   QTYMIN: number;
   QTYMAX: number;
@@ -48,6 +46,8 @@ export type productType = {
   DATEUPDATE: Date;
   DATEAUDIT: Date;
   REMARKS: string;
+  prices: pricesType[];
+  prices_m: prices_mType[];
 };
 
 export type ProductContextType = {

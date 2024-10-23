@@ -29,6 +29,8 @@ import {
 import { useSession } from "next-auth/react";
 import PosSelectAcount from "./PosSelectAccount";
 import { Separator } from "@/components/ui/separator";
+import PosBillItemsUnitSelect from "./PosBillItemsUnitSelect";
+import PosBillItemsPriceSelect from "./PosBillItemsPriceSelect";
 
 export default function PosBillItemsCard() {
   const {
@@ -37,6 +39,10 @@ export default function PosBillItemsCard() {
     handleClickRemoveQty,
     handleClickAddQty,
     getSumAmount,
+    getPrice,
+    getAmount,
+    getSumBeforeTax,
+    getSumTax,
     vat,
   } = useContext(PosContext) as PosContextType;
   const { itemList, totalFound, handleSubmitForm } = useContext(
@@ -108,7 +114,8 @@ export default function PosBillItemsCard() {
                 <TableHead>จำนวน</TableHead>
                 <TableHead>{/*place holder for + button */}</TableHead>
                 <TableHead>หน่วย</TableHead>
-                <TableHead>ราคา</TableHead>
+                <TableHead>ราคาเต็ม</TableHead>
+                <TableHead>ส่วนลด</TableHead>
                 <TableHead>จำนวนเงิน</TableHead>
                 <TableHead>{/*place holder for delete button */}</TableHead>
               </TableRow>
@@ -118,7 +125,14 @@ export default function PosBillItemsCard() {
                 posItems.map((item) => (
                   <TableRow key={item.BCODE}>
                     <TableCell>{item.BCODE}</TableCell>
-                    <TableCell>{item.DESCR}</TableCell>
+                    <TableCell>
+                      {item.ISVAT === "Y" && (
+                        <span className="bg-secondary text-white px-1 rounded-sm text-xs">
+                          VAT
+                        </span>
+                      )}{" "}
+                      {item.DESCR}, {item.MODEL}
+                    </TableCell>
                     <TableCell
                       onClick={() => handleClickRemoveQty(item.BCODE)}
                       className="text-gray-300 hover:cursor-pointer hover:text-gray-500"
@@ -132,28 +146,17 @@ export default function PosBillItemsCard() {
                     >
                       <AddIcon />
                     </TableCell>
-                    <TableCell>{item.UI}</TableCell>
-                    <TableCell className="text-right">
-                      {(vat === "vat"
-                        ? item.ISVAT === "Y"
-                          ? (item.PRICE * 100) / 107
-                          : item.PRICE
-                        : item.PRICE
-                      ).toLocaleString("th-TH", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
+                    <TableCell>
+                      <PosBillItemsUnitSelect posItem={item} />
                     </TableCell>
                     <TableCell className="text-right">
-                      {(vat === "vat"
-                        ? item.ISVAT === "Y"
-                          ? (item.PRICE * item.QTY * 100) / 107
-                          : item.PRICE * item.QTY
-                        : item.PRICE * item.QTY
-                      ).toLocaleString("th-TH", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
+                      {getPrice(item)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <PosBillItemsPriceSelect posItem={item} />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {getAmount(item)}
                     </TableCell>
                     <TableCell
                       onClick={() => handleCLickDeleteItem(item.BCODE)}
@@ -170,26 +173,11 @@ export default function PosBillItemsCard() {
           <div className="flex justify-end text-base mt-8 h-fit">
             <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg">
               <span>มูลค่ารวมก่อนภาษี</span>
-              <span className="text-right">
-                {(getSumAmount() * (100 / 107)).toLocaleString("th-TH", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </span>
+              <span className="text-right">{getSumBeforeTax()}</span>
               <span>ภาษีมูลค่าเพิ่ม 7%</span>
-              <span className="text-right">
-                {(getSumAmount() * (1 - 100 / 107)).toLocaleString("th-TH", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </span>
+              <span className="text-right">{getSumTax()}</span>
               <span className="font-bold">ยอดรวม</span>
-              <span className="font-bold text-right">
-                {getSumAmount().toLocaleString("th-TH", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </span>
+              <span className="font-bold text-right">{getSumAmount()}</span>
             </div>
           </div>
         )}

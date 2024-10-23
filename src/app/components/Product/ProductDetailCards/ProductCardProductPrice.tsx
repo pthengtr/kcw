@@ -30,35 +30,30 @@ export default function ProductCardProductPrice({
               ราคาพิเศษ
             </AccordionTrigger>
             <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
-              <SpanName>PRICE1</SpanName>
-              <SpanValue>{productDetail.PRICE1}</SpanValue>
-              <SpanName>PRICE2</SpanName>
-              <SpanValue>{productDetail.PRICE2}</SpanValue>
-              <SpanName>PRICE3</SpanName>
-              <SpanValue>{productDetail.PRICE3}</SpanValue>
-              <SpanName>PRICE4</SpanName>
-              <SpanValue>{productDetail.PRICE4}</SpanValue>
-              <SpanName>PRICE5</SpanName>
-              <SpanValue>{productDetail.PRICE5}</SpanValue>
+              {productDetail.prices?.map((price) => (
+                <React.Fragment key={price.Attribute}>
+                  <SpanName>{price.Attribute}</SpanName>
+                  <SpanValue>{price.Value}</SpanValue>
+                </React.Fragment>
+              ))}
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger className="text-gray-500">
-              {`ราคา${productDetail.UI2 ? productDetail.UI2 : "หน่วยใหญ่"}`}
-            </AccordionTrigger>
-            <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
-              <SpanName>PRICEM1</SpanName>
-              <SpanValue>{productDetail.PRICEM1}</SpanValue>
-              <SpanName>PRICEM2</SpanName>
-              <SpanValue>{productDetail.PRICEM2}</SpanValue>
-              <SpanName>PRICEM3</SpanName>
-              <SpanValue>{productDetail.PRICEM3}</SpanValue>
-              <SpanName>PRICEM4</SpanName>
-              <SpanValue>{productDetail.PRICEM4}</SpanValue>
-              <SpanName>PRICEM5</SpanName>
-              <SpanValue>{productDetail.PRICEM5}</SpanValue>
-            </AccordionContent>
-          </AccordionItem>
+          {!!productDetail.prices_m && productDetail.prices_m.length > 0 && (
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="text-gray-500">
+                {`ราคา${productDetail.UI2 ? productDetail.UI2 : "หน่วยใหญ่"}`}
+              </AccordionTrigger>
+
+              <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
+                {productDetail.prices_m?.map((price) => (
+                  <React.Fragment key={price.Attribute}>
+                    <SpanName>{price.Attribute}</SpanName>
+                    <SpanValue>{price.Value}</SpanValue>
+                  </React.Fragment>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          )}
         </Accordion>
       </CardContent>
     </Card>

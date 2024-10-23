@@ -1,18 +1,26 @@
 "use client";
 import { createContext } from "react";
 import React from "react";
-import { productType } from "../Product/ProductProvider";
+import {
+  prices_mType,
+  pricesType,
+  productType,
+} from "../Product/ProductProvider";
 import { accountsType } from "../Transaction/TransactionProvider";
 
 export type posItemsType = {
   BCODE: string;
   DESCR: string;
+  MODEL: string;
   QTY: number;
-  UI: string;
+  UI1: string;
+  UI2: string;
   MTP: number;
-  PRICE: number;
-  AMOUNT: number;
+  prices: pricesType[];
+  prices_m: prices_mType[];
   ISVAT: string;
+  atPrice: string;
+  atUnit: string;
 };
 
 export type PosContextType = {
@@ -28,7 +36,11 @@ export type PosContextType = {
   handleCLickDeleteItem: (bcode: string) => void;
   handleClickAddQty: (bcode: string) => void;
   handleClickRemoveQty: (bcode: string) => void;
-  getSumAmount: () => number;
+  getSumAmount: () => string;
+  getSumBeforeTax: () => string;
+  getSumTax: () => string;
+  getPrice: (item: posItemsType) => string;
+  getAmount: (item: posItemsType) => string;
 };
 
 export const PosContext = createContext<PosContextType | null>(null);
@@ -43,17 +55,70 @@ export default function PosProvider({ children }: PosProviderProps) {
   const [vat, setVat] = React.useState("novat");
   const [currentCustomer, setCurrentCustomer] = React.useState<accountsType>();
 
+  function getSumBeforeTax() {
+    return (
+      !!posItems
+        ? posItems?.reduce((acc, item) => _getPrice(item) * item.QTY + acc, 0) *
+          (100 / 107)
+        : 0
+    )?.toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function getSumTax() {
+    return (
+      !!posItems
+        ? posItems?.reduce((acc, item) => _getPrice(item) * item.QTY + acc, 0) *
+          (1 - 100 / 107)
+        : 0
+    )?.toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
   function getSumAmount() {
-    return !!posItems
-      ? posItems.reduce(
-          (acc, item) =>
-            item.QTY *
-              item.PRICE *
-              (vat === "vat" ? (item.ISVAT === "Y" ? 1 : 1.07) : 1) +
-            acc,
-          0
-        )
-      : 0;
+    return (
+      !!posItems
+        ? posItems?.reduce((acc, item) => _getPrice(item) * item.QTY + acc, 0)
+        : 0
+    )?.toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function _getPrice(item: posItemsType) {
+    const prices = Object.fromEntries(
+      item.prices.map((price) => [price.Attribute, price.Value])
+    );
+    const prices_m = Object.fromEntries(
+      item.prices_m.map((price) => [price.Attribute, price.Value])
+    );
+
+    const itemPrice = item.atUnit === "UI1" ? prices : prices_m;
+
+    return vat === "vat"
+      ? item.ISVAT === "Y"
+        ? itemPrice[item.atPrice]
+        : itemPrice[item.atPrice] * 1.07
+      : itemPrice[item.atPrice];
+  }
+
+  function getAmount(item: posItemsType) {
+    return (_getPrice(item) * item.QTY).toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function getPrice(item: posItemsType) {
+    return _getPrice(item).toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   function handleCLickDeleteItem(bcode: string) {
@@ -101,12 +166,16 @@ export default function PosProvider({ children }: PosProviderProps) {
       const item: posItemsType = {
         BCODE: productDetail.BCODE,
         DESCR: productDetail.DESCR,
+        MODEL: productDetail.MODEL,
         QTY: 1,
-        UI: productDetail.UI1,
-        MTP: 1,
-        PRICE: productDetail.PRICE1,
-        AMOUNT: productDetail.PRICE1,
+        UI1: productDetail.UI1,
+        UI2: productDetail.UI2,
+        MTP: productDetail.MTP2,
+        prices: productDetail.prices,
+        prices_m: productDetail.prices_m,
         ISVAT: productDetail.ISVAT,
+        atPrice: "PRICE1",
+        atUnit: "UI1",
       };
 
       const newPosItems = !!posItems ? [...posItems, item] : [item];
@@ -123,6 +192,10 @@ export default function PosProvider({ children }: PosProviderProps) {
     handleClickAddQty,
     handleClickRemoveQty,
     getSumAmount,
+    getSumBeforeTax,
+    getSumTax,
+    getPrice,
+    getAmount,
     payment,
     setPayment,
     vat,

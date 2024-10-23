@@ -11,10 +11,7 @@ export default function PosBillTotalCard() {
       </CardHeader>
       <CardContent className="grid place-content-center gap-8">
         <div className="rounded-md text-6xl py-2 px-4 bg-primary text-white font-semibold">
-          {getSumAmount().toLocaleString("th-TH", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
+          {getSumAmount()}
         </div>
       </CardContent>
     </Card>

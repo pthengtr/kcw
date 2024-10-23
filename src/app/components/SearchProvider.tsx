@@ -75,7 +75,7 @@ export default function SearchProvider({ children }: ProductProvider) {
   async function searchCode(page: number, sortOrder: string, sortBy: string) {
     let query = supabase
       .from("products")
-      .select("*", { count: "exact" })
+      .select("*, prices(*), prices_m(*)", { count: "exact" })
       .order(sortBy, { ascending: sortOrder === "asc" })
       .range((page - 1) * dbTake, page * dbTake - 1);
 
@@ -110,7 +110,7 @@ export default function SearchProvider({ children }: ProductProvider) {
   async function searchSize(page: number, sortOrder: string, sortBy: string) {
     let query = supabase
       .from("products")
-      .select("*", { count: "exact" })
+      .select("*, prices(*), prices_m(*)", { count: "exact" })
       .order(sortBy, { ascending: sortOrder === "asc" })
       .range((page - 1) * dbTake, page * dbTake - 1);
 
@@ -124,6 +124,7 @@ export default function SearchProvider({ children }: ProductProvider) {
 
     const { data, error, count } = await query;
 
+    console.log(data);
     if (error) return;
     if (count !== null) setTotalFound(count);
     if (data !== null) setItemList(data);
