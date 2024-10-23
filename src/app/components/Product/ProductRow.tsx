@@ -62,6 +62,11 @@ export default function ProductRow({ item }: ProductRowProps) {
             "bg-red-50"
           }`}
         >
+          {col === "DESCR" && item.ISVAT === "Y" && (
+            <span className="bg-secondary text-white px-1 rounded-sm text-xs">
+              VAT
+            </span>
+          )}{" "}
           {col === "PRICE1"
             ? item[col].toLocaleString()
             : item[col as keyof typeof item]?.toString()}

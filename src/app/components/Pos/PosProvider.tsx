@@ -40,6 +40,7 @@ export type PosContextType = {
   getSumBeforeTax: () => string;
   getSumTax: () => string;
   getPrice: (item: posItemsType) => string;
+  getFullPrice: (item: posItemsType) => string;
   getAmount: (item: posItemsType) => string;
 };
 
@@ -105,6 +106,31 @@ export default function PosProvider({ children }: PosProviderProps) {
         ? itemPrice[item.atPrice]
         : itemPrice[item.atPrice] * 1.07
       : itemPrice[item.atPrice];
+  }
+
+  function _getFullPrice(item: posItemsType) {
+    const prices = Object.fromEntries(
+      item.prices.map((price) => [price.Attribute, price.Value])
+    );
+    const prices_m = Object.fromEntries(
+      item.prices_m.map((price) => [price.Attribute, price.Value])
+    );
+
+    const itemPrice = item.atUnit === "UI1" ? prices : prices_m;
+    const atPrice = item.atUnit === "UI1" ? "PRICE1" : "PRICEM1";
+
+    return vat === "vat"
+      ? item.ISVAT === "Y"
+        ? itemPrice[atPrice]
+        : itemPrice[atPrice] * 1.07
+      : itemPrice[atPrice];
+  }
+
+  function getFullPrice(item: posItemsType) {
+    return _getFullPrice(item).toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   function getAmount(item: posItemsType) {
@@ -195,6 +221,7 @@ export default function PosProvider({ children }: PosProviderProps) {
     getSumBeforeTax,
     getSumTax,
     getPrice,
+    getFullPrice,
     getAmount,
     payment,
     setPayment,

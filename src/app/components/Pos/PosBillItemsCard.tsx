@@ -39,7 +39,7 @@ export default function PosBillItemsCard() {
     handleClickRemoveQty,
     handleClickAddQty,
     getSumAmount,
-    getPrice,
+    getFullPrice,
     getAmount,
     getSumBeforeTax,
     getSumTax,
@@ -150,7 +150,7 @@ export default function PosBillItemsCard() {
                       <PosBillItemsUnitSelect posItem={item} />
                     </TableCell>
                     <TableCell className="text-right">
-                      {getPrice(item)}
+                      {getFullPrice(item)}
                     </TableCell>
                     <TableCell className="text-right">
                       <PosBillItemsPriceSelect posItem={item} />
