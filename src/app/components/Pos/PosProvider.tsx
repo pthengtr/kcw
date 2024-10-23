@@ -2,6 +2,7 @@
 import { createContext } from "react";
 import React from "react";
 import { productType } from "../Product/ProductProvider";
+import { accountsType } from "../Transaction/TransactionProvider";
 
 export type posItemsType = {
   BCODE: string;
@@ -21,6 +22,8 @@ export type PosContextType = {
   setPayment: (payment: string) => void;
   vat: string;
   setVat: (isVat: string) => void;
+  currentCustomer: accountsType | undefined;
+  setCurrentCustomer: (customer: accountsType | undefined) => void;
   handleClickAddToCart: (productDetail: productType) => void;
   handleCLickDeleteItem: (bcode: string) => void;
   handleClickAddQty: (bcode: string) => void;
@@ -38,6 +41,7 @@ export default function PosProvider({ children }: PosProviderProps) {
   const [posItems, setPosItems] = React.useState<posItemsType[]>();
   const [payment, setPayment] = React.useState("cash");
   const [vat, setVat] = React.useState("novat");
+  const [currentCustomer, setCurrentCustomer] = React.useState<accountsType>();
 
   function getSumAmount() {
     return !!posItems
@@ -123,6 +127,8 @@ export default function PosProvider({ children }: PosProviderProps) {
     setPayment,
     vat,
     setVat,
+    currentCustomer,
+    setCurrentCustomer,
   };
 
   return <PosContext.Provider value={value}>{children}</PosContext.Provider>;

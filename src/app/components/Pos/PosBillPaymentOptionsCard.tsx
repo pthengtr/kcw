@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useContext } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
+
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function PosBillPaymentOptionsCard() {
   const { vat, setVat, payment, setPayment } = useContext(
@@ -14,51 +15,38 @@ export default function PosBillPaymentOptionsCard() {
         <CardTitle>ตัวเลือกการชำระ</CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-2 gap-4 place-content-center">
-        <ToggleGroup
+        <Tabs
           value={payment}
           onValueChange={setPayment}
           className="col-span-2 bg-gray-100 rounded-md"
-          type="single"
         >
-          <ToggleGroupItem
-            className="w-full data-[state=on]:bg-gray-300 data-[state=on]:text-black text-gray-400"
-            value="cash"
-          >
-            เงินสด
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            className="w-full data-[state=on]:bg-gray-300 data-[state=on]:text-black text-gray-400"
-            value="transfer"
-          >
-            โอน
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            className="w-full data-[state=on]:bg-gray-300 data-[state=on]:text-black text-gray-400"
-            value="credit"
-          >
-            ลงบัญชี
-          </ToggleGroupItem>
-        </ToggleGroup>
+          <TabsList className="w-full">
+            <TabsTrigger className="w-full" value="cash">
+              เงินสด
+            </TabsTrigger>
+            <TabsTrigger className="w-full " value="transfer">
+              โอน
+            </TabsTrigger>
+            <TabsTrigger className="w-full " value="credit">
+              ลงบัญชี
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
-        <ToggleGroup
+        <Tabs
           value={vat}
           onValueChange={setVat}
           className="col-span-2 bg-gray-100 rounded-md"
-          type="single"
         >
-          <ToggleGroupItem
-            className="w-full data-[state=on]:bg-gray-300 data-[state=on]:text-black text-gray-400"
-            value="novat"
-          >
-            ไม่รวม VAT
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            className="w-full data-[state=on]:bg-gray-300 data-[state=on]:text-black text-gray-400"
-            value="vat"
-          >
-            VAT
-          </ToggleGroupItem>
-        </ToggleGroup>
+          <TabsList className="w-full">
+            <TabsTrigger className="w-full" value="novat">
+              ไม่รวม VAT
+            </TabsTrigger>
+            <TabsTrigger className="w-full" value="vat">
+              VAT
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </CardContent>
     </Card>
   );

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
 import { SearchContext, SearchContextType } from "../SearchProvider";
+
 import PosProductDetail from "./PosProductDetail";
 import {
   Sheet,
@@ -24,6 +25,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+
+import { useSession } from "next-auth/react";
+import PosSelectAcount from "./PosSelectAccount";
 
 export default function PosBillItemsCard() {
   const {
@@ -38,18 +42,20 @@ export default function PosBillItemsCard() {
     SearchContext
   ) as SearchContextType;
 
+  const { data: session } = useSession();
+
   return (
     <Card className="w-full pb-8 shadow-md">
       <CardHeader>
         <CardTitle className="text-center items-center flex">
           <div className="flex-1 text-left">
             <Sheet>
-              <SheetTrigger className="bg-gray-300 text-base p-2 rounded-md">
+              <SheetTrigger className="bg-gray-100 text-base p-2 rounded-md hover:bg-gray-200">
                 ค้นหาสินค้า
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="sm:max-w-[1024px] overflow-auto"
+                className="sm:max-w-[70%] overflow-auto"
               >
                 <SheetHeader>
                   <SheetTitle className="w-[500px] mx-auto">
@@ -81,10 +87,13 @@ export default function PosBillItemsCard() {
             </Sheet>
           </div>
           <span>รายการสินค้า</span>
-          <span className="flex-1"></span>
+          <div className="flex-1 text-base flex flex-col justify-end text-right gap-2">
+            <PosSelectAcount />
+            <span className="font-normal italic">{session?.user?.name}</span>
+          </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col h-[75vh]">
+      <CardContent className="flex flex-col h-[70vh]">
         <div className="overflow-auto">
           <Table className="h-full relative">
             <TableHeader className="sticky top-0  bg-white">
@@ -189,9 +198,9 @@ function TrashIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      height="18px"
+      height="24px"
       viewBox="0 -960 960 960"
-      width="18px"
+      width="24px"
       fill="currentcolor"
     >
       <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
@@ -226,3 +235,17 @@ function RemoveIcon() {
     </svg>
   );
 }
+
+// function SearchIcon() {
+//   return (
+//     <svg
+//       xmlns="http://www.w3.org/2000/svg"
+//       height="18px"
+//       viewBox="0 -960 960 960"
+//       width="18px"
+//       fill="currentcolor"
+//     >
+//       <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+//     </svg>
+//   );
+// }
