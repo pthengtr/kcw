@@ -28,6 +28,7 @@ import {
 
 import { useSession } from "next-auth/react";
 import PosSelectAcount from "./PosSelectAccount";
+import { Separator } from "@/components/ui/separator";
 
 export default function PosBillItemsCard() {
   const {
@@ -47,49 +48,52 @@ export default function PosBillItemsCard() {
   return (
     <Card className="w-full pb-8 shadow-md">
       <CardHeader>
-        <CardTitle className="text-center items-center flex">
-          <div className="flex-1 text-left">
-            <Sheet>
-              <SheetTrigger className="bg-gray-100 text-base p-2 rounded-md hover:bg-gray-200">
-                ค้นหาสินค้า
-              </SheetTrigger>
-              <SheetContent
-                side="left"
-                className="sm:max-w-[70%] overflow-auto"
-              >
-                <SheetHeader>
-                  <SheetTitle className="w-[500px] mx-auto">
-                    <form
-                      onSubmit={handleSubmitForm}
-                      className="flex gap-2 items-center"
-                    >
-                      <div className="w-[500px] flex flex-auto shadow-lg relative">
-                        <ProductSearch />
-                      </div>
-                      <Button className="bg-gray-100 text-gray-800 shadow-lg font-semibold hover:bg-slate-200 hover:scale-[1.02] active:scale-[1]">
-                        ค้นหา
-                      </Button>
-                    </form>
-                  </SheetTitle>
-                  <SheetDescription>
-                    {!!itemList && itemList.length > 0 && (
-                      <>
-                        <div className="w-full h-[40vh] overflow-auto">
-                          <ProductTable itemList={itemList} />
+        <CardTitle className="flex flex-col gap-4">
+          <PosSelectAcount />
+          <Separator />
+          <div className="text-center items-center flex">
+            <div className="flex-1 text-left">
+              <Sheet>
+                <SheetTrigger className="bg-gray-100 text-base p-2 rounded-md hover:bg-gray-200">
+                  ค้นหาสินค้า
+                </SheetTrigger>
+                <SheetContent
+                  side="left"
+                  className="sm:max-w-[70%] overflow-auto"
+                >
+                  <SheetHeader>
+                    <SheetTitle className="w-[500px] mx-auto">
+                      <form
+                        onSubmit={handleSubmitForm}
+                        className="flex gap-2 items-center"
+                      >
+                        <div className="w-[500px] flex flex-auto shadow-lg relative">
+                          <ProductSearch />
                         </div>
-                        <ProductPagination totalFound={totalFound} />
-                        <PosProductDetail />
-                      </>
-                    )}
-                  </SheetDescription>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
-          </div>
-          <span>รายการสินค้า</span>
-          <div className="flex-1 text-base flex flex-col justify-end text-right gap-2">
-            <PosSelectAcount />
-            <span className="font-normal italic">{session?.user?.name}</span>
+                        <Button className="bg-gray-100 text-gray-800 shadow-lg font-semibold hover:bg-slate-200 hover:scale-[1.02] active:scale-[1]">
+                          ค้นหา
+                        </Button>
+                      </form>
+                    </SheetTitle>
+                    <SheetDescription>
+                      {!!itemList && itemList.length > 0 && (
+                        <>
+                          <div className="w-full h-[40vh] overflow-auto">
+                            <ProductTable itemList={itemList} />
+                          </div>
+                          <ProductPagination totalFound={totalFound} />
+                          <PosProductDetail />
+                        </>
+                      )}
+                    </SheetDescription>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
+            </div>
+            <span>รายการสินค้า</span>
+            <div className="flex-1 text-base flex flex-col justify-end text-right gap-2">
+              <span className="font-normal italic">{session?.user?.name}</span>
+            </div>
           </div>
         </CardTitle>
       </CardHeader>

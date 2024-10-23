@@ -72,9 +72,9 @@ export default function PosSelectAcount() {
     }
   }
   return (
-    <div className="flex gap-2 justify-end items-center">
+    <div className="flex gap-2 justify-start items-center text-xl">
       <DropdownMenu>
-        <DropdownMenuTrigger className="focus:outline-none max-w-56 text-right">
+        <DropdownMenuTrigger className="focus:outline-none ">
           {!!currentCustomer ? (
             <>
               <span className="bg-green-800 rounded-sm text-white px-1">
