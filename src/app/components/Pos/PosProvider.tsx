@@ -36,6 +36,7 @@ export type PosContextType = {
   handleCLickDeleteItem: (bcode: string) => void;
   handleClickAddQty: (bcode: string) => void;
   handleClickRemoveQty: (bcode: string) => void;
+  handleSetNewQty: (bcode: string, newQty: number) => void;
   getSumAmount: () => string;
   getSumBeforeTax: () => string;
   getSumTax: () => string;
@@ -153,6 +154,17 @@ export default function PosProvider({ children }: PosProviderProps) {
     if (newPosItems !== undefined) setPosItems(newPosItems);
   }
 
+  function handleSetNewQty(bcode: string, newQty: number) {
+    if (!!posItems && posItems.findIndex((item) => item.BCODE === bcode) > -1) {
+      const newPosItems = posItems.map((item) => {
+        if (item.BCODE === bcode) item.QTY = newQty;
+        return item;
+      });
+
+      setPosItems(newPosItems);
+    }
+  }
+
   function handleClickAddQty(bcode: string) {
     if (!!posItems && posItems.findIndex((item) => item.BCODE === bcode) > -1) {
       const newPosItems = posItems.map((item) => {
@@ -217,6 +229,7 @@ export default function PosProvider({ children }: PosProviderProps) {
     handleCLickDeleteItem,
     handleClickAddQty,
     handleClickRemoveQty,
+    handleSetNewQty,
     getSumAmount,
     getSumBeforeTax,
     getSumTax,

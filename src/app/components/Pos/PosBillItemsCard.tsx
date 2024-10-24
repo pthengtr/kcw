@@ -31,13 +31,13 @@ import PosSelectAcount from "./PosSelectAccount";
 import { Separator } from "@/components/ui/separator";
 import PosBillItemsUnitSelect from "./PosBillItemsUnitSelect";
 import PosBillItemsPriceSelect from "./PosBillItemsPriceSelect";
+import PosQtyPopover from "./PosQtyPopover";
+import PosBillPriceSelect from "./PosBillPriceSelect";
 
 export default function PosBillItemsCard() {
   const {
     posItems,
     handleCLickDeleteItem,
-    handleClickRemoveQty,
-    handleClickAddQty,
     getSumAmount,
     getFullPrice,
     getAmount,
@@ -55,7 +55,10 @@ export default function PosBillItemsCard() {
     <Card className="w-full pb-8 shadow-md">
       <CardHeader>
         <CardTitle className="flex flex-col gap-4">
-          <PosSelectAcount />
+          <div className="flex items-center justify-between">
+            <PosSelectAcount />
+            <PosBillPriceSelect />
+          </div>
           <Separator />
           <div className="text-center items-center flex">
             <div className="flex-1 text-left">
@@ -110,9 +113,7 @@ export default function PosBillItemsCard() {
               <TableRow>
                 <TableHead>รหัสสินค้า</TableHead>
                 <TableHead>ชื่อสินค้า</TableHead>
-                <TableHead>{/*place holder for - button */}</TableHead>
                 <TableHead>จำนวน</TableHead>
-                <TableHead>{/*place holder for + button */}</TableHead>
                 <TableHead>หน่วย</TableHead>
                 <TableHead>ราคาเต็ม</TableHead>
                 <TableHead>ส่วนลด</TableHead>
@@ -133,18 +134,9 @@ export default function PosBillItemsCard() {
                       )}{" "}
                       {item.DESCR}, {item.MODEL}
                     </TableCell>
-                    <TableCell
-                      onClick={() => handleClickRemoveQty(item.BCODE)}
-                      className="text-gray-300 hover:cursor-pointer hover:text-gray-500"
-                    >
-                      <RemoveIcon />
-                    </TableCell>
-                    <TableCell className="text-center">{item.QTY}</TableCell>
-                    <TableCell
-                      onClick={() => handleClickAddQty(item.BCODE)}
-                      className="text-gray-300 hover:cursor-pointer hover:text-gray-500"
-                    >
-                      <AddIcon />
+
+                    <TableCell className="text-center">
+                      <PosQtyPopover item={item} />
                     </TableCell>
                     <TableCell>
                       <PosBillItemsUnitSelect posItem={item} />
@@ -196,34 +188,6 @@ function TrashIcon() {
       fill="currentcolor"
     >
       <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
-    </svg>
-  );
-}
-
-function AddIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="20px"
-      viewBox="0 -960 960 960"
-      width="20px"
-      fill="currentcolor"
-    >
-      <path d="M444-444H240v-72h204v-204h72v204h204v72H516v204h-72v-204Z" />
-    </svg>
-  );
-}
-
-function RemoveIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="18px"
-      viewBox="0 -960 960 960"
-      width="18px"
-      fill="currentcolor"
-    >
-      <path d="M200-440v-80h560v80H200Z" />
     </svg>
   );
 }

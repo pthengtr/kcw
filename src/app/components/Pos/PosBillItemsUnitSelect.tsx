@@ -30,7 +30,7 @@ export default function PosBillItemsUnitSelect({
 
   return (
     <Select defaultValue="UI1" onValueChange={handleUnitChange}>
-      <SelectTrigger className="">
+      <SelectTrigger className="focus:ring-transparent">
         <SelectValue placeholder="เลือกหน่วย" />
       </SelectTrigger>
       <SelectContent>

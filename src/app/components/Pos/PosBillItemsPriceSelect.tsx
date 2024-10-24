@@ -48,21 +48,23 @@ export default function PosBillItemsPriceSelect({
   }
 
   return (
-    <Select defaultValue={defaultPrice} onValueChange={handlePriceChange}>
-      <SelectTrigger className="">
-        <SelectValue placeholder="เลือกราคา">
-          {getVatPrice(
-            itemPrices[defaultPrice] - itemPrices[posItem.atPrice]
-          ).toString()}
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        {Object.keys(itemPrices).map((key) => (
-          <SelectItem key={key} value={key}>
-            {key} {getVatPrice(itemPrices[key])}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="flex flex-col gap-1">
+      <Select defaultValue={defaultPrice} onValueChange={handlePriceChange}>
+        <SelectTrigger className="focus:ring-transparent w-full">
+          <SelectValue placeholder="เลือกราคา">
+            {getVatPrice(
+              itemPrices[defaultPrice] - itemPrices[posItem.atPrice]
+            )}
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {Object.keys(itemPrices).map((key) => (
+            <SelectItem key={key} value={key}>
+              {key}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
