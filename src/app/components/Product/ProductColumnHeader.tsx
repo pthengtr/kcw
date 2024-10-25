@@ -57,6 +57,15 @@ export default function ProductColumnHeder() {
             />
           </TableHead>
         ))}
+
+        <TableHead>
+          <button
+            className="w-full text-left outline-none"
+            onClick={() => handleSort("QTYOH2")}
+          >
+            คงเหลือ
+          </button>
+        </TableHead>
       </TableRow>
     </TableHeader>
   );

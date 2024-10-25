@@ -31,6 +31,7 @@ export default function ProductRow({ item }: ProductRowProps) {
           "SIZE3",
           optCol[0],
           optCol[1],
+          "QTYOH2",
         ] as (keyof productType)[])
       : ([
           "BCODE",
@@ -39,6 +40,7 @@ export default function ProductRow({ item }: ProductRowProps) {
           optCol[0],
           optCol[1],
           optCol[2],
+          "QTYOH2",
         ] as (keyof productType)[]);
 
   return (
