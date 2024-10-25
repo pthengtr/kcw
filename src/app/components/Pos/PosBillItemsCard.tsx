@@ -8,23 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ProductTable from "@/app/components/Product/ProductTable";
-import ProductPagination from "@/app/components/Product/ProductPagination";
-import ProductSearch from "../Product/ProductSearch";
-import { Button } from "@/components/ui/button";
+
 import { useContext } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
-import { SearchContext, SearchContextType } from "../SearchProvider";
-
-import PosProductDetail from "./PosProductDetail";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 import { useSession } from "next-auth/react";
 import PosSelectAcount from "./PosSelectAccount";
@@ -34,6 +20,7 @@ import PosBillItemsPriceSelect from "./PosBillItemsPriceSelect";
 import PosQtyPopover from "./PosQtyPopover";
 import PosBillPriceSelect from "./PosBillPriceSelect";
 import { Input } from "@/components/ui/input";
+import PosProductSheet from "./PosProductSheet";
 
 export default function PosBillItemsCard() {
   const {
@@ -50,9 +37,6 @@ export default function PosBillItemsCard() {
     setBillDiscount,
     vat,
   } = useContext(PosContext) as PosContextType;
-  const { itemList, totalFound, handleSubmitForm } = useContext(
-    SearchContext
-  ) as SearchContextType;
 
   const { data: session } = useSession();
 
@@ -67,42 +51,7 @@ export default function PosBillItemsCard() {
           <Separator />
           <div className="text-center items-center flex">
             <div className="flex-1 text-left">
-              <Sheet>
-                <SheetTrigger className="bg-gray-100 text-base p-2 rounded-md hover:bg-gray-200">
-                  ค้นหาสินค้า
-                </SheetTrigger>
-                <SheetContent
-                  side="left"
-                  className="sm:max-w-[70%] overflow-auto"
-                >
-                  <SheetHeader>
-                    <SheetTitle className="w-[500px] mx-auto">
-                      <form
-                        onSubmit={handleSubmitForm}
-                        className="flex gap-2 items-center"
-                      >
-                        <div className="w-[500px] flex flex-auto shadow-lg relative">
-                          <ProductSearch />
-                        </div>
-                        <Button className="bg-gray-100 text-gray-800 shadow-lg font-semibold hover:bg-slate-200 hover:scale-[1.02] active:scale-[1]">
-                          ค้นหา
-                        </Button>
-                      </form>
-                    </SheetTitle>
-                    <SheetDescription>
-                      {!!itemList && itemList.length > 0 && (
-                        <>
-                          <div className="w-full h-[40vh] overflow-auto">
-                            <ProductTable itemList={itemList} />
-                          </div>
-                          <ProductPagination totalFound={totalFound} />
-                          <PosProductDetail />
-                        </>
-                      )}
-                    </SheetDescription>
-                  </SheetHeader>
-                </SheetContent>
-              </Sheet>
+              <PosProductSheet />
             </div>
             <span>รายการสินค้า</span>
             <div className="flex-1 text-base flex flex-col justify-end text-right gap-2">

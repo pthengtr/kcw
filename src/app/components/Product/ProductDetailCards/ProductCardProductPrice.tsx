@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { priceName } from "../../Pos/PosProvider";
 
 export default function ProductCardProductPrice({
   productDetail,
@@ -32,7 +33,9 @@ export default function ProductCardProductPrice({
             <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
               {productDetail.prices?.map((price) => (
                 <React.Fragment key={price.Attribute}>
-                  <SpanName>{price.Attribute}</SpanName>
+                  <SpanName>
+                    {priceName[price.Attribute as keyof typeof priceName]}
+                  </SpanName>
                   <SpanValue>{price.Value}</SpanValue>
                 </React.Fragment>
               ))}
@@ -47,7 +50,9 @@ export default function ProductCardProductPrice({
               <AccordionContent className="grid grid-cols-[1fr_2fr] gap-1">
                 {productDetail.prices_m?.map((price) => (
                   <React.Fragment key={price.Attribute}>
-                    <SpanName>{price.Attribute}</SpanName>
+                    <SpanName>
+                      {priceName[price.Attribute as keyof typeof priceName]}
+                    </SpanName>
                     <SpanValue>{price.Value}</SpanValue>
                   </React.Fragment>
                 ))}
