@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 export default function PosBillPaymentOptionsCard() {
   const { vat, setVat, payment, setPayment } = useContext(
@@ -47,6 +48,10 @@ export default function PosBillPaymentOptionsCard() {
             </TabsTrigger>
           </TabsList>
         </Tabs>
+
+        <Button className="col-span-2 bg-gray-100 text-gray-800 hover:bg-gray-200">
+          ดูประวัติบิลขาย
+        </Button>
       </CardContent>
     </Card>
   );

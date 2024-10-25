@@ -33,7 +33,7 @@ export default function PosProductSheet() {
 
           {!!itemList && itemList.length > 0 && (
             <>
-              <div className="w-full h-[80vh] overflow-auto">
+              <div className="w-full h-[80vh] mt-6 overflow-auto">
                 <ProductTable itemList={itemList} />
               </div>
               <ProductPagination totalFound={totalFound} />
