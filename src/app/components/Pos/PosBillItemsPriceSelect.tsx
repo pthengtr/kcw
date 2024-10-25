@@ -1,11 +1,15 @@
-import { PosContext, PosContextType, posItemsType } from "./PosProvider";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  PosContext,
+  PosContextType,
+  posItemsType,
+  priceName,
+} from "./PosProvider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useContext } from "react";
 
 type PPosBillItemsPriceSelectProps = {
@@ -36,7 +40,7 @@ export default function PosBillItemsPriceSelect({
           posItem.prices_m.map((price) => [price.Attribute, price.Value])
         );
 
-  const defaultPrice = posItem.atUnit === "UI1" ? "PRICE1" : "PRICEM1";
+  const defaultPrice = "PRICE1";
 
   function getVatPrice(price: number) {
     return (
@@ -49,7 +53,7 @@ export default function PosBillItemsPriceSelect({
 
   return (
     <div className="flex flex-col gap-1">
-      <Select defaultValue={defaultPrice} onValueChange={handlePriceChange}>
+      {/* <Select defaultValue={defaultPrice} onValueChange={handlePriceChange}>
         <SelectTrigger className="focus:ring-transparent w-full">
           <SelectValue placeholder="เลือกราคา">
             {getVatPrice(
@@ -64,7 +68,33 @@ export default function PosBillItemsPriceSelect({
             </SelectItem>
           ))}
         </SelectContent>
-      </Select>
+      </Select> */}
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex gap-1">
+            <span>
+              {getVatPrice(
+                itemPrices[defaultPrice] - itemPrices[posItem.atPrice]
+              )}
+            </span>
+            <span>
+              ({priceName[posItem.atPrice as keyof typeof priceName]})
+            </span>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {Object.keys(itemPrices).map((key) => (
+            <DropdownMenuItem key={key} onClick={() => handlePriceChange(key)}>
+              <div className="flex gap-1">
+                <span>
+                  {getVatPrice(itemPrices[defaultPrice] - itemPrices[key])}
+                </span>
+                <span>({priceName[key as keyof typeof priceName]})</span>
+              </div>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

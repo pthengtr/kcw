@@ -31,6 +31,8 @@ export type PosContextType = {
   vat: string;
   setVat: (isVat: string) => void;
   currentCustomer: accountsType | undefined;
+  billDiscount: string;
+  setBillDiscount: (discount: string) => void;
   setCurrentCustomer: (customer: accountsType | undefined) => void;
   handleClickAddToCart: (productDetail: productType) => void;
   handleCLickDeleteItem: (bcode: string) => void;
@@ -40,9 +42,18 @@ export type PosContextType = {
   getSumAmount: () => string;
   getSumBeforeTax: () => string;
   getSumTax: () => string;
+  getSumDiscount: () => string;
+  getSumFullprice: () => string;
   getPrice: (item: posItemsType) => string;
   getFullPrice: (item: posItemsType) => string;
   getAmount: (item: posItemsType) => string;
+};
+
+export const priceName = {
+  PRICE1: "ทั่วไป",
+  PRICE2: "ช่าง",
+  PRICE3: "ส่ง",
+  PRICE5: "LAZ",
 };
 
 export const PosContext = createContext<PosContextType | null>(null);
@@ -56,6 +67,7 @@ export default function PosProvider({ children }: PosProviderProps) {
   const [payment, setPayment] = React.useState("cash");
   const [vat, setVat] = React.useState("novat");
   const [currentCustomer, setCurrentCustomer] = React.useState<accountsType>();
+  const [billDiscount, setBillDiscount] = React.useState("");
 
   function getSumBeforeTax() {
     return (
@@ -84,12 +96,45 @@ export default function PosProvider({ children }: PosProviderProps) {
   function getSumAmount() {
     return (
       !!posItems
-        ? posItems?.reduce((acc, item) => _getPrice(item) * item.QTY + acc, 0)
+        ? posItems?.reduce((acc, item) => _getPrice(item) * item.QTY + acc, 0) -
+          parseFloat(!!billDiscount ? billDiscount : "0")
         : 0
     )?.toLocaleString("th-TH", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+  }
+
+  function getSumFullprice() {
+    return (
+      !!posItems
+        ? posItems?.reduce(
+            (acc, item) => _getFullPrice(item) * item.QTY + acc,
+            0
+          )
+        : 0
+    )?.toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function getSumDiscount() {
+    return (
+      !!posItems
+        ? posItems.reduce(
+            (acc, item) => _getDiscount(item) * item.QTY + acc,
+            0
+          ) + parseFloat(!!billDiscount ? billDiscount : "0")
+        : 0
+    )?.toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function _getDiscount(item: posItemsType) {
+    return _getFullPrice(item) - _getPrice(item);
   }
 
   function _getPrice(item: posItemsType) {
@@ -118,7 +163,7 @@ export default function PosProvider({ children }: PosProviderProps) {
     );
 
     const itemPrice = item.atUnit === "UI1" ? prices : prices_m;
-    const atPrice = item.atUnit === "UI1" ? "PRICE1" : "PRICEM1";
+    const atPrice = "PRICE1";
 
     return vat === "vat"
       ? item.ISVAT === "Y"
@@ -223,6 +268,8 @@ export default function PosProvider({ children }: PosProviderProps) {
   }
 
   const value = {
+    billDiscount,
+    setBillDiscount,
     posItems,
     setPosItems,
     handleClickAddToCart,
@@ -233,6 +280,8 @@ export default function PosProvider({ children }: PosProviderProps) {
     getSumAmount,
     getSumBeforeTax,
     getSumTax,
+    getSumFullprice,
+    getSumDiscount,
     getPrice,
     getFullPrice,
     getAmount,

@@ -20,7 +20,7 @@ export default function PosBillItemsUnitSelect({
     const newPosItems = posItems?.map((item) => {
       if (item.BCODE === posItem.BCODE) {
         item.atUnit = value;
-        item.atPrice = value === "UI1" ? "PRICE1" : "PRICEM1";
+        item.atPrice = "PRICE1";
       }
       return item;
     });

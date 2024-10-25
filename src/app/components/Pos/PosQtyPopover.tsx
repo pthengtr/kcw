@@ -36,11 +36,7 @@ export default function PosQtyPopover({ item }: PosQtyPopoverProps) {
     const quantity = !!textInput ? parseInt(textInput) : item.QTY;
 
     setTextInput(
-      Number.isNaN(quantity)
-        ? item.QTY.toString()
-        : quantity > 0
-        ? (quantity - 1).toString()
-        : quantity.toString()
+      Number.isNaN(quantity) ? item.QTY.toString() : (quantity - 1).toString()
     );
   }
 
@@ -76,7 +72,9 @@ export default function PosQtyPopover({ item }: PosQtyPopoverProps) {
           </Button>
           <form onSubmit={(e) => handleOnsubmit(e)}>
             <Input
-              className="w-14 text-center"
+              id="qty-input"
+              type="number"
+              className="w-14 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
             />

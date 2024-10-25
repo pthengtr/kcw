@@ -33,6 +33,7 @@ import PosBillItemsUnitSelect from "./PosBillItemsUnitSelect";
 import PosBillItemsPriceSelect from "./PosBillItemsPriceSelect";
 import PosQtyPopover from "./PosQtyPopover";
 import PosBillPriceSelect from "./PosBillPriceSelect";
+import { Input } from "@/components/ui/input";
 
 export default function PosBillItemsCard() {
   const {
@@ -43,6 +44,10 @@ export default function PosBillItemsCard() {
     getAmount,
     getSumBeforeTax,
     getSumTax,
+    getSumFullprice,
+    getSumDiscount,
+    billDiscount,
+    setBillDiscount,
     vat,
   } = useContext(PosContext) as PosContextType;
   const { itemList, totalFound, handleSubmitForm } = useContext(
@@ -126,7 +131,7 @@ export default function PosBillItemsCard() {
                 posItems.map((item) => (
                   <TableRow key={item.BCODE}>
                     <TableCell>{item.BCODE}</TableCell>
-                    <TableCell>
+                    <TableCell className="">
                       {item.ISVAT === "Y" && (
                         <span className="bg-secondary text-white px-1 rounded-sm text-xs">
                           VAT
@@ -161,18 +166,36 @@ export default function PosBillItemsCard() {
             </TableBody>
           </Table>
         </div>
-        {vat === "vat" && !!posItems && (
-          <div className="flex justify-end text-base mt-8 h-fit">
-            <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg">
-              <span>มูลค่ารวมก่อนภาษี</span>
-              <span className="text-right">{getSumBeforeTax()}</span>
-              <span>ภาษีมูลค่าเพิ่ม 7%</span>
-              <span className="text-right">{getSumTax()}</span>
-              <span className="font-bold">ยอดรวม</span>
-              <span className="font-bold text-right">{getSumAmount()}</span>
-            </div>
+
+        <div className="flex justify-between items-start text-base mt-8 mx-16 h-fit">
+          <div className="flex gap-4 items-center">
+            <span>ส่วนลดท้ายบิล</span>
+            <Input
+              type="number"
+              value={billDiscount}
+              onChange={(e) => setBillDiscount(e.target.value)}
+              className="w-20 text-right [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:ring-transparent"
+            />
           </div>
-        )}
+          <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg">
+            <span>ราคาเต็ม</span>
+            <span className="text-right">{getSumFullprice()}</span>
+            <span>ส่วนลดทั้งหมด</span>
+            <span className="text-right">{getSumDiscount()}</span>
+            {vat === "vat" && !!posItems && (
+              <>
+                <Separator className="col-span-2" />
+                <span>มูลค่ารวมก่อนภาษี</span>
+                <span className="text-right">{getSumBeforeTax()}</span>
+                <span>ภาษีมูลค่าเพิ่ม 7%</span>
+                <span className="text-right">{getSumTax()}</span>
+              </>
+            )}
+            <Separator className="col-span-2" />
+            <span className="font-bold">ยอดรวม</span>
+            <span className="font-bold text-right">{getSumAmount()}</span>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
