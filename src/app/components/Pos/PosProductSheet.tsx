@@ -41,9 +41,7 @@ export default function PosProductSheet() {
           )}
         </div>
 
-        <div>
-          <PosProductDetail />
-        </div>
+        <div>{!!itemList && itemList.length > 0 && <PosProductDetail />}</div>
       </SheetContent>
     </Sheet>
   );

@@ -57,7 +57,7 @@ export default function TransactionBillList({
           <TableRow className="w-full">
             <TableHead>วันที่</TableHead>
             <TableHead>เลขที่บิล</TableHead>
-            <TableHead>ยอดรวม</TableHead>
+            <TableHead>ยอดค้างชำระ</TableHead>
             <TableHead>
               {mode === "notes"
                 ? `เลขที่ใบสำคัญ${accountType[acctType]}`
@@ -97,10 +97,18 @@ export default function TransactionBillList({
                   </Dialog>
                 </TableCell>
                 <TableCell>
-                  {item.AFTERTAX.toLocaleString("th-TH", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+                  {item.bill_payment
+                    .reduce(
+                      (acc, payment) =>
+                        payment.PAYTYPE !== "VOUCHER"
+                          ? acc - payment.AMOUNT
+                          : acc,
+                      item.AFTERTAX
+                    )
+                    .toLocaleString("th-TH", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                 </TableCell>
 
                 <TableCell

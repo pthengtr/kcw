@@ -2,9 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useContext } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
-
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import PosRecentBillSheet from "./PosRecentBillSheet";
 
 export default function PosBillPaymentOptionsCard() {
   const { vat, setVat, payment, setPayment } = useContext(
@@ -24,9 +23,6 @@ export default function PosBillPaymentOptionsCard() {
           <TabsList className="w-full">
             <TabsTrigger className="w-full" value="cash">
               เงินสด
-            </TabsTrigger>
-            <TabsTrigger className="w-full " value="transfer">
-              โอน
             </TabsTrigger>
             <TabsTrigger className="w-full " value="credit">
               ลงบัญชี
@@ -49,9 +45,9 @@ export default function PosBillPaymentOptionsCard() {
           </TabsList>
         </Tabs>
 
-        <Button className="col-span-2 bg-gray-100 text-gray-800 hover:bg-gray-200">
-          ดูประวัติบิลขาย
-        </Button>
+        <div className="col-span-2  text-center hover:bg-gray-100 p-1 rounded-md">
+          <PosRecentBillSheet />
+        </div>
       </CardContent>
     </Card>
   );

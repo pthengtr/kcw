@@ -36,13 +36,20 @@ export type noteType = {
   accounts: accountsType;
 };
 
+export type bill_paymentType = {
+  AMOUNT: number;
+  PAYTYPE: string;
+  billId: number;
+};
+
 export type billType = {
+  billId: number;
   BILLNO: string;
   JOURDATE: Date;
   BILLDATE: Date;
   DEDUCT: number;
   BEFORETAX: number;
-  VAT: number;
+  TAX: number;
   AFTERTAX: number;
   accountId: number;
   accounts: accountsType;
@@ -51,6 +58,8 @@ export type billType = {
   noteId: number;
   notes: noteType;
   REMARKS: string;
+  SALE: string;
+  bill_payment: bill_paymentType[];
 };
 
 export type itemsType = {
@@ -184,7 +193,7 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   async function getCurrentNoteBillsSupabase(noteId: number) {
     const { data, error } = await supabase
       .from("bills")
-      .select(`*, vouchers(*), notes(*)`)
+      .select(`*, vouchers(*), notes(*), bill_payment(*)`)
       .eq("noteId", noteId)
       .order("JOURDATE", { ascending: false })
       .limit(100);
@@ -196,7 +205,7 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   async function getCurrentVoucherBillsSupabase(voucherId: number) {
     const { data, error } = await supabase
       .from("bills")
-      .select(`*, vouchers(*), notes(*)`)
+      .select(`*, vouchers(*), notes(*), bill_payment(*)`)
       .eq("voucherId", voucherId)
       .order("JOURDATE", { ascending: false })
       .limit(100);
@@ -221,7 +230,7 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     async function getBillSupabase(billNo: string) {
       const { data, error } = await supabase
         .from("bills")
-        .select(`*,  vouchers(*), notes(*), accounts(*)`)
+        .select(`*,  vouchers(*), notes(*), accounts(*), bill_payment(*)`)
         .eq("BILLNO", billNo)
         .limit(100);
 

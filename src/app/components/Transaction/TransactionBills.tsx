@@ -60,7 +60,9 @@ export default function TransactionBills({
     async function getBillsSupabase() {
       const { data, error, count } = await supabase
         .from("bills")
-        .select(`*, vouchers(*), notes(*), accounts(*)`, { count: "exact" })
+        .select(`*, vouchers(*), notes(*), accounts(*), bill_payment(*)`, {
+          count: "exact",
+        })
         .ilike("BILLNO", `%${filterText}%`)
         .ilike("BILLTYPE", `${billType}%`)
         .eq("accountId", accountId)

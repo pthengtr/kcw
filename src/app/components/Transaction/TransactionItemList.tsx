@@ -16,7 +16,7 @@ export default function TransactionItemList({
   currentItems,
 }: TransactionItemListProps) {
   return (
-    <div className="relative overflow-auto h-[45vh]">
+    <div className="relative overflow-auto h-[60vh]">
       <Table>
         <TableHeader className="sticky top-0 bg-white">
           <TableRow>
@@ -24,7 +24,6 @@ export default function TransactionItemList({
             <TableHead>ชื่อสินค้า</TableHead>
             <TableHead>จำนวน</TableHead>
             <TableHead>หน่วย</TableHead>
-            <TableHead>ราคา</TableHead>
             <TableHead>ส่วนลด</TableHead>
             <TableHead>จำนวนเงิน</TableHead>
           </TableRow>
@@ -42,12 +41,6 @@ export default function TransactionItemList({
               <TableCell>{item.UI}</TableCell>
               <TableCell>
                 {item.PRICE.toLocaleString("th-TH", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </TableCell>
-              <TableCell>
-                {item.DISCNT1.toLocaleString("th-TH", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
