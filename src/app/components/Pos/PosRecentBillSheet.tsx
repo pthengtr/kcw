@@ -117,6 +117,7 @@ export default function PosRecentBillSheet() {
       setBillDate(new Date());
       setCurrentRecentBill(undefined);
       setPosRecentBillItems(undefined);
+      setPaymentFilter(initialPaymentFilter);
     }
   }
 
