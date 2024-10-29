@@ -156,7 +156,7 @@ export default function PosRecentBillSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={handleSheetOpen}>
-      <SheetTrigger className="w-full">ดูประวัติบิลขาย</SheetTrigger>
+      <SheetTrigger className="w-full">รายการบิลขายประจำวัน</SheetTrigger>
       <SheetContent className="sm:max-w-full grid grid-cols-2">
         {posFilterRecentBills && (
           <div className="h-full overflow-auto flex flex-col gap-4">

@@ -7,6 +7,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { paymentFilterType } from "./PosRecentBillSheet";
+import { useState } from "react";
 
 type PosRecentBillFilterProps = {
   paymentFilter: paymentFilterType;
@@ -21,19 +22,34 @@ export default function PosRecentBillFilter({
   billDate,
   setBillDate,
 }: PosRecentBillFilterProps) {
+  const [popOpen, setPopOpen] = useState(false);
+  function handleClickDate(date: Date) {
+    setBillDate(date);
+    setPopOpen(false);
+  }
   return (
     <>
-      <div className="flex gap-4 justify-center items-center">
-        <span>รายการบิลประจำวันที่</span>
-        <Popover>
-          <PopoverTrigger className="bg-gray-100 py-1 px-2 rounded-md hover:bg-gray-200 font-semibold">
-            {billDate.toLocaleDateString("th-TH")}
+      <div className="flex gap-4 justify-center items-baseline">
+        <span>รายการบิลขายประจำวันที่</span>
+        <Popover open={popOpen}>
+          <PopoverTrigger
+            onClick={() => setPopOpen((cur) => !cur)}
+            className="py-1 px-2 rounded-md hover:bg-gray-200 text-xl font-semibold"
+          >
+            {billDate.toLocaleDateString("th-TH", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </PopoverTrigger>
-          <PopoverContent className="pointer-events-auto">
+          <PopoverContent
+            onFocusOutside={() => setPopOpen(false)}
+            className="pointer-events-auto"
+          >
             <Calendar
               mode="single"
               selected={billDate}
-              onDayClick={setBillDate}
+              onDayClick={(date) => handleClickDate(date)}
               defaultMonth={billDate}
               formatters={{
                 formatCaption: (date) =>
