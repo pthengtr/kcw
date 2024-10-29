@@ -31,14 +31,15 @@ export default function PosBillItemsPriceSelect({
     setPosItems(newPosItems);
   }
 
-  const itemPrices =
-    posItem.atUnit === "UI1"
+  const itemPrices = posItem.prices
+    ? posItem.atUnit === "UI1"
       ? Object.fromEntries(
           posItem.prices.map((price) => [price.Attribute, price.Value])
         )
       : Object.fromEntries(
           posItem.prices_m.map((price) => [price.Attribute, price.Value])
-        );
+        )
+    : {};
 
   const defaultPrice = "PRICE1";
 
