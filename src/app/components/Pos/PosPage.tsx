@@ -12,8 +12,9 @@ export default function PosPage() {
   useEffect(() => {
     function handleKeydownEvent(e: KeyboardEvent) {
       if (e.code === "Space") setBarcode("");
-      else if (e.code === "Enter") handleSearchFromScan();
-      else if (e.code.includes("Shift")) return;
+      else if (e.code === "Enter" && barcode.length > 4) {
+        handleSearchFromScan();
+      } else if (e.code.includes("Shift")) return;
       else setBarcode((cur) => cur + e.code.slice(-1));
     }
 
@@ -26,7 +27,7 @@ export default function PosPage() {
     async function getItemSupabase(bcode: string) {
       const { data, error } = await supabase
         .from("products")
-        .select(`*`)
+        .select(`*, prices(*), prices_m(*)`)
         .or(`BCODE.eq.${bcode}, MCODE.eq.${bcode}`)
         .limit(10);
 

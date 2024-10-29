@@ -138,8 +138,6 @@ export default function PosProvider({ children }: PosProviderProps) {
   }
 
   function _getPrice(item: posItemsType) {
-    if (!item.prices) return 0;
-
     const prices = Object.fromEntries(
       item.prices.map((price) => [price.Attribute, price.Value])
     );
@@ -157,8 +155,6 @@ export default function PosProvider({ children }: PosProviderProps) {
   }
 
   function _getFullPrice(item: posItemsType) {
-    if (!item.prices) return 0;
-
     const prices = Object.fromEntries(
       item.prices.map((price) => [price.Attribute, price.Value])
     );
