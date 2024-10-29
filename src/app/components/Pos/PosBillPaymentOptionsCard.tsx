@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useContext } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PosRecentBillSheet from "./PosRecentBillSheet";
+import PosRecentBillSheet from "./PosRecentBills/PosRecentBillSheet";
 
 export default function PosBillPaymentOptionsCard() {
   const { vat, setVat, payment, setPayment } = useContext(
