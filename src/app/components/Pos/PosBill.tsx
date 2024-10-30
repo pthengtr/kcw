@@ -1,7 +1,7 @@
 import PosBillItemsCard from "./PosBillItemsCard";
 import PosBillTotalCard from "./PosBillTotalCard";
-import PosBillPaymentOptionsCard from "./PosBillPaymentOptionsCard";
-import { Button } from "@/components/ui/button";
+import PosBillSaveDialog from "./PosBillSaveDialog";
+import PosRecentBillSheet from "./PosRecentBills/PosRecentBillSheet";
 
 export default function PosBill() {
   return (
@@ -11,12 +11,10 @@ export default function PosBill() {
       </div>
       <div className="flex flex-col justify-start gap-4 min-w-72">
         <PosBillTotalCard />
-        <PosBillPaymentOptionsCard />
-        <Button className="bg-secondary hover:bg-red-700 text-4xl py-10 shadow-md">
-          <div className="flex gap-4 items-center">
-            <span>บันทึก</span>
-          </div>
-        </Button>
+        <PosBillSaveDialog />
+        <div className="col-span-2  text-center hover:bg-gray-100 p-1 rounded-md text-base">
+          <PosRecentBillSheet />
+        </div>
       </div>
     </div>
   );
