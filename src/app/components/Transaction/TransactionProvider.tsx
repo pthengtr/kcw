@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, createContext } from "react";
-import { productType } from "../Product/ProductProvider";
+import {
+  prices_mType,
+  pricesType,
+  productType,
+} from "../Product/ProductProvider";
 import { supabase } from "@/app/lib/supabase";
 
 export type checkType = {
@@ -80,6 +84,8 @@ export type itemsType = {
   accounts: accountsType;
   bills: billType;
   products: productType;
+  prices: pricesType[];
+  prices_m: prices_mType[];
 };
 
 export type accountsType = {

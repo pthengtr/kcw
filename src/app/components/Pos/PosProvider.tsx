@@ -6,7 +6,7 @@ import {
   pricesType,
   productType,
 } from "../Product/ProductProvider";
-import { accountsType } from "../Transaction/TransactionProvider";
+import { accountsType, billType } from "../Transaction/TransactionProvider";
 
 export type posItemsType = {
   BCODE: string;
@@ -21,6 +21,10 @@ export type posItemsType = {
   ISVAT: string;
   atPrice: string;
   atUnit: string;
+  isReturn: boolean;
+  returnPrice: number;
+  returnUnit: string;
+  returnQty: number;
 };
 
 export type PosContextType = {
@@ -31,9 +35,13 @@ export type PosContextType = {
   vat: string;
   setVat: (isVat: string) => void;
   currentCustomer: accountsType | undefined;
+  setCurrentCustomer: (customer: accountsType | undefined) => void;
   billDiscount: string;
   setBillDiscount: (discount: string) => void;
-  setCurrentCustomer: (customer: accountsType | undefined) => void;
+  returnMode: boolean;
+  setReturnMode: (isReturn: boolean) => void;
+  currentReturnBill: billType | undefined;
+  setCurrentReturnBill: (bill: billType | undefined) => void;
   handleClickAddToCart: (productDetail: productType) => void;
   handleCLickDeleteItem: (bcode: string) => void;
   handleClickAddQty: (bcode: string) => void;
@@ -47,6 +55,9 @@ export type PosContextType = {
   getPrice: (item: posItemsType) => string;
   getFullPrice: (item: posItemsType) => string;
   getAmount: (item: posItemsType) => string;
+  getSumReturnAmount: () => string;
+  getReturnItemPrice: (item: posItemsType) => string;
+  getReturnItemAmount: (item: posItemsType) => string;
 };
 
 export const priceName = {
@@ -68,6 +79,10 @@ export default function PosProvider({ children }: PosProviderProps) {
   const [vat, setVat] = React.useState("novat");
   const [currentCustomer, setCurrentCustomer] = React.useState<accountsType>();
   const [billDiscount, setBillDiscount] = React.useState("");
+  const [returnMode, setReturnMode] = React.useState(false);
+  const [currentReturnBill, setCurrentReturnBill] = React.useState<
+    billType | undefined
+  >();
 
   function getSumBeforeTax() {
     return (
@@ -193,6 +208,43 @@ export default function PosProvider({ children }: PosProviderProps) {
     });
   }
 
+  function getReturnItemPrice(item: posItemsType) {
+    return _getReturnItemPrice(item).toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function _getReturnItemPrice(item: posItemsType) {
+    return !!currentReturnBill && currentReturnBill.TAX > 0
+      ? item.ISVAT === "Y"
+        ? item.returnPrice
+        : item.returnPrice * 1.07
+      : item.returnPrice;
+  }
+
+  function getReturnItemAmount(item: posItemsType) {
+    return (_getReturnItemPrice(item) * item.QTY).toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  function getSumReturnAmount() {
+    return (
+      !!posItems
+        ? posItems.reduce(
+            (acc, cur) =>
+              cur.isReturn ? acc + _getReturnItemPrice(cur) * cur.QTY : acc,
+            0
+          )
+        : 0
+    ).toLocaleString("th-TH", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
   function handleCLickDeleteItem(bcode: string) {
     const newPosItems = posItems?.filter((item) => item.BCODE !== bcode);
 
@@ -259,6 +311,10 @@ export default function PosProvider({ children }: PosProviderProps) {
         ISVAT: productDetail.ISVAT,
         atPrice: "PRICE1",
         atUnit: "UI1",
+        isReturn: false,
+        returnUnit: productDetail.UI1,
+        returnPrice: productDetail.PRICE1,
+        returnQty: 1,
       };
 
       const newPosItems = !!posItems ? [...posItems, item] : [item];
@@ -272,6 +328,8 @@ export default function PosProvider({ children }: PosProviderProps) {
     setBillDiscount,
     posItems,
     setPosItems,
+    currentReturnBill,
+    setCurrentReturnBill,
     handleClickAddToCart,
     handleCLickDeleteItem,
     handleClickAddQty,
@@ -285,12 +343,17 @@ export default function PosProvider({ children }: PosProviderProps) {
     getPrice,
     getFullPrice,
     getAmount,
+    getReturnItemAmount,
+    getReturnItemPrice,
+    getSumReturnAmount,
     payment,
     setPayment,
     vat,
     setVat,
     currentCustomer,
     setCurrentCustomer,
+    returnMode,
+    setReturnMode,
   };
 
   return <PosContext.Provider value={value}>{children}</PosContext.Provider>;

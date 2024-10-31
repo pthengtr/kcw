@@ -10,22 +10,45 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useContext } from "react";
-import { PosContext, PosContextType } from "./PosProvider";
+import { PosContext, PosContextType, posItemsType } from "./PosProvider";
+import { Checkbox } from "@/components/ui/checkbox";
+import PosReturnQtySelect from "./PosReturnQtySelect";
 
 export default function PosBillItemsTable() {
-  const { posItems, getFullPrice, getAmount, handleCLickDeleteItem } =
-    useContext(PosContext) as PosContextType;
+  const {
+    posItems,
+    getFullPrice,
+    getAmount,
+    handleCLickDeleteItem,
+    returnMode,
+    getReturnItemPrice,
+    getReturnItemAmount,
+    setPosItems,
+  } = useContext(PosContext) as PosContextType;
+
+  function handleItemCheckChange(item: posItemsType, checked: boolean) {
+    const newPosItems = posItems?.map((posItem) => {
+      if (item.BCODE === posItem.BCODE) posItem.isReturn = checked;
+      return posItem;
+    });
+
+    setPosItems(newPosItems);
+  }
+
   return (
     <div className="overflow-auto">
       <Table className="h-full relative">
         <TableHeader className="sticky top-0  bg-white">
           <TableRow>
+            {returnMode && (
+              <TableHead>{/*place holder for checkbox */}</TableHead>
+            )}
             <TableHead>รหัสสินค้า</TableHead>
             <TableHead>ชื่อสินค้า</TableHead>
             <TableHead>จำนวน</TableHead>
             <TableHead>หน่วย</TableHead>
-            <TableHead>ราคาเต็ม</TableHead>
-            <TableHead>ส่วนลด</TableHead>
+            <TableHead>{returnMode ? "ราคาขาย" : "ราคาเต็ม"}</TableHead>
+            {!returnMode && <TableHead>ส่วนลด</TableHead>}
             <TableHead>จำนวนเงิน</TableHead>
             <TableHead>{/*place holder for delete button */}</TableHead>
           </TableRow>
@@ -34,6 +57,18 @@ export default function PosBillItemsTable() {
           {!!posItems &&
             posItems.map((item) => (
               <TableRow key={item.BCODE}>
+                {returnMode && (
+                  <TableCell>
+                    <Checkbox
+                      id={item.BCODE}
+                      onCheckedChange={(checked) =>
+                        handleItemCheckChange(item, checked as boolean)
+                      }
+                      className="data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
+                      checked={item.isReturn}
+                    />
+                  </TableCell>
+                )}
                 <TableCell>{item.BCODE}</TableCell>
                 <TableCell className="">
                   {item.ISVAT === "Y" && (
@@ -45,18 +80,30 @@ export default function PosBillItemsTable() {
                 </TableCell>
 
                 <TableCell className="text-center">
-                  <PosQtyPopover item={item} />
+                  {returnMode ? (
+                    <PosReturnQtySelect item={item} />
+                  ) : (
+                    <PosQtyPopover item={item} />
+                  )}
                 </TableCell>
                 <TableCell>
-                  <PosBillItemsUnitSelect posItem={item} />
+                  {returnMode ? (
+                    item.returnUnit
+                  ) : (
+                    <PosBillItemsUnitSelect posItem={item} />
+                  )}
                 </TableCell>
                 <TableCell className="text-right">
-                  {getFullPrice(item)}
+                  {returnMode ? getReturnItemPrice(item) : getFullPrice(item)}
                 </TableCell>
+                {!returnMode && (
+                  <TableCell className="text-right">
+                    <PosBillItemsPriceSelect posItem={item} />
+                  </TableCell>
+                )}
                 <TableCell className="text-right">
-                  <PosBillItemsPriceSelect posItem={item} />
+                  {returnMode ? getReturnItemAmount(item) : getAmount(item)}
                 </TableCell>
-                <TableCell className="text-right">{getAmount(item)}</TableCell>
                 <TableCell
                   onClick={() => handleCLickDeleteItem(item.BCODE)}
                   className="text-gray-300 hover:cursor-pointer hover:text-gray-500"

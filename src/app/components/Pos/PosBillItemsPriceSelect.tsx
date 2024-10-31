@@ -52,22 +52,6 @@ export default function PosBillItemsPriceSelect({
 
   return (
     <div className="flex flex-col gap-1">
-      {/* <Select defaultValue={defaultPrice} onValueChange={handlePriceChange}>
-        <SelectTrigger className="focus:ring-transparent w-full">
-          <SelectValue placeholder="เลือกราคา">
-            {getVatPrice(
-              itemPrices[defaultPrice] - itemPrices[posItem.atPrice]
-            )}
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {Object.keys(itemPrices).map((key) => (
-            <SelectItem key={key} value={key}>
-              {key}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select> */}
       <DropdownMenu>
         <DropdownMenuTrigger>
           <div className="flex gap-1">

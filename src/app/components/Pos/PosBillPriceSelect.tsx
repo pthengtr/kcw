@@ -11,7 +11,9 @@ import { useContext } from "react";
 const priceOptions = ["PRICE1", "PRICE2", "PRICE3", "PRICE5"];
 
 export default function PosBillPriceSelect() {
-  const { posItems, setPosItems } = useContext(PosContext) as PosContextType;
+  const { posItems, setPosItems, returnMode } = useContext(
+    PosContext
+  ) as PosContextType;
 
   function handlePriceChange(value: string) {
     const newPosItems =
@@ -34,7 +36,11 @@ export default function PosBillPriceSelect() {
     if (!!newPosItems) setPosItems(newPosItems);
   }
   return (
-    <Select defaultValue={`PRICE1`} onValueChange={handlePriceChange}>
+    <Select
+      disabled={returnMode}
+      defaultValue={`PRICE1`}
+      onValueChange={handlePriceChange}
+    >
       <SelectTrigger className="w-fit focus:ring-transparent">
         <SelectValue placeholder="เลือกราคา" />
       </SelectTrigger>

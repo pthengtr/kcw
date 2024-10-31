@@ -15,6 +15,10 @@ type TransactionItemListProps = {
 export default function TransactionItemList({
   currentItems,
 }: TransactionItemListProps) {
+  function getPrice(item: itemsType) {
+    return item.products.ISVAT === "Y" ? item.PRICE : item.PRICE * 1.07;
+  }
+
   return (
     <div className="relative overflow-auto h-[60vh]">
       <Table>
@@ -24,7 +28,7 @@ export default function TransactionItemList({
             <TableHead>ชื่อสินค้า</TableHead>
             <TableHead>จำนวน</TableHead>
             <TableHead>หน่วย</TableHead>
-            <TableHead>ส่วนลด</TableHead>
+            <TableHead>ราคา</TableHead>
             <TableHead>จำนวนเงิน</TableHead>
           </TableRow>
         </TableHeader>
@@ -46,7 +50,7 @@ export default function TransactionItemList({
                 })}
               </TableCell>
               <TableCell>
-                {item.AMOUNT.toLocaleString("th-TH", {
+                {(getPrice(item) * item.QTY).toLocaleString("th-TH", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}

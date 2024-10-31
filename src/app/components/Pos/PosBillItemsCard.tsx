@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useCallback } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
 import { useSession } from "next-auth/react";
 import PosSelectAcount from "./PosSelectAccount";
@@ -10,16 +10,32 @@ import { supabase } from "@/app/lib/supabase";
 import { Input } from "@/components/ui/input";
 import PosBillItemsTable from "./PosBillItemsTable";
 import PosBillPaymentOptions from "./PosBillPaymentOptions";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import PosReturnBillSearch from "./PosReturnBillSearch";
 
 export default function PosBillItemsCard() {
-  const { setCurrentCustomer, billDiscount, setBillDiscount } = useContext(
-    PosContext
-  ) as PosContextType;
+  const {
+    setCurrentCustomer,
+    setCurrentReturnBill,
+    billDiscount,
+    setBillDiscount,
+    returnMode,
+    setReturnMode,
+    setPosItems,
+  } = useContext(PosContext) as PosContextType;
 
   const { data: session } = useSession();
 
-  useEffect(() => {
-    async function getDefaultCustomer() {
+  function handleReturnModeChange(checked: boolean) {
+    setReturnMode(checked);
+    setPosItems(undefined);
+    setCurrentReturnBill(undefined);
+    getDefaultCustomer();
+  }
+
+  const getDefaultCustomer = useCallback(() => {
+    async function _getDefaultCustomer() {
       const { data, error } = await supabase
         .from("accounts")
         .select(`*`)
@@ -30,37 +46,57 @@ export default function PosBillItemsCard() {
       if (error) return;
       if (data !== null) setCurrentCustomer(data[0]);
     }
-
-    getDefaultCustomer();
+    _getDefaultCustomer();
   }, [setCurrentCustomer]);
+
+  useEffect(() => {
+    getDefaultCustomer();
+  }, [getDefaultCustomer]);
 
   return (
     <Card className="w-full pb-8 shadow-md flex flex-col">
-      <CardHeader className="h-[25%]">
+      <CardHeader className="h-[22%]">
         <CardTitle className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
+          <div className="flex justify-between">
             <PosSelectAcount />
-            <PosBillPaymentOptions />
-            <PosBillPriceSelect />
+            <span className="font-normal text-base italic">
+              {session?.user?.name}
+            </span>
           </div>
+
           <Separator />
           <div className="text-center items-center flex">
-            <div className="flex-1 text-left">
-              <PosProductSheet />
+            <div className="flex-1 text-left flex gap-2">
+              {returnMode ? <PosReturnBillSearch /> : <PosProductSheet />}
             </div>
             <span>รายการสินค้า</span>
-            <div className="flex-1 text-base flex flex-col justify-end text-right gap-2">
-              <span className="font-normal italic">{session?.user?.name}</span>
+            <div className="flex-1 text-base gap-2 flex items-center space-x-2 justify-end">
+              <Switch
+                checked={returnMode}
+                onCheckedChange={(checked) => handleReturnModeChange(checked)}
+                id="return-mode"
+              />
+              <Label
+                htmlFor="return-mode"
+                className={`${
+                  returnMode ? "text-gray-800 font-semibold" : "text-gray-400"
+                }`}
+              >
+                คืนสินค้า/ใบลดหนี้
+              </Label>
             </div>
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[75%] flex flex-col">
+      <CardContent className="h-[78%] flex flex-col">
         <PosBillItemsTable />
-        <div className="flex justify-end items-start text-base mt-8 mx-16 h-fit">
+        <div className="flex justify-center items-start gap-4 text-base mt-8 mx-16 h-fit">
+          <PosBillPaymentOptions />
+          <PosBillPriceSelect />
           <div className="flex gap-4 items-center">
             <span>ส่วนลดท้ายบิล</span>
             <Input
+              disabled={returnMode}
               type="number"
               value={billDiscount}
               onChange={(e) => setBillDiscount(e.target.value)}
