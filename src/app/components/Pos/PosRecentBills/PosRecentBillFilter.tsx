@@ -4,7 +4,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { paymentFilterType } from "./PosRecentBillSheet";
 import { useState } from "react";

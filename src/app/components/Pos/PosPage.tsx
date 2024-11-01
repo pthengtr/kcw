@@ -44,7 +44,7 @@ export default function PosPage() {
     return () => {
       window.removeEventListener("keydown", handleKeydownEvent);
     };
-  }, [barcode, handleClickAddToCart]);
+  }, [barcode, handleClickAddToCart, returnMode]);
 
   return (
     <main className="h-[90%] flex mx-auto ">
