@@ -14,6 +14,8 @@ export type paymentFilterType = {
   transfer: boolean;
   check: boolean;
   credit: boolean;
+  vat: boolean;
+  novat: boolean;
 };
 
 const initialPaymentFilter = {
@@ -22,6 +24,8 @@ const initialPaymentFilter = {
   transfer: true,
   check: true,
   credit: true,
+  vat: true,
+  novat: true,
 };
 
 export default function PosRecentBillSheet() {
@@ -74,6 +78,7 @@ export default function PosRecentBillSheet() {
       if (error) return;
       if (data !== null) {
         setPosRecentBills(data);
+        setPaymentFilter(initialPaymentFilter);
         filterRecentBills(initialPaymentFilter, data);
       }
     }
@@ -151,6 +156,11 @@ export default function PosRecentBillSheet() {
               bill.accounts?.ACCTNO.includes(filter.filterText)
           )
         : newPosRecentBills;
+
+    newPosRecentBills = newPosRecentBills.filter(
+      (bill) =>
+        (filter.vat && bill.TAX !== 0) || (filter.novat && bill.TAX === 0)
+    );
 
     setPosFilterRecentBills(newPosRecentBills);
   }

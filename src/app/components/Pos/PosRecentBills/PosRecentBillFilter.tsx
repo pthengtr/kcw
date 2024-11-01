@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { paymentFilterType } from "./PosRecentBillSheet";
 import { useState } from "react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 type PosRecentBillFilterProps = {
   paymentFilter: paymentFilterType;
@@ -23,6 +24,10 @@ export default function PosRecentBillFilter({
   setBillDate,
 }: PosRecentBillFilterProps) {
   const [popOpen, setPopOpen] = useState(false);
+  const [togglePayValue, setTogglePayValue] = useState(
+    "cash transfer credit check".split(" ")
+  );
+  const [toggleVatValue, setToggleVatValue] = useState("vat novat".split(" "));
   function handleClickDate(date: Date) {
     setBillDate(date);
     setPopOpen(false);
@@ -66,7 +71,7 @@ export default function PosRecentBillFilter({
           </PopoverContent>
         </Popover>
       </div>
-      <div className="flex gap-4 items-center justify-center">
+      <div className="flex gap-2 items-center justify-center">
         <Input
           value={paymentFilter.filterText}
           placeholder="ชื่อลูกค้า หรือ เลขที่บิล"
@@ -78,62 +83,43 @@ export default function PosRecentBillFilter({
           }
           className="w-40 focus-visible:ring-transparent"
         />
-        <div className="flex gap-2 items-center">
-          <Checkbox
-            className="data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
-            checked={paymentFilter.cash}
-            onCheckedChange={() =>
-              handleFilterChange({
-                ...paymentFilter,
-                cash: !paymentFilter.cash,
-              })
-            }
-            id="cash"
-          />
-          <label htmlFor="cash">เงินสด</label>
-        </div>
-        <div className="flex gap-2 items-center">
-          <Checkbox
-            className="data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
-            checked={paymentFilter.transfer}
-            onCheckedChange={() =>
-              handleFilterChange({
-                ...paymentFilter,
-                transfer: !paymentFilter.transfer,
-              })
-            }
-            id="transfer"
-          />
-          <label htmlFor="transfer">โอน</label>
-        </div>
-        <div className="flex gap-2 items-center">
-          <Checkbox
-            className="data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
-            checked={paymentFilter.credit}
-            onCheckedChange={() =>
-              handleFilterChange({
-                ...paymentFilter,
-                credit: !paymentFilter.credit,
-              })
-            }
-            id="credit"
-          />
-          <label htmlFor="check">ลงบัญชี</label>
-        </div>
-        <div className="flex gap-2 items-center">
-          <Checkbox
-            className="data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
-            checked={paymentFilter.check}
-            onCheckedChange={() =>
-              handleFilterChange({
-                ...paymentFilter,
-                check: !paymentFilter.check,
-              })
-            }
-            id="check"
-          />
-          <label htmlFor="check">เช็ค</label>
-        </div>
+
+        <ToggleGroup
+          type="multiple"
+          className="border-x px-2"
+          value={togglePayValue}
+          onValueChange={(values) => {
+            setTogglePayValue(values);
+            handleFilterChange({
+              ...paymentFilter,
+              cash: values.includes("cash") ? true : false,
+              transfer: values.includes("transfer") ? true : false,
+              credit: values.includes("credit") ? true : false,
+              check: values.includes("check") ? true : false,
+            });
+          }}
+        >
+          <ToggleGroupItem value="cash">เงินสด</ToggleGroupItem>
+          <ToggleGroupItem value="transfer">โอน</ToggleGroupItem>
+          <ToggleGroupItem value="credit">ลงบัญชี</ToggleGroupItem>
+          <ToggleGroupItem value="check">เช็ค</ToggleGroupItem>
+        </ToggleGroup>
+
+        <ToggleGroup
+          type="multiple"
+          value={toggleVatValue}
+          onValueChange={(values) => {
+            setToggleVatValue(values);
+            handleFilterChange({
+              ...paymentFilter,
+              vat: values.includes("vat") ? true : false,
+              novat: values.includes("novat") ? true : false,
+            });
+          }}
+        >
+          <ToggleGroupItem value="vat">VAT</ToggleGroupItem>
+          <ToggleGroupItem value="novat">ไม่ VAT</ToggleGroupItem>
+        </ToggleGroup>
       </div>
     </>
   );
