@@ -54,22 +54,23 @@ export default function PosRecentBillSheet() {
         .lte(
           "JOURDATE",
           new Date(
-            `${billDate.getUTCFullYear()}-${billDate.getUTCMonth() + 1}-${
-              billDate.getUTCDate() + 1
-            } 23:59:59`
+            `${billDate.getUTCFullYear()}-${
+              billDate.getUTCMonth() + 1
+            }-${billDate.getUTCDate()} 23:59:59`
           ).toLocaleString("en-US")
         )
         .gte(
           "JOURDATE",
           new Date(
-            `${billDate.getUTCFullYear()}-${billDate.getUTCMonth() + 1}-${
-              billDate.getUTCDate() + 1
-            } 00:00:00`
+            `${billDate.getUTCFullYear()}-${
+              billDate.getUTCMonth() + 1
+            }-${billDate.getUTCDate()} 00:00:00`
           ).toLocaleString("en-US")
         )
         .limit(500);
 
       console.log("rerender");
+
       if (error) return;
       if (data !== null) {
         setPosRecentBills(data);

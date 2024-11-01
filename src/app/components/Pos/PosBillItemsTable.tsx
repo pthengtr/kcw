@@ -50,21 +50,27 @@ export default function PosBillItemsTable() {
             <TableHead>{returnMode ? "ราคาขาย" : "ราคาเต็ม"}</TableHead>
             {!returnMode && <TableHead>ส่วนลด</TableHead>}
             <TableHead>จำนวนเงิน</TableHead>
-            <TableHead>{/*place holder for delete button */}</TableHead>
+            {!returnMode && (
+              <TableHead>{/*place holder for delete button */}</TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
           {!!posItems &&
             posItems.map((item) => (
-              <TableRow key={item.BCODE}>
+              <TableRow
+                className={`${item.returnQty <= 0 ? "text-gray-400" : ""} `}
+                key={item.BCODE}
+              >
                 {returnMode && (
                   <TableCell>
                     <Checkbox
                       id={item.BCODE}
+                      disabled={item.returnQty <= 0}
                       onCheckedChange={(checked) =>
                         handleItemCheckChange(item, checked as boolean)
                       }
-                      className="data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
+                      className={`data-[state=checked]:bg-secondary data-[state=checked]:border-secondary`}
                       checked={item.isReturn}
                     />
                   </TableCell>
@@ -104,12 +110,14 @@ export default function PosBillItemsTable() {
                 <TableCell className="text-right">
                   {returnMode ? getReturnItemAmount(item) : getAmount(item)}
                 </TableCell>
-                <TableCell
-                  onClick={() => handleCLickDeleteItem(item.BCODE)}
-                  className="text-gray-300 hover:cursor-pointer hover:text-gray-500"
-                >
-                  <TrashIcon />
-                </TableCell>
+                {!returnMode && (
+                  <TableCell
+                    onClick={() => handleCLickDeleteItem(item.BCODE)}
+                    className="text-gray-300 hover:cursor-pointer hover:text-gray-500"
+                  >
+                    <TrashIcon />
+                  </TableCell>
+                )}
               </TableRow>
             ))}
         </TableBody>

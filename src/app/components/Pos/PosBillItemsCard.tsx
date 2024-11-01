@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useContext, useEffect, useCallback } from "react";
+import { useContext, useEffect, useCallback, useRef } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
 import { useSession } from "next-auth/react";
 import PosSelectAcount from "./PosSelectAccount";
@@ -27,11 +27,14 @@ export default function PosBillItemsCard() {
 
   const { data: session } = useSession();
 
+  const switchRef = useRef(null);
+
   function handleReturnModeChange(checked: boolean) {
     setReturnMode(checked);
     setPosItems(undefined);
     setCurrentReturnBill(undefined);
     getDefaultCustomer();
+    (document.activeElement as HTMLElement).blur();
   }
 
   const getDefaultCustomer = useCallback(() => {
@@ -72,6 +75,7 @@ export default function PosBillItemsCard() {
             <span>รายการสินค้า</span>
             <div className="flex-1 text-base gap-2 flex items-center space-x-2 justify-end">
               <Switch
+                ref={switchRef}
                 checked={returnMode}
                 onCheckedChange={(checked) => handleReturnModeChange(checked)}
                 id="return-mode"
@@ -96,7 +100,7 @@ export default function PosBillItemsCard() {
           <div className="flex gap-4 items-center">
             <span>ส่วนลดท้ายบิล</span>
             <Input
-              disabled={returnMode}
+              //disabled={returnMode}
               type="number"
               value={billDiscount}
               onChange={(e) => setBillDiscount(e.target.value)}

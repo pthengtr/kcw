@@ -15,11 +15,14 @@ type PosReturnQtySelectProps = {
 export default function PosReturnQtySelect({ item }: PosReturnQtySelectProps) {
   const { setPosItems, posItems } = useContext(PosContext) as PosContextType;
 
-  const qtyArray = Array.from(
-    Array(item.returnQty)
-      .keys()
-      .map((key) => key + 1)
-  );
+  const qtyArray =
+    item.returnQty > 0
+      ? Array.from(
+          Array(item.returnQty)
+            .keys()
+            .map((key) => key + 1)
+        )
+      : undefined;
 
   function handleQtyChange(value: string) {
     const newPosItems = posItems?.map((posItem) => {
@@ -31,17 +34,23 @@ export default function PosReturnQtySelect({ item }: PosReturnQtySelectProps) {
   }
 
   return (
-    <Select value={item.QTY.toString()} onValueChange={handleQtyChange}>
-      <SelectTrigger className="w-14 focus:ring-transparent">
-        <SelectValue placeholder="เลือกจำนวน" />
-      </SelectTrigger>
-      <SelectContent>
-        {qtyArray.map((qty) => (
-          <SelectItem className="" key={qty} value={qty.toString()}>
-            {qty}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <>
+      {!qtyArray ? (
+        item.returnQty
+      ) : (
+        <Select value={item.QTY.toString()} onValueChange={handleQtyChange}>
+          <SelectTrigger className="w-14 focus:ring-transparent">
+            <SelectValue placeholder="เลือกจำนวน" />
+          </SelectTrigger>
+          <SelectContent>
+            {qtyArray.map((qty) => (
+              <SelectItem className="" key={qty} value={qty.toString()}>
+                {qty}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+    </>
   );
 }

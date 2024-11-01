@@ -5,12 +5,16 @@ import { PosContext, PosContextType } from "./PosProvider";
 import { supabase } from "@/app/lib/supabase";
 
 export default function PosPage() {
-  const { handleClickAddToCart } = useContext(PosContext) as PosContextType;
+  const { handleClickAddToCart, returnMode } = useContext(
+    PosContext
+  ) as PosContextType;
 
   const [barcode, setBarcode] = useState("");
 
   useEffect(() => {
     function handleKeydownEvent(e: KeyboardEvent) {
+      if (returnMode) return;
+
       if (e.code === "Space") setBarcode("");
       else if (e.code === "Enter" && barcode.length > 4) {
         handleSearchFromScan();

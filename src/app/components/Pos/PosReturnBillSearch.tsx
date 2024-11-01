@@ -50,6 +50,7 @@ export default function PosReturnBillSearch() {
       .ilike("BILLNO", `%${search}%`)
       .ilike("BILLTYPE", `1S%`)
       .order("JOURDATE", { ascending: false })
+      //.gt("TAX", "0")
       .limit(10);
 
     const { data, error } = await query;
@@ -77,7 +78,7 @@ export default function PosReturnBillSearch() {
         ISVAT: item.products.ISVAT,
         atPrice: "PRICE1",
         atUnit: "UI1",
-        isReturn: true,
+        isReturn: item.QTY > 0 ? true : false,
         returnPrice: item.PRICE,
         returnUnit: item.UI,
         returnQty: item.QTY,
