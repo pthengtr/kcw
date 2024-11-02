@@ -72,7 +72,7 @@ export default function PosBillItemsCard() {
             <div className="flex-1 text-left flex gap-2">
               {returnMode ? <PosReturnBillSearch /> : <PosProductSheet />}
             </div>
-            <span>รายการสินค้า</span>
+            <span>รายการสินค้า{returnMode && "คืน"}</span>
             <div className="flex-1 text-base gap-2 flex items-center space-x-2 justify-end">
               <Switch
                 ref={switchRef}

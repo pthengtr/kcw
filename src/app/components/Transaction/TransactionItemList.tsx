@@ -16,7 +16,11 @@ export default function TransactionItemList({
   currentItems,
 }: TransactionItemListProps) {
   function getPrice(item: itemsType) {
-    return item.products.ISVAT === "Y" ? item.PRICE : item.PRICE * 1.07;
+    return !!item.products
+      ? item.products.ISVAT === "Y"
+        ? item.PRICE
+        : item.PRICE * 1.07
+      : item.PRICE;
   }
 
   return (

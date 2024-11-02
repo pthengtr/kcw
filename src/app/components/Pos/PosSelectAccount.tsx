@@ -14,9 +14,8 @@ import { useContext, useState } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
 
 export default function PosSelectAcount() {
-  const { currentCustomer, setCurrentCustomer } = useContext(
-    PosContext
-  ) as PosContextType;
+  const { currentCustomer, setCurrentCustomer, setVat, setPayment } =
+    useContext(PosContext) as PosContextType;
 
   const [searchCustomer, setSearchCustomer] = useState("");
   const [customerList, setCustomerList] = useState<
@@ -32,6 +31,10 @@ export default function PosSelectAcount() {
     setSearchCustomer("");
     setCustomerList(undefined);
     setCurrentCustomer(value);
+    if (value.ACCTNO === "000" || value.ACCTNO === "7000") {
+      setVat("novat");
+      setPayment("CASH");
+    }
   }
 
   function handleSearchCustomer(searchText: string) {
