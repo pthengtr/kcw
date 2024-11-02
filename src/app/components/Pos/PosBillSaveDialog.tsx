@@ -15,11 +15,14 @@ import PosBillSaveDialogCash from "./PosBillSaveDialogCash";
 import PosBillSaveDialogTransfer from "./PosBillSaveDialogTransfer";
 import { supabase } from "@/app/lib/supabase";
 import { billType } from "../Transaction/TransactionProvider";
+import { useSession } from "next-auth/react";
 
 export default function PosBillSaveDialog() {
   const { payment, currentCustomer, vat, returnMode } = useContext(
     PosContext
   ) as PosContextType;
+
+  const { data: session } = useSession();
 
   function formatNewBill(date: Date, data: billType[]) {
     let billHeader, newBillType;
@@ -64,7 +67,7 @@ export default function PosBillSaveDialog() {
       TAX: 1,
       AFTERTAX: 2,
       REMARKS: "Test Bill Creation",
-      SALE: "Test User",
+      SALE: session?.user?.name,
     };
 
     return newBill;
