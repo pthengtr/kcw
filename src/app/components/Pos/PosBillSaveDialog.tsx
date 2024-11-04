@@ -18,24 +18,34 @@ import { billType } from "../Transaction/TransactionProvider";
 import { useSession } from "next-auth/react";
 
 export default function PosBillSaveDialog() {
-  const { payment, currentCustomer, vat, returnMode } = useContext(
-    PosContext
-  ) as PosContextType;
+  const {
+    payment,
+    currentCustomer,
+    vat,
+    returnMode,
+    getSumBeforeTax,
+    getSumAmount,
+    getSumTax,
+    posItems,
+    getPrice,
+    getAmount,
+  } = useContext(PosContext) as PosContextType;
 
   const { data: session } = useSession();
 
+  function getNoVatPrefix() {
+    return vat === "novat" ? "0" : "";
+  }
+
   function formatNewBill(date: Date, data: billType[]) {
     let billHeader, newBillType;
-    if (vat === "vat") {
-      if (payment === "CASH") {
-        billHeader = "RT";
-        newBillType = "1SY";
-      } else if (payment === "CREDIT") {
-        billHeader = "IVT";
-        newBillType = "1SN";
-      }
-    } else if (vat === "novat") {
-      billHeader = "NOVAT";
+
+    if (payment === "CASH") {
+      billHeader = getNoVatPrefix() + "TR";
+      newBillType = `1SY`;
+    } else if (payment === "CREDIT") {
+      billHeader = getNoVatPrefix() + "TB";
+      newBillType = "1SN";
     }
 
     const newBillId = Math.random().toString().substring(2, 14);
@@ -63,22 +73,45 @@ export default function PosBillSaveDialog() {
       BILLTYPE: newBillType,
       JOURDATE: date,
       BILLDATE: date,
-      BEFORETAX: 1,
-      TAX: 1,
-      AFTERTAX: 2,
+      BEFORETAX:
+        vat === "vat" ? toFloat(getSumBeforeTax()) : toFloat(getSumAmount()),
+      TAX: vat === "vat" ? toFloat(getSumTax()) : 0,
+      AFTERTAX: toFloat(getSumAmount()),
       REMARKS: "Test Bill Creation",
       SALE: session?.user?.name,
+      ACCTNO: currentCustomer?.ACCTNO,
+      accountId: currentCustomer?.accountId,
     };
 
     return newBill;
   }
 
+  function toFloat(inStr: string) {
+    return parseFloat(inStr.replace(",", ""));
+  }
+
+  function formatNewBillItems(date: Date, newBill: billType) {
+    return posItems?.map((posItem) => ({
+      itemId: Math.random().toString().substring(2, 14),
+      JOURDATE: date,
+      BILLNO: newBill.BILLNO,
+      BCODE: posItem.BCODE,
+      QTY: posItem.QTY,
+      UI: posItems[posItem.atUnit as keyof typeof posItems],
+      MTP: posItem.MTP,
+      PRICE: toFloat(getPrice(posItem)),
+      AMOUNT: toFloat(getAmount(posItem)),
+      ACCTNO: currentCustomer?.ACCTNO,
+      accountId: currentCustomer?.accountId,
+      billId: newBill.billId,
+    }));
+  }
+
   async function createNewBill(date: Date) {
-    const { data, error } = await supabase
+    let query = supabase
       .from("bills")
       .select(`*`)
-      .neq("TAX", `0`)
-      .ilike("BILLTYPE", `1SY`)
+      .ilike("BILLTYPE", payment === "CASH" ? "1SY" : "1SN")
       .lt(
         "BILLDATE",
         new Date(
@@ -98,23 +131,39 @@ export default function PosBillSaveDialog() {
       .order("BILLDATE", { ascending: false })
       .limit(1);
 
+    if (vat === "vat") query = query.neq("TAX", "0");
+    else query = query.eq("TAX", "0");
+
+    const { data, error } = await query;
+
     console.log("get latest", data);
 
     if (error) return;
-    // if (data !== null) setLatestBill(data);
-    // if (count !== null) setBillCount(count);
+
     const newBill = formatNewBill(date, data);
 
-    console.log("input", newBill);
-
-    const { data: out, error: outerr } = await supabase
+    console.log("bill input", newBill);
+    const { data: outBill, error: outBillErr } = await supabase
       .from("bills")
       .insert([newBill])
       .select();
 
-    if (outerr) return;
+    if (outBillErr) {
+      console.log(outBillErr);
+      return;
+    }
+    console.log("bill output", outBill);
 
-    console.log("output", out);
+    const newBillItems = formatNewBillItems(date, outBill[0]);
+
+    console.log("items input", outBill);
+    const { data: outItems, error: outItemsErr } = await supabase
+      .from("items")
+      .insert(newBillItems)
+      .select();
+
+    if (outItemsErr) return;
+    console.log("items output", outItems);
   }
 
   function handleConfirmBill() {
@@ -123,7 +172,10 @@ export default function PosBillSaveDialog() {
 
   return (
     <Dialog>
-      <DialogTrigger className="bg-secondary hover:bg-red-700 text-4xl py-10 shadow-md text-white rounded-md">
+      <DialogTrigger
+        disabled={!posItems || posItems.length === 0}
+        className="bg-secondary hover:bg-red-700 text-4xl py-10 shadow-md text-white rounded-md"
+      >
         {payment === "CASH" ? "ชำระเงิน" : "บันทึก"}
       </DialogTrigger>
       <DialogContent className="flex flex-col sm:max-w-fit">
