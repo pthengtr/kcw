@@ -71,8 +71,8 @@ export default function PosBillSaveDialog() {
       billId: newBillId,
       BILLNO: newBillNo,
       BILLTYPE: newBillType,
-      JOURDATE: date,
-      BILLDATE: date,
+      JOURDATE: date.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }),
+      BILLDATE: date.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }),
       BEFORETAX:
         vat === "vat" ? toFloat(getSumBeforeTax()) : toFloat(getSumAmount()),
       TAX: vat === "vat" ? toFloat(getSumTax()) : 0,
@@ -93,7 +93,7 @@ export default function PosBillSaveDialog() {
   function formatNewBillItems(date: Date, newBill: billType) {
     return posItems?.map((posItem) => ({
       itemId: Math.random().toString().substring(2, 14),
-      JOURDATE: date,
+      JOURDATE: date.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }),
       BILLNO: newBill.BILLNO,
       BCODE: posItem.BCODE,
       QTY: posItem.QTY,
