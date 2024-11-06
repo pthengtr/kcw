@@ -45,7 +45,10 @@ export default function TransactionBillsItemList({
             </div>
           )}
 
-          <TransactionItemList currentItems={currentBillItems} />
+          <TransactionItemList
+            currentItems={currentBillItems}
+            isVat={!!currentBill && currentBill.TAX > 0}
+          />
 
           {currentBill && (
             <div className="grid grid-cols-2 gap-4 mr-8 text-base mt-auto h-fit justify-items-end">

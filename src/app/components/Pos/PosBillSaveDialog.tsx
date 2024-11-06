@@ -8,7 +8,6 @@ import {
 import { PosContext, PosContextType } from "./PosProvider";
 import { useContext } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { DialogClose } from "@radix-ui/react-dialog";
 import PosBillTotalCard from "./PosBillTotalCard";
 import PosBillSaveDialogCash from "./PosBillSaveDialogCash";
@@ -16,6 +15,7 @@ import PosBillSaveDialogTransfer from "./PosBillSaveDialogTransfer";
 import { supabase } from "@/app/lib/supabase";
 import { billType } from "../Transaction/TransactionProvider";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function PosBillSaveDialog() {
   const {
@@ -27,11 +27,11 @@ export default function PosBillSaveDialog() {
     getSumAmount,
     getSumTax,
     posItems,
-    getPrice,
-    getAmount,
+    setPosItems,
   } = useContext(PosContext) as PosContextType;
 
   const { data: session } = useSession();
+  const { toast } = useToast();
 
   function getNoVatPrefix() {
     return vat === "novat" ? "0" : "";
@@ -91,20 +91,30 @@ export default function PosBillSaveDialog() {
   }
 
   function formatNewBillItems(date: Date, newBill: billType) {
-    return posItems?.map((posItem) => ({
-      itemId: Math.random().toString().substring(2, 14),
-      JOURDATE: date.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }),
-      BILLNO: newBill.BILLNO,
-      BCODE: posItem.BCODE,
-      QTY: posItem.QTY,
-      UI: posItems[posItem.atUnit as keyof typeof posItems],
-      MTP: posItem.MTP,
-      PRICE: toFloat(getPrice(posItem)),
-      AMOUNT: toFloat(getAmount(posItem)),
-      ACCTNO: currentCustomer?.ACCTNO,
-      accountId: currentCustomer?.accountId,
-      billId: newBill.billId,
-    }));
+    return posItems?.map((posItem) => {
+      const prices = Object.fromEntries(
+        posItem.prices.map((price) => [price.Attribute, price.Value])
+      );
+      const prices_m = Object.fromEntries(
+        posItem.prices_m.map((price) => [price.Attribute, price.Value])
+      );
+
+      const itemPrice = posItem.atUnit === "UI1" ? prices : prices_m;
+      return {
+        itemId: Math.random().toString().substring(2, 14),
+        JOURDATE: date.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }),
+        BILLNO: newBill.BILLNO,
+        BCODE: posItem.BCODE,
+        QTY: posItem.QTY,
+        UI: posItems[posItem.atUnit as keyof typeof posItems],
+        MTP: posItem.MTP,
+        PRICE: itemPrice[posItem.atPrice],
+        AMOUNT: itemPrice[posItem.atPrice] * posItem.QTY,
+        ACCTNO: currentCustomer?.ACCTNO,
+        accountId: currentCustomer?.accountId,
+        billId: newBill.billId,
+      };
+    });
   }
 
   async function createNewBill(date: Date) {
@@ -138,7 +148,10 @@ export default function PosBillSaveDialog() {
 
     console.log("get latest", data);
 
-    if (error) return;
+    if (error) {
+      console.log(error);
+      return;
+    }
 
     const newBill = formatNewBill(date, data);
 
@@ -162,8 +175,16 @@ export default function PosBillSaveDialog() {
       .insert(newBillItems)
       .select();
 
-    if (outItemsErr) return;
+    if (outItemsErr) {
+      console.log("error", outItemsErr);
+      toast({ title: "เกิดข้อผิดพลาด", description: "กรุณาลองใหม่อีกครั้ง" });
+      return;
+    }
     console.log("items output", outItems);
+
+    setPosItems(undefined);
+
+    toast({ title: outBill[0].BILLNO, description: "บันทึกเรียบร้อยแล้ว" });
   }
 
   function handleConfirmBill() {
@@ -231,12 +252,12 @@ export default function PosBillSaveDialog() {
           <DialogClose className="bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 p-2 rounded-lg">
             ยกเลิก
           </DialogClose>
-          <Button
+          <DialogClose
             onClick={handleConfirmBill}
-            className="bg-secondary hover:bg-red-700 font-bold text-xl p-2"
+            className="bg-secondary hover:bg-red-700 font-bold text-white text-xl p-2 rounded-md"
           >
             ยืนยัน
-          </Button>
+          </DialogClose>
         </div>
       </DialogContent>
     </Dialog>

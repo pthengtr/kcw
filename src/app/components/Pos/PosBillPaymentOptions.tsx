@@ -55,14 +55,14 @@ export default function PosBillPaymentOptions() {
         >
           <TabsList className="w-full">
             <TabsTrigger className="w-full" value="novat">
-              ไม่รวม VAT
+              บิลทั่วไป
             </TabsTrigger>
             <TabsTrigger
               disabled={!isVatOrCreditAllow()}
               className="w-full"
               value="vat"
             >
-              VAT
+              บิล VAT
             </TabsTrigger>
           </TabsList>
         </Tabs>

@@ -5,6 +5,7 @@ import ProductProvider from "./components/Product/ProductProvider";
 import SearchProvider from "./components/SearchProvider";
 import Header from "./components/Header";
 import AuthProvider from "./components/AuthProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const prompt = Prompt({
   weight: ["400", "700"],
@@ -36,6 +37,7 @@ export default function RootLayout({
             </SearchProvider>
           </ProductProvider>
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

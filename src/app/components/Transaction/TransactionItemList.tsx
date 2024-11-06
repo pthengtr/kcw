@@ -10,13 +10,15 @@ import { itemsType } from "./TransactionProvider";
 
 type TransactionItemListProps = {
   currentItems: itemsType[];
+  isVat: boolean;
 };
 
 export default function TransactionItemList({
   currentItems,
+  isVat,
 }: TransactionItemListProps) {
   function getPrice(item: itemsType) {
-    return !!item.products
+    return !!item.products && isVat
       ? item.products.ISVAT === "Y"
         ? item.PRICE
         : item.PRICE * 1.07
@@ -48,7 +50,7 @@ export default function TransactionItemList({
               <TableCell>{item.QTY}</TableCell>
               <TableCell>{item.UI}</TableCell>
               <TableCell>
-                {item.PRICE.toLocaleString("th-TH", {
+                {getPrice(item).toLocaleString("th-TH", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
