@@ -12,6 +12,7 @@ import {
 import { supabase } from "@/app/lib/supabase";
 import { useContext, useState } from "react";
 import { PosContext, PosContextType } from "./PosProvider";
+import { usePathname } from "next/navigation";
 
 export default function PosSelectAcount() {
   const { currentCustomer, setCurrentCustomer, setVat, setPayment } =
@@ -21,6 +22,8 @@ export default function PosSelectAcount() {
   const [customerList, setCustomerList] = useState<
     accountsType[] | undefined
   >();
+
+  const pathName = usePathname();
 
   const handleUserKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     e.stopPropagation();
@@ -55,7 +58,7 @@ export default function PosSelectAcount() {
       .select("*", {
         count: "exact",
       })
-      .eq("ACCTTYPE", "S")
+      .eq("ACCTTYPE", pathName === "/Pos" ? "S" : "P")
       .order("ACCTNAME", { ascending: true })
       .limit(10);
 
@@ -80,7 +83,13 @@ export default function PosSelectAcount() {
         <DropdownMenuTrigger className="focus:outline-none ">
           {!!currentCustomer ? (
             <>
-              <span className="bg-green-800 rounded-sm text-white px-1">
+              <span
+                className={`${
+                  currentCustomer.ACCTTYPE === "S"
+                    ? "bg-green-800"
+                    : "bg-red-800"
+                } rounded-sm text-white px-1`}
+              >
                 {currentCustomer.ACCTNO}
               </span>{" "}
               {currentCustomer.ACCTNAME}
@@ -110,7 +119,11 @@ export default function PosSelectAcount() {
                 key={customer.accountId}
                 onClick={() => handleSelectCustomer(customer)}
               >
-                <span className="bg-green-800 rounded-sm text-white px-1">
+                <span
+                  className={`${
+                    customer.ACCTTYPE === "S" ? "bg-green-800" : "bg-red-800"
+                  } rounded-sm text-white px-1`}
+                >
                   {customer.ACCTNO}
                 </span>
                 <span>{customer.ACCTNAME}</span>

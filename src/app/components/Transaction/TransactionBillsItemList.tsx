@@ -53,7 +53,8 @@ export default function TransactionBillsItemList({
           {currentBill && (
             <div className="grid grid-cols-2 gap-4 mr-8 text-base mt-auto h-fit justify-items-end">
               <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg">
-                {currentBill.bill_payment.length > 0 ? (
+                {currentBill.bill_payment &&
+                currentBill.bill_payment.length > 0 ? (
                   <>
                     {currentBill.bill_payment.map((payment) => (
                       <React.Fragment key={payment.PAYTYPE}>
@@ -62,7 +63,7 @@ export default function TransactionBillsItemList({
                             ? paymentName[
                                 payment.PAYTYPE as keyof typeof paymentName
                               ]
-                            : currentBill.vouchers.VOUCNO}
+                            : currentBill.vouchers?.VOUCNO}
                         </span>
                         <span className="font-semibold text-right">
                           {payment.AMOUNT.toLocaleString("th-TH", {

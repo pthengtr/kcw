@@ -78,7 +78,7 @@ export default function TransactionSearchPage() {
   ]);
 
   const path = usePathname();
-  const acctType = path === "/sales" ? "S" : path === "/purchases" ? "P" : "";
+  const acctType = path === "/customer" ? "S" : path === "/supplier" ? "P" : "";
 
   function handleOnTabChange(value: string) {
     setCurrentTab(value);

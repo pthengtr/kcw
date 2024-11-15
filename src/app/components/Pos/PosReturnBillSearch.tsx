@@ -82,6 +82,11 @@ export default function PosReturnBillSearch() {
         returnPrice: item.PRICE,
         returnUnit: item.UI,
         returnQty: item.QTY,
+        cost: 0,
+        DISCNT1: 0,
+        DISCNT2: 0,
+        DISCNT3: 0,
+        DISCNT4: 0,
       };
     });
 

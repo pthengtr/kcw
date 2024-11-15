@@ -90,7 +90,7 @@ export default function TransactionBillsBillList({
                 onClick={() => handleClickColumn("_vouchers(VOUCNO)")}
               >
                 {`เลขที่ใบสำคัญ${
-                  accountBills[0]
+                  !!accountBills[0].accounts
                     ? accountBills[0].accounts.ACCTTYPE === "P"
                       ? "จ่าย"
                       : "รับ"
@@ -102,7 +102,7 @@ export default function TransactionBillsBillList({
                 onClick={() => handleClickColumn("_vouchers(VOUCDATE)")}
               >
                 {`วันที่ใบสำคัญ${
-                  accountBills
+                  !!accountBills[0].accounts
                     ? accountBills[0].accounts.ACCTTYPE === "P"
                       ? "จ่าย"
                       : "รับ"
@@ -140,13 +140,18 @@ export default function TransactionBillsBillList({
                     item.notes &&
                     "hover:cursor-pointer hover:underline hover:italic"
                   }`}
-                  onClick={() => handleClickNote(item.noteId)}
+                  onClick={() => {
+                    if (!!item.noteId) handleClickNote(item.noteId);
+                  }}
                 >
                   {!!item.notes && (
                     <Dialog>
                       <DialogTrigger
                         className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
-                        onClick={() => handleClickVoucher(item.voucherId)}
+                        onClick={() => {
+                          if (!!item.voucherId)
+                            handleClickVoucher(item.voucherId);
+                        }}
                       >
                         {item.notes?.NOTENO}
                       </DialogTrigger>
@@ -172,7 +177,10 @@ export default function TransactionBillsBillList({
                     <Dialog>
                       <DialogTrigger
                         className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
-                        onClick={() => handleClickVoucher(item.voucherId)}
+                        onClick={() => {
+                          if (!!item.voucherId)
+                            handleClickVoucher(item.voucherId);
+                        }}
                       >
                         {item.vouchers?.VOUCNO}
                       </DialogTrigger>

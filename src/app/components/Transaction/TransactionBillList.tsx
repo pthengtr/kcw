@@ -97,25 +97,32 @@ export default function TransactionBillList({
                   </Dialog>
                 </TableCell>
                 <TableCell>
-                  {item.bill_payment
-                    .reduce(
-                      (acc, payment) =>
-                        payment.PAYTYPE !== "VOUCHER"
-                          ? acc - payment.AMOUNT
-                          : acc,
-                      item.AFTERTAX
-                    )
-                    .toLocaleString("th-TH", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                  {!!item.bill_payment
+                    ? item.bill_payment
+                        .reduce(
+                          (acc, payment) =>
+                            payment.PAYTYPE !== "VOUCHER"
+                              ? acc - payment.AMOUNT
+                              : acc,
+                          item.AFTERTAX
+                        )
+                        .toLocaleString("th-TH", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })
+                    : ""}
                 </TableCell>
 
                 <TableCell
                   onClick={
                     mode === "notes"
-                      ? () => handleClickVoucher(item.voucherId)
-                      : () => handleClickNote(item.noteId)
+                      ? () => {
+                          if (!!item.voucherId)
+                            handleClickVoucher(item.voucherId);
+                        }
+                      : () => {
+                          if (!!item.noteId) handleClickNote(item.noteId);
+                        }
                   }
                   className={`${
                     mode === "notes"
@@ -130,7 +137,10 @@ export default function TransactionBillList({
                         <Dialog>
                           <DialogTrigger
                             className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
-                            onClick={() => handleClickVoucher(item.voucherId)}
+                            onClick={() => {
+                              if (!!item.voucherId)
+                                handleClickVoucher(item.voucherId);
+                            }}
                           >
                             {item.vouchers?.VOUCNO}
                           </DialogTrigger>
@@ -148,7 +158,10 @@ export default function TransactionBillList({
                         <Dialog>
                           <DialogTrigger
                             className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
-                            onClick={() => handleClickVoucher(item.voucherId)}
+                            onClick={() => {
+                              if (!!item.voucherId)
+                                handleClickVoucher(item.voucherId);
+                            }}
                           >
                             {item.notes?.NOTENO}
                           </DialogTrigger>

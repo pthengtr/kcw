@@ -50,7 +50,7 @@ export default function TransactionFilter() {
     บิลทั่วไป: "1",
     ใบลดหนี้: "2",
     ใบเพิ่มหนี้: "3",
-    คงค้าง: pathName === "/sales" ? "R" : "P",
+    คงค้าง: pathName === "/customer" ? "R" : "P",
   };
 
   return (

@@ -25,6 +25,11 @@ export type posItemsType = {
   returnPrice: number;
   returnUnit: string;
   returnQty: number;
+  cost: number;
+  DISCNT1: number;
+  DISCNT2: number;
+  DISCNT3: number;
+  DISCNT4: number;
 };
 
 export type PosContextType = {
@@ -315,6 +320,11 @@ export default function PosProvider({ children }: PosProviderProps) {
         returnUnit: productDetail.UI1,
         returnPrice: productDetail.PRICE1,
         returnQty: 1,
+        cost: 0,
+        DISCNT1: 0,
+        DISCNT2: 0,
+        DISCNT3: 0,
+        DISCNT4: 0,
       };
 
       const newPosItems = !!posItems ? [...posItems, item] : [item];

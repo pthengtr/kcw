@@ -15,7 +15,7 @@ export default function TransactionSearch() {
   const [accountsFound, setAccountsFound] = useState(0);
 
   const path = usePathname();
-  const acctType = path === "/sales" ? "S" : path === "/purchases" ? "P" : "";
+  const acctType = path === "/customer" ? "S" : path === "/supplier" ? "P" : "";
 
   const {
     setSearchKey,

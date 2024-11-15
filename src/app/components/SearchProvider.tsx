@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 import React from "react";
 import { supabase } from "../lib/supabase";
 import { dbTake } from "../lib/util";
-import ProductProvider, {
+import {
   ProductContext,
   ProductContextType,
   productType,
@@ -11,6 +11,8 @@ import ProductProvider, {
 import { accountsType } from "./Transaction/TransactionProvider";
 
 export type SearchContextType = {
+  branch: string;
+  setBranch: (text: string) => void;
   searchText: string;
   setSearchText: (text: string) => void;
   searchGroup: string;
@@ -47,11 +49,12 @@ export type SearchContextType = {
 
 export const SearchContext = createContext<SearchContextType | null>(null);
 
-type ProductProvider = {
+type SearchProviderProps = {
   children: React.ReactNode;
 };
 
-export default function SearchProvider({ children }: ProductProvider) {
+export default function SearchProvider({ children }: SearchProviderProps) {
+  const [branch, setBranch] = React.useState("_1");
   const [searchText, setSearchText] = React.useState("");
   const [searchGroup, setSearchGroup] = React.useState("all");
   const [searchKey, setSearchKey] = React.useState("CODE");
@@ -191,6 +194,8 @@ export default function SearchProvider({ children }: ProductProvider) {
   }
 
   const value = {
+    branch,
+    setBranch,
     searchText,
     setSearchText,
     searchGroup,

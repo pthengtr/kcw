@@ -5,31 +5,28 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PosContext, PosContextType } from "./PosProvider";
+import { PosContext, PosContextType } from "../Pos/PosProvider";
 import { useContext } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DialogClose } from "@radix-ui/react-dialog";
-import PosBillTotalCard from "./PosBillTotalCard";
-import PosBillSaveDialogCash from "./PosBillSaveDialogCash";
-import PosBillSaveDialogTransfer from "./PosBillSaveDialogTransfer";
 import { supabase } from "@/app/lib/supabase";
 import { billType } from "../Transaction/TransactionProvider";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { SearchContext, SearchContextType } from "../SearchProvider";
+import { PurchaseContext, PurchaseContextType } from "./PurchaseProvider";
 
-export default function PosBillSaveDialog() {
+export default function PurchaseBillSaveDialog() {
+  const { payment, currentCustomer, vat, returnMode, posItems, setPosItems } =
+    useContext(PosContext) as PosContextType;
+
   const {
-    payment,
-    currentCustomer,
-    vat,
-    returnMode,
-    getSumBeforeTax,
-    getSumAmount,
-    getSumTax,
-    posItems,
-    setPosItems,
-  } = useContext(PosContext) as PosContextType;
+    purchaseBillDate,
+    purchaseBillNo,
+    getTotalCostBeforeVat,
+    getTotalCostAfterVat,
+    getTotalTax,
+  } = useContext(PurchaseContext) as PurchaseContextType;
 
   const { branch } = useContext(SearchContext) as SearchContextType;
 
@@ -38,55 +35,38 @@ export default function PosBillSaveDialog() {
   const { data: session } = useSession();
   const { toast } = useToast();
 
-  function getNoVatPrefix() {
-    return vat === "novat" ? "0" : "";
-  }
-
   function formatNewBill(date: Date, data: billType[]): billType {
-    let billHeader, newBillType;
+    let newBillType;
+
+    console.log(data);
 
     if (payment === "CASH") {
-      billHeader = getNoVatPrefix() + "TR";
-      newBillType = `1SY`;
+      newBillType = `1PY`;
     } else if (payment === "CREDIT") {
-      billHeader = getNoVatPrefix() + "TB";
-      newBillType = "1SN";
+      newBillType = "1PN";
     }
 
     const newBillId = Math.random().toString().substring(2, 14);
-
-    const sequenceNumber =
-      data.length === 0
-        ? "0001"
-        : (parseInt(data[0].BILLNO.split("-")[1]) + 1)
-            .toString()
-            .padStart(4, "0");
-
-    const newBillNo =
-      billHeader +
-      date
-        .toLocaleDateString("th-TH", { month: "2-digit", year: "2-digit" })
-        .split("/")
-        .reverse()
-        .join("") +
-      "-" +
-      sequenceNumber;
 
     const newBill: billType = {
       billId: parseInt(newBillId),
       BILLTYPE: !!newBillType ? newBillType : "",
       JOURDATE: date.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }),
-      BILLDATE: date.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }),
-      BILLNO: newBillNo,
+      BILLDATE: purchaseBillDate.toLocaleString("en-US", {
+        timeZone: "Asia/Bangkok",
+      }),
+      BILLNO: purchaseBillNo,
       DISCOUNT: 0,
       DEDUCT: 0,
       BEFORETAX:
-        vat === "vat" ? toFloat(getSumBeforeTax()) : toFloat(getSumAmount()),
-      TAX: vat === "vat" ? toFloat(getSumTax()) : 0,
-      AFTERTAX: toFloat(getSumAmount()),
+        vat === "vat"
+          ? toFloat(getTotalCostBeforeVat())
+          : toFloat(getTotalCostAfterVat()),
+      TAX: vat === "vat" ? toFloat(getTotalTax()) : 0,
+      AFTERTAX: toFloat(getTotalCostAfterVat()),
       PO: "",
       DUEDATE: null,
-      REMARKS: "Test Sale Bill Creation",
+      REMARKS: "Test Purchase Bill Creation",
       accountId: !!currentCustomer ? currentCustomer.accountId : null,
       voucherId: null,
       noteId: null,
@@ -108,14 +88,6 @@ export default function PosBillSaveDialog() {
 
   function formatNewBillItems(date: Date, newBill: billType) {
     return posItems?.map((posItem) => {
-      const prices = Object.fromEntries(
-        posItem.prices.map((price) => [price.Attribute, price.Value])
-      );
-      const prices_m = Object.fromEntries(
-        posItem.prices_m.map((price) => [price.Attribute, price.Value])
-      );
-
-      const itemPrice = posItem.atUnit === "UI1" ? prices : prices_m;
       return {
         itemId: Math.random().toString().substring(2, 14),
         JOURDATE: date.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }),
@@ -124,8 +96,8 @@ export default function PosBillSaveDialog() {
         QTY: posItem.QTY,
         UI: posItems[posItem.atUnit as keyof typeof posItems],
         MTP: posItem.MTP,
-        PRICE: itemPrice[posItem.atPrice],
-        AMOUNT: itemPrice[posItem.atPrice] * posItem.QTY,
+        PRICE: 0, //TODO
+        AMOUNT: 0, //TODO
         ACCTNO: currentCustomer?.ACCTNO,
         accountId: currentCustomer?.accountId,
         billId: newBill.billId,
@@ -137,7 +109,7 @@ export default function PosBillSaveDialog() {
     let query = supabase
       .from("bills")
       .select(`*`)
-      .ilike("BILLTYPE", payment === "CASH" ? "1SY" : "1SN")
+      .ilike("BILLTYPE", payment === "CASH" ? "1PY" : "1PN")
       .lt(
         "BILLDATE",
         new Date(
@@ -276,7 +248,8 @@ export default function PosBillSaveDialog() {
         {payment === "CASH" && (
           <section className="w-[680px]">
             {returnMode ? (
-              <PosBillTotalCard />
+              //   <PosBillTotalCard />
+              <></>
             ) : (
               <Tabs>
                 <TabsList className="grid w-full grid-cols-2">
@@ -284,10 +257,10 @@ export default function PosBillSaveDialog() {
                   <TabsTrigger value="transfer">โอน</TabsTrigger>
                 </TabsList>
                 <TabsContent value="cash">
-                  <PosBillSaveDialogCash />
+                  {/* <PosBillSaveDialogCash /> */}
                 </TabsContent>
                 <TabsContent value="transfer">
-                  <PosBillSaveDialogTransfer />
+                  {/* <PosBillSaveDialogTransfer /> */}
                 </TabsContent>
               </Tabs>
             )}
@@ -295,9 +268,7 @@ export default function PosBillSaveDialog() {
         )}
 
         {payment === "CREDIT" && (
-          <section className="w-[680px]">
-            <PosBillTotalCard />
-          </section>
+          <section className="w-[680px]">{/* <PosBillTotalCard /> */}</section>
         )}
 
         <div className="grid grid-cols-2 gap-8">

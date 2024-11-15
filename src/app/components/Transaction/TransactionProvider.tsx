@@ -48,22 +48,28 @@ export type bill_paymentType = {
 
 export type billType = {
   billId: number;
+  BILLTYPE: string;
+  JOURDATE: string;
+  BILLDATE: string;
   BILLNO: string;
-  JOURDATE: Date;
-  BILLDATE: Date;
+  DISCOUNT: number;
   DEDUCT: number;
   BEFORETAX: number;
   TAX: number;
   AFTERTAX: number;
-  accountId: number;
-  accounts: accountsType;
-  voucherId: number;
-  vouchers: voucherType;
-  noteId: number;
-  notes: noteType;
+  PO: string;
+  DUEDATE: string | null;
   REMARKS: string;
+  accountId: number | null;
+  accounts?: accountsType;
+  voucherId: number | null;
+  vouchers?: voucherType;
+  noteId: number | null;
+  notes?: noteType;
+  bill_payment?: bill_paymentType[];
+  ACCTNO: string;
   SALE: string;
-  bill_payment: bill_paymentType[];
+  CANCELED: string;
 };
 
 export type itemsType = {

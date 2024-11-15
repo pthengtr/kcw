@@ -125,7 +125,7 @@ export default function PosRecentBillSheet() {
     //Filter payment type
     let newPosRecentBills = bills.filter(
       (bill) =>
-        bill.bill_payment.filter(
+        bill.bill_payment?.filter(
           (payment) =>
             (filter.cash && payment.PAYTYPE === "CASH") ||
             (filter.transfer && payment.PAYTYPE === "TRANSFER") ||
@@ -139,7 +139,7 @@ export default function PosRecentBillSheet() {
           ...newPosRecentBills,
           ...bills.filter(
             (bill) =>
-              bill.bill_payment.reduce(
+              bill.bill_payment?.reduce(
                 (acc, payment) => acc - payment.AMOUNT,
                 bill.AFTERTAX
               ) !== 0 || bill.bill_payment.length === 0

@@ -41,7 +41,7 @@ export default function PosBillTotalCard() {
             )}
             <Separator className="col-span-2" />
             <span className="font-bold col-span-2">ยอดรวม</span>
-            <div className="rounded-md text-6xl py-2 px-4 bg-primary text-white font-semibold col-span-2 text-center">
+            <div className="rounded-md text-6xl py-2 px-4 bg-green-800 text-white font-semibold col-span-2 text-center">
               {getSumAmount()}
             </div>
           </div>

@@ -30,23 +30,30 @@ export default function PosRecentBillSummary({
       return sumBills.reduce(
         (acc, bill) =>
           acc +
-          bill.bill_payment.reduce(
-            (acc, payment) =>
-              payment.PAYTYPE !== "VOUCHER" ? acc - payment.AMOUNT : acc,
-            bill.AFTERTAX
-          ),
+          (!!bill.bill_payment
+            ? bill.bill_payment.reduce(
+                (acc, payment) =>
+                  payment.PAYTYPE !== "VOUCHER" ? acc - payment.AMOUNT : acc,
+                bill.AFTERTAX
+              )
+            : 0),
         0
       );
     } else {
       const paytypeBills = sumBills.filter(
         (bill) =>
-          bill.bill_payment.filter((payment) => payment.PAYTYPE === paytype)
+          bill.bill_payment?.filter((payment) => payment.PAYTYPE === paytype)
             .length != 0
       );
       return paytypeBills.reduce(
         (acc, bill) =>
           acc +
-          bill.bill_payment.reduce((acc, payment) => acc + payment.AMOUNT, 0),
+          (!!bill.bill_payment
+            ? bill.bill_payment.reduce(
+                (acc, payment) => acc + payment.AMOUNT,
+                0
+              )
+            : 0),
         0
       );
     }
