@@ -95,7 +95,7 @@ export default function PurchaseBillSaveDialog() {
         UI: posItems[posItem.atUnit as keyof typeof posItems],
         MTP: posItem.MTP,
         PRICE: posItem.cost,
-        AMOUNT: getItemAmount(posItem),
+        AMOUNT: parseFloat(getItemAmount(posItem).replace(",", "")),
         ACCTNO: currentCustomer?.ACCTNO,
         accountId: currentCustomer?.accountId,
         billId: newBill.billId,
