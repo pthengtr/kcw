@@ -16,7 +16,7 @@ import { supabase } from "@/app/lib/supabase";
 import { billType } from "../Transaction/TransactionProvider";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
-//import { SearchContext, SearchContextType } from "../SearchProvider";
+import { SearchContext, SearchContextType } from "../SearchProvider";
 
 export default function PosBillSaveDialog() {
   const {
@@ -28,6 +28,7 @@ export default function PosBillSaveDialog() {
     getSumAmount,
     getSumTax,
     posItems,
+    setPosItems,
   } = useContext(PosContext) as PosContextType;
 
   //const { branch } = useContext(SearchContext) as SearchContextType;
@@ -174,19 +175,20 @@ export default function PosBillSaveDialog() {
 
     console.log(newBill);
 
-    const { data: dataRpc, error: errorRpc } = await supabase.rpc("fn_test", {
-      new_bill: JSON.stringify(newBill),
-      new_bill_items: JSON.stringify(newBillItems),
-    });
+    const { data: dataRpc, error: errorRpc } = await supabase.rpc(
+      "fn_create_new_sale_bill",
+      {
+        new_bill: JSON.stringify(newBill),
+        new_bill_items: JSON.stringify(newBillItems),
+      }
+    );
 
     console.log(dataRpc, errorRpc);
 
-    //setPosItems(undefined);
-
-    if (errorRpc || dataRpc !== newBill.BILLNO) {
+    if (!!errorRpc || dataRpc !== newBill.BILLNO) {
       toast({
-        title: !!dataRpc ? dataRpc : "",
-        description: !!errorRpc ? errorRpc.details : dataRpc,
+        title: !!errorRpc ? errorRpc.code : "เกิดข้อผิดพลาด",
+        description: !!errorRpc ? errorRpc.message : dataRpc,
         action: <CancelSVG />,
         className: "text-xl",
       });
@@ -197,6 +199,8 @@ export default function PosBillSaveDialog() {
         action: <CheckCircleSVG />,
         className: "text-xl",
       });
+
+      setPosItems(undefined);
     }
   }
 

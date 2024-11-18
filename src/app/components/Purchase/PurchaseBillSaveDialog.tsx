@@ -96,8 +96,8 @@ export default function PurchaseBillSaveDialog() {
         QTY: posItem.QTY,
         UI: posItems[posItem.atUnit as keyof typeof posItems],
         MTP: posItem.MTP,
-        PRICE: 0, //TODO
-        AMOUNT: 0, //TODO
+        PRICE: posItem.cost,
+        AMOUNT: posItem.cost * posItem.QTY,
         ACCTNO: currentCustomer?.ACCTNO,
         accountId: currentCustomer?.accountId,
         billId: newBill.billId,
@@ -151,44 +151,8 @@ export default function PurchaseBillSaveDialog() {
 
     console.log(newBill);
     console.log(newBillItems);
-    // console.log("bill input", newBill);
-    // const { data: outBill, error: outBillErr } = await supabase
-    //   .from("bills")
-    //   .insert([newBill])
-    //   .select();
 
-    // if (outBillErr) {
-    //   toast({
-    //     title: "เกิดข้อผิดพลาด",
-    //     description: "กรุณาลองใหม่อีกครั้ง",
-    //     action: <CancelSVG />,
-    //     className: "text-xl",
-    //   });
-    //   return;
-    // }
-    // console.log("bill output", outBill);
-
-    // const newBillItems = formatNewBillItems(date, outBill[0]);
-
-    // console.log("items input", outBill);
-    // const { data: outItems, error: outItemsErr } = await supabase
-    //   .from("items")
-    //   .insert(newBillItems)
-    //   .select();
-
-    // if (outItemsErr) {
-    //   console.log("error", outItemsErr);
-    //   toast({
-    //     title: "เกิดข้อผิดพลาด",
-    //     description: "กรุณาลองใหม่อีกครั้ง",
-    //     action: <CancelSVG />,
-    //     className: "text-xl",
-    //   });
-    //   return;
-    // }
-    // console.log("items output", outItems);
-
-    setPosItems(undefined);
+    //setPosItems(undefined);
 
     toast({
       title: "0TR6711-0002",
@@ -203,19 +167,6 @@ export default function PurchaseBillSaveDialog() {
   }
 
   return (
-    // <Button
-    //   onClick={() =>
-    //     toast({
-    //       title: "เกิดข้อผิดพลาด",
-    //       description: "กรุณาลองใหม่อีกครั้ง",
-    //       action: <CancelSVG />,
-    //       className: "text-xl",
-    //     })
-    //   }
-    // >
-    //   Test Toast
-    // </Button>
-
     <Dialog>
       <DialogTrigger
         disabled={!posItems || posItems.length === 0}
