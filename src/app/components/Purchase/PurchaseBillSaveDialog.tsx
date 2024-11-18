@@ -7,39 +7,36 @@ import {
 } from "@/components/ui/dialog";
 import { PosContext, PosContextType } from "../Pos/PosProvider";
 import { useContext } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { supabase } from "@/app/lib/supabase";
 import { billType } from "../Transaction/TransactionProvider";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
-import { SearchContext, SearchContextType } from "../SearchProvider";
+//import { SearchContext, SearchContextType } from "../SearchProvider";
 import { PurchaseContext, PurchaseContextType } from "./PurchaseProvider";
+import PurchaseBillTotalCard from "./PurchaseBillTotalCard";
 
 export default function PurchaseBillSaveDialog() {
-  const { payment, currentCustomer, vat, returnMode, posItems } = useContext(
+  const { payment, currentCustomer, vat, posItems, setPosItems } = useContext(
     PosContext
   ) as PosContextType;
 
   const {
     purchaseBillDate,
     purchaseBillNo,
+    getItemAmount,
     getTotalCostBeforeVat,
     getTotalCostAfterVat,
     getTotalTax,
   } = useContext(PurchaseContext) as PurchaseContextType;
 
-  const { branch } = useContext(SearchContext) as SearchContextType;
-
-  console.log(branch);
+  //const { branch } = useContext(SearchContext) as SearchContextType;
 
   const { data: session } = useSession();
   const { toast } = useToast();
 
-  function formatNewBill(date: Date, data: billType[]): billType {
+  function formatNewBill(date: Date): billType {
     let newBillType;
-
-    console.log(data);
 
     if (payment === "CASH") {
       newBillType = `1PY`;
@@ -98,69 +95,52 @@ export default function PurchaseBillSaveDialog() {
         UI: posItems[posItem.atUnit as keyof typeof posItems],
         MTP: posItem.MTP,
         PRICE: posItem.cost,
-        AMOUNT: posItem.cost * posItem.QTY,
+        AMOUNT: getItemAmount(posItem),
         ACCTNO: currentCustomer?.ACCTNO,
         accountId: currentCustomer?.accountId,
         billId: newBill.billId,
+        DISCNT1: posItem.DISCNT1,
+        DISCNT2: posItem.DISCNT2,
+        DISCNT3: posItem.DISCNT3,
+        DISCNT4: posItem.DISCNT4,
       };
     });
   }
 
   async function createNewBill(date: Date) {
-    let query = supabase
-      .from("bills")
-      .select(`*`)
-      .ilike("BILLTYPE", payment === "CASH" ? "1PY" : "1PN")
-      .lt(
-        "BILLDATE",
-        new Date(
-          `${date.getUTCFullYear().toString()}-${(
-            date.getUTCMonth() + 2
-          ).toString()}-01 00:00`
-        ).toLocaleDateString("en-US")
-      )
-      .gte(
-        "BILLDATE",
-        new Date(
-          `${date.getUTCFullYear().toString()}-${(
-            date.getUTCMonth() + 1
-          ).toString()}-01 00:00`
-        ).toLocaleDateString("en-US")
-      )
-      .order("BILLDATE", { ascending: false })
-      .limit(1);
-
-    if (vat === "vat") query = query.neq("TAX", "0");
-    else query = query.eq("TAX", "0");
-
-    const { data, error } = await query;
-
-    console.log("get latest", data);
-
-    if (error) {
-      toast({
-        title: "เกิดข้อผิดพลาด",
-        description: "กรุณาลองใหม่อีกครั้ง",
-        action: <CancelSVG />,
-        className: "text-xl",
-      });
-      return;
-    }
-
-    const newBill: billType = formatNewBill(date, data);
+    const newBill: billType = formatNewBill(date);
     const newBillItems = formatNewBillItems(date, newBill);
 
     console.log(newBill);
     console.log(newBillItems);
 
-    //setPosItems(undefined);
+    const { data: dataRpc, error: errorRpc } = await supabase.rpc(
+      "fn_create_new_purchase_bill",
+      {
+        new_bill: JSON.stringify(newBill),
+        new_bill_items: JSON.stringify(newBillItems),
+      }
+    );
 
-    toast({
-      title: "0TR6711-0002",
-      description: "บันทึกเรียบร้อยแล้ว",
-      action: <CheckCircleSVG />,
-      className: "text-xl",
-    });
+    console.log(dataRpc, errorRpc);
+
+    if (!!errorRpc || dataRpc !== newBill.BILLNO) {
+      toast({
+        title: !!errorRpc ? errorRpc.code : "เกิดข้อผิดพลาด",
+        description: !!errorRpc ? errorRpc.message : dataRpc,
+        action: <CancelSVG />,
+        className: "text-xl",
+      });
+    } else {
+      toast({
+        title: !!dataRpc ? dataRpc : "",
+        description: "บันทึกเรียบร้อยแล้ว",
+        action: <CheckCircleSVG />,
+        className: "text-xl",
+      });
+
+      setPosItems(undefined);
+    }
   }
 
   function handleConfirmBill() {
@@ -173,21 +153,15 @@ export default function PurchaseBillSaveDialog() {
         disabled={!posItems || posItems.length === 0}
         className="bg-secondary hover:bg-red-700 text-4xl py-10 shadow-md text-white rounded-md"
       >
-        {payment === "CASH" ? "ชำระเงิน" : "บันทึก"}
+        บันทึก
       </DialogTrigger>
       <DialogContent className="flex flex-col sm:max-w-fit [&>button]:hidden">
         <DialogHeader className="p-4">
           <DialogTitle className="text-3xl flex flex-col gap-4">
-            {returnMode ? (
-              <span>ใบลดหนี้</span>
-            ) : (
-              <div className="flex gap-2 items-center">
-                {vat === "vat" && <span>ใบกำกับภาษี/</span>}
-                <span>
-                  {payment === "CASH" ? "ใบเสร็จรับเงิน" : "ใบส่งสินค้า"}
-                </span>
-              </div>
-            )}
+            <div className="flex gap-4">
+              <span>บิลซื้อ</span>
+              <span>{purchaseBillNo}</span>
+            </div>
 
             <div className="text-xl flex gap-2 items-center">
               <span className="bg-green-700 rounded-md text-white px-1">
@@ -197,31 +171,10 @@ export default function PurchaseBillSaveDialog() {
             </div>
           </DialogTitle>
         </DialogHeader>
-        {payment === "CASH" && (
-          <section className="w-[680px]">
-            {returnMode ? (
-              //   <PosBillTotalCard />
-              <></>
-            ) : (
-              <Tabs>
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="cash">เงินสด</TabsTrigger>
-                  <TabsTrigger value="transfer">โอน</TabsTrigger>
-                </TabsList>
-                <TabsContent value="cash">
-                  {/* <PosBillSaveDialogCash /> */}
-                </TabsContent>
-                <TabsContent value="transfer">
-                  {/* <PosBillSaveDialogTransfer /> */}
-                </TabsContent>
-              </Tabs>
-            )}
-          </section>
-        )}
 
-        {payment === "CREDIT" && (
-          <section className="w-[680px]">{/* <PosBillTotalCard /> */}</section>
-        )}
+        <section className="w-[680px]">
+          <PurchaseBillTotalCard />
+        </section>
 
         <div className="grid grid-cols-2 gap-8">
           <DialogClose className="bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 p-2 rounded-lg">

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { paymentFilterType } from "./PosRecentBillSheet";
 import { useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { usePathname } from "next/navigation";
 
 type PosRecentBillFilterProps = {
   paymentFilter: paymentFilterType;
@@ -27,6 +28,9 @@ export default function PosRecentBillFilter({
     "cash transfer credit check".split(" ")
   );
   const [toggleVatValue, setToggleVatValue] = useState("vat novat".split(" "));
+
+  const pathName = usePathname();
+
   function handleClickDate(date: Date) {
     setBillDate(date);
     setPopOpen(false);
@@ -34,7 +38,11 @@ export default function PosRecentBillFilter({
   return (
     <>
       <div className="flex gap-4 justify-center items-baseline">
-        <span>รายการบิลขายประจำวันที่</span>
+        <span>
+          {pathName === "/pos"
+            ? "รายการบิลขายประจำวันที่"
+            : "รายการบิลซื้อประจำวันที่"}
+        </span>
         <Popover open={popOpen}>
           <PopoverTrigger
             onClick={() => setPopOpen((cur) => !cur)}

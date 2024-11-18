@@ -7,6 +7,7 @@ import TransactionBillsItemList from "../../Transaction/TransactionBillsItemList
 import PosRecentBillSummary from "./PosRecentBillSummary";
 import PosRecentBillFilter from "./PosRecentBillFilter";
 import PosRecentBillsTable from "./PosRecentBillsTable";
+import { usePathname } from "next/navigation";
 
 export type paymentFilterType = {
   filterText: string;
@@ -46,6 +47,8 @@ export default function PosRecentBillSheet() {
     itemsType[] | undefined
   >();
 
+  const pathName = usePathname();
+
   useEffect(() => {
     async function getBillsSupabase() {
       const { data, error } = await supabase
@@ -53,7 +56,7 @@ export default function PosRecentBillSheet() {
         .select(`*, vouchers(*), notes(*), accounts(*), bill_payment(*)`, {
           count: "exact",
         })
-        .ilike("BILLTYPE", `1S%`)
+        .ilike("BILLTYPE", `${pathName === "/pos" ? "1S%" : "1P%"}`)
         .order("JOURDATE", { ascending: false })
         .lte(
           "JOURDATE",
@@ -84,7 +87,7 @@ export default function PosRecentBillSheet() {
     }
 
     if (isOpen) getBillsSupabase();
-  }, [isOpen, billDate, setPosRecentBills, setPosFilterRecentBills]);
+  }, [isOpen, billDate, setPosRecentBills, setPosFilterRecentBills, pathName]);
 
   async function getBillItemsSupabase(billId: string) {
     const { data, error } = await supabase
@@ -167,7 +170,11 @@ export default function PosRecentBillSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={handleSheetOpen}>
-      <SheetTrigger className="w-full">รายการบิลขายประจำวัน</SheetTrigger>
+      <SheetTrigger className="w-full">
+        {pathName === "/pos"
+          ? `รายการบิลขายประจำวัน`
+          : "ดูรายการบิลซื้อประจำวัน"}
+      </SheetTrigger>
       <SheetContent className="sm:max-w-full grid grid-cols-2">
         {posFilterRecentBills && (
           <div className="h-full overflow-auto flex flex-col gap-4">
