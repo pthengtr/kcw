@@ -16,7 +16,7 @@ import { supabase } from "@/app/lib/supabase";
 import { billType } from "../Transaction/TransactionProvider";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
-import { SearchContext, SearchContextType } from "../SearchProvider";
+//import { SearchContext, SearchContextType } from "../SearchProvider";
 
 export default function PosBillSaveDialog() {
   const {

@@ -17,8 +17,9 @@ import { SearchContext, SearchContextType } from "../SearchProvider";
 import { PurchaseContext, PurchaseContextType } from "./PurchaseProvider";
 
 export default function PurchaseBillSaveDialog() {
-  const { payment, currentCustomer, vat, returnMode, posItems, setPosItems } =
-    useContext(PosContext) as PosContextType;
+  const { payment, currentCustomer, vat, returnMode, posItems } = useContext(
+    PosContext
+  ) as PosContextType;
 
   const {
     purchaseBillDate,
