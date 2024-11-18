@@ -16,7 +16,7 @@ import { supabase } from "@/app/lib/supabase";
 import { billType } from "../Transaction/TransactionProvider";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
-import { SearchContext, SearchContextType } from "../SearchProvider";
+//import { SearchContext, SearchContextType } from "../SearchProvider";
 
 export default function PosBillSaveDialog() {
   const {
@@ -28,12 +28,9 @@ export default function PosBillSaveDialog() {
     getSumAmount,
     getSumTax,
     posItems,
-    setPosItems,
   } = useContext(PosContext) as PosContextType;
 
-  const { branch } = useContext(SearchContext) as SearchContextType;
-
-  console.log(branch);
+  //const { branch } = useContext(SearchContext) as SearchContextType;
 
   const { data: session } = useSession();
   const { toast } = useToast();
@@ -162,8 +159,6 @@ export default function PosBillSaveDialog() {
 
     const { data, error } = await query;
 
-    console.log("get latest", data);
-
     if (error) {
       toast({
         title: "เกิดข้อผิดพลาด",
@@ -178,52 +173,31 @@ export default function PosBillSaveDialog() {
     const newBillItems = formatNewBillItems(date, newBill);
 
     console.log(newBill);
-    console.log(newBillItems);
-    // console.log("bill input", newBill);
-    // const { data: outBill, error: outBillErr } = await supabase
-    //   .from("bills")
-    //   .insert([newBill])
-    //   .select();
 
-    // if (outBillErr) {
-    //   toast({
-    //     title: "เกิดข้อผิดพลาด",
-    //     description: "กรุณาลองใหม่อีกครั้ง",
-    //     action: <CancelSVG />,
-    //     className: "text-xl",
-    //   });
-    //   return;
-    // }
-    // console.log("bill output", outBill);
-
-    // const newBillItems = formatNewBillItems(date, outBill[0]);
-
-    // console.log("items input", outBill);
-    // const { data: outItems, error: outItemsErr } = await supabase
-    //   .from("items")
-    //   .insert(newBillItems)
-    //   .select();
-
-    // if (outItemsErr) {
-    //   console.log("error", outItemsErr);
-    //   toast({
-    //     title: "เกิดข้อผิดพลาด",
-    //     description: "กรุณาลองใหม่อีกครั้ง",
-    //     action: <CancelSVG />,
-    //     className: "text-xl",
-    //   });
-    //   return;
-    // }
-    // console.log("items output", outItems);
-
-    setPosItems(undefined);
-
-    toast({
-      title: "0TR6711-0002",
-      description: "บันทึกเรียบร้อยแล้ว",
-      action: <CheckCircleSVG />,
-      className: "text-xl",
+    const { data: dataRpc, error: errorRpc } = await supabase.rpc("fn_test", {
+      new_bill: JSON.stringify(newBill),
+      new_bill_items: JSON.stringify(newBillItems),
     });
+
+    console.log(dataRpc, errorRpc);
+
+    //setPosItems(undefined);
+
+    if (errorRpc || dataRpc !== newBill.BILLNO) {
+      toast({
+        title: !!dataRpc ? dataRpc : "",
+        description: !!errorRpc ? errorRpc.details : dataRpc,
+        action: <CancelSVG />,
+        className: "text-xl",
+      });
+    } else {
+      toast({
+        title: !!dataRpc ? dataRpc : "",
+        description: "บันทึกเรียบร้อยแล้ว",
+        action: <CheckCircleSVG />,
+        className: "text-xl",
+      });
+    }
   }
 
   function handleConfirmBill() {
@@ -231,19 +205,6 @@ export default function PosBillSaveDialog() {
   }
 
   return (
-    // <Button
-    //   onClick={() =>
-    //     toast({
-    //       title: "เกิดข้อผิดพลาด",
-    //       description: "กรุณาลองใหม่อีกครั้ง",
-    //       action: <CancelSVG />,
-    //       className: "text-xl",
-    //     })
-    //   }
-    // >
-    //   Test Toast
-    // </Button>
-
     <Dialog>
       <DialogTrigger
         disabled={!posItems || posItems.length === 0}
