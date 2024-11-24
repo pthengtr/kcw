@@ -32,7 +32,7 @@ export default function PosReturnBillSearch() {
   async function getBillItems(bill: billType) {
     const { data, error } = await supabase
       .from("items")
-      .select(`*, products(*, prices(*), prices_m(*))`)
+      .select(`*, products(*, prices(*), prices_m(*), inventory(*))`)
       .eq("billId", bill.billId)
       .order("JOURDATE", { ascending: false })
       .limit(100);

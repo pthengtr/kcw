@@ -13,11 +13,11 @@ export default function ProductCardProductStock({
       </CardHeader>
       <CardContent className="grid grid-cols-[1fr_2fr] gap-x-2 gap-1">
         <SpanName>คงเหลือ</SpanName>
-        <SpanValue>{productDetail.QTYOH2}</SpanValue>
+        <SpanValue>{productDetail.inventory.QTYOH2}</SpanValue>
         <SpanName>LOW</SpanName>
-        <SpanValue>{productDetail.QTYMIN}</SpanValue>
+        <SpanValue>{productDetail.inventory.QTYMIN}</SpanValue>
         <SpanName>ORDER</SpanName>
-        <SpanValue>{productDetail.QTYGET}</SpanValue>
+        <SpanValue>{productDetail.inventory.QTYGET}</SpanValue>
       </CardContent>
     </Card>
   );

@@ -14,6 +14,14 @@ export type prices_mType = {
   Value: number;
 };
 
+export type inventoryType = {
+  QTYOH2: number;
+  QTYMIN: number;
+  QTYMAX: number;
+  QTYGET: number;
+  QTYPUT: number;
+};
+
 export type productType = {
   BCODE: string;
   XCODE: string;
@@ -38,16 +46,12 @@ export type productType = {
   SIZE2: string;
   SIZE3: string;
   PRICE1: number;
-  QTYOH2: number;
-  QTYMIN: number;
-  QTYMAX: number;
-  QTYGET: number;
-  QTYPUT: number;
   DATEUPDATE: Date;
   DATEAUDIT: Date;
   REMARKS: string;
   prices: pricesType[];
   prices_m: prices_mType[];
+  inventory: inventoryType;
 };
 
 export type ProductContextType = {

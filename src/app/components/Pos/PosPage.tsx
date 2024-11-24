@@ -31,7 +31,7 @@ export default function PosPage() {
     async function getItemSupabase(bcode: string) {
       const { data, error } = await supabase
         .from("products")
-        .select(`*, prices(*), prices_m(*)`)
+        .select(`*, prices(*), prices_m(*), inventory(*)`)
         .or(`BCODE.eq.${bcode}, MCODE.eq.${bcode}`)
         .limit(10);
 

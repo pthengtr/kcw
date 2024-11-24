@@ -31,7 +31,6 @@ export default function ProductRow({ item }: ProductRowProps) {
           "SIZE3",
           optCol[0],
           optCol[1],
-          "QTYOH2",
         ] as (keyof productType)[])
       : ([
           "BCODE",
@@ -40,7 +39,6 @@ export default function ProductRow({ item }: ProductRowProps) {
           optCol[0],
           optCol[1],
           optCol[2],
-          "QTYOH2",
         ] as (keyof productType)[]);
 
   return (
@@ -62,7 +60,7 @@ export default function ProductRow({ item }: ProductRowProps) {
             activeRow === item.BCODE &&
             activeRow !== selectedItem &&
             "bg-red-50"
-          }`}
+          } ${col === "PRICE1" ? "text-right" : ""}`}
         >
           {col === "DESCR" && item.ISVAT === "Y" && (
             <span className="bg-secondary text-white px-1 rounded-sm text-xs">
@@ -70,10 +68,22 @@ export default function ProductRow({ item }: ProductRowProps) {
             </span>
           )}{" "}
           {col === "PRICE1"
-            ? item[col].toLocaleString()
+            ? item[col].toLocaleString("th-TH", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
             : item[col as keyof typeof item]?.toString()}
         </TableCell>
       ))}
+
+      <TableCell
+        key={`${item.BCODE}-QTYOH2`}
+        className={`${item.BCODE === selectedItem && "bg-primary text-white"} ${
+          activeRow === item.BCODE && activeRow !== selectedItem && "bg-red-50"
+        } text-right`}
+      >
+        {item.inventory.QTYOH2}
+      </TableCell>
     </TableRow>
   );
 }

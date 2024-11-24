@@ -41,7 +41,7 @@ export default function PosProductDetail() {
     async function getDataSupabase() {
       const { data, error } = await supabase
         .from("products")
-        .select(`*, prices(*), prices_m(*)`)
+        .select(`*, prices(*), prices_m(*), inventory(*)`)
         .eq("BCODE", selectedItem)
         .limit(10);
 
