@@ -95,7 +95,7 @@ export default function PosSelectAcount() {
               {currentCustomer.ACCTNAME}
             </>
           ) : (
-            "ค้นหาลูกค้า.."
+            `${pathName === "/Pos" ? "ค้นหาลูกค้า.." : "ค้นหาบริษัท.."}`
           )}
         </DropdownMenuTrigger>
         <DropdownMenuContent>

@@ -6,7 +6,12 @@ import {
   pricesType,
   productType,
 } from "../Product/ProductProvider";
-import { accountsType, billType } from "../Transaction/TransactionProvider";
+import {
+  accountsType,
+  billType,
+  itemsType,
+} from "../Transaction/TransactionProvider";
+import { supabase } from "@/app/lib/supabase";
 
 export type posItemsType = {
   BCODE: string;
@@ -303,34 +308,55 @@ export default function PosProvider({ children }: PosProviderProps) {
 
       setPosItems(newPosItems);
     } else {
-      const item: posItemsType = {
-        BCODE: productDetail.BCODE,
-        DESCR: productDetail.DESCR,
-        MODEL: productDetail.MODEL,
-        QTY: 1,
-        UI1: productDetail.UI1,
-        UI2: productDetail.UI2,
-        MTP: productDetail.MTP2,
-        prices: productDetail.prices,
-        prices_m: productDetail.prices_m,
-        ISVAT: productDetail.ISVAT,
-        atPrice: "PRICE1",
-        atUnit: "UI1",
-        isReturn: false,
-        returnUnit: productDetail.UI1,
-        returnPrice: productDetail.PRICE1,
-        returnQty: 1,
-        cost: 0,
-        DISCNT1: 0,
-        DISCNT2: 0,
-        DISCNT3: 0,
-        DISCNT4: 0,
-      };
-
-      const newPosItems = !!posItems ? [...posItems, item] : [item];
-
-      setPosItems(newPosItems);
+      getLatestCostAndSetNewPositems(productDetail);
     }
+  }
+
+  async function getLatestCostAndSetNewPositems(productDetail: productType) {
+    const query = supabase
+      .from("items")
+      .select(`*, bills!inner(BILLTYPE)`)
+      .ilike("bills.BILLTYPE", "1P%")
+      .eq("BCODE", productDetail.BCODE)
+      .order("JOURDATE", { ascending: false })
+      .limit(1);
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    const latestItem: itemsType = data[0];
+
+    const item: posItemsType = {
+      BCODE: productDetail.BCODE,
+      DESCR: productDetail.DESCR,
+      MODEL: productDetail.MODEL,
+      QTY: 1,
+      UI1: productDetail.UI1,
+      UI2: productDetail.UI2,
+      MTP: productDetail.MTP2,
+      prices: productDetail.prices,
+      prices_m: productDetail.prices_m,
+      ISVAT: productDetail.ISVAT,
+      atPrice: "PRICE1",
+      atUnit: "UI1",
+      isReturn: false,
+      returnUnit: productDetail.UI1,
+      returnPrice: productDetail.PRICE1,
+      returnQty: 1,
+      cost: !!latestItem ? latestItem.PRICE : 0,
+      DISCNT1: !!latestItem ? latestItem.DISCNT1 : 0,
+      DISCNT2: !!latestItem ? latestItem.DISCNT2 : 0,
+      DISCNT3: !!latestItem ? latestItem.DISCNT3 : 0,
+      DISCNT4: !!latestItem ? latestItem.DISCNT4 : 0,
+    };
+
+    const newPosItems = !!posItems ? [...posItems, item] : [item];
+
+    setPosItems(newPosItems);
   }
 
   const value = {
