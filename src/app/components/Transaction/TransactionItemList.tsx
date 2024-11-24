@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { itemsType } from "./TransactionProvider";
+import { usePathname } from "next/navigation";
 
 type TransactionItemListProps = {
   currentItems: itemsType[];
@@ -17,12 +18,24 @@ export default function TransactionItemList({
   currentItems,
   isVat,
 }: TransactionItemListProps) {
+  const pathName = usePathname();
+
   function getPrice(item: itemsType) {
-    return !!item.products && isVat
-      ? item.products.ISVAT === "Y"
-        ? item.PRICE
-        : item.PRICE * 1.07
-      : item.PRICE;
+    if (pathName === "/purchase") {
+      return (
+        item.PRICE *
+        (1 - item.DISCNT1 / 100) *
+        (1 - item.DISCNT2 / 100) *
+        (1 - item.DISCNT3 / 100) *
+        (1 - item.DISCNT4 / 100)
+      );
+    } else {
+      return !!item.products && isVat
+        ? item.products.ISVAT === "Y"
+          ? item.PRICE
+          : item.PRICE * 1.07
+        : item.PRICE;
+    }
   }
 
   return (

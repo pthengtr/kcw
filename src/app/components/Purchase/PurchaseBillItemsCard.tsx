@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import PurchaseBillItemsTable from "./PurchaseBillItemsTable";
 import PurchaseDiscountPopover from "./PurchaseDiscountPopover";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { PosContext, PosContextType } from "../Pos/PosProvider";
 import PosSelectAcount from "../Pos/PosSelectAccount";
 import {
@@ -29,6 +29,12 @@ export default function PurchaseBillItemsCard() {
     purchaseBillDate,
     setPurchaseBillDate,
   } = useContext(PurchaseContext) as PurchaseContextType;
+
+  useEffect(() => {
+    console.log("purchase render");
+    setVat("vat");
+    setPayment("CREDIT");
+  }, [setVat, setPayment]);
 
   return (
     <Card className="w-full pb-8 shadow-md flex flex-col">

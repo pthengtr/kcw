@@ -17,9 +17,15 @@ import { PurchaseContext, PurchaseContextType } from "./PurchaseProvider";
 import PurchaseBillTotalCard from "./PurchaseBillTotalCard";
 
 export default function PurchaseBillSaveDialog() {
-  const { payment, currentCustomer, vat, posItems, setPosItems } = useContext(
-    PosContext
-  ) as PosContextType;
+  const {
+    payment,
+    currentCustomer,
+    vat,
+    posItems,
+    setPosItems,
+    setVat,
+    setPayment,
+  } = useContext(PosContext) as PosContextType;
 
   const {
     purchaseBillDate,
@@ -140,6 +146,8 @@ export default function PurchaseBillSaveDialog() {
       });
 
       setPosItems(undefined);
+      setVat("vat");
+      setPayment("CREDIT");
     }
   }
 
