@@ -225,7 +225,7 @@ export default function PosBillSaveDialog() {
               <div className="flex gap-2 items-center">
                 {vat === "vat" && <span>ใบกำกับภาษี/</span>}
                 <span>
-                  {payment === "CASH" ? "ใบเสร็จรับเงิน" : "ใบส่งสินค้า"}
+                  {payment === "CASH" ? "ใบเสร็จรับเงิน" : "ใบแจ้งหนี้"}
                 </span>
               </div>
             )}

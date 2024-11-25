@@ -55,6 +55,17 @@ export default function TransactionItems({
     }
   }
 
+  function calculateCombinedDiscount(item: itemsType) {
+    return (
+      (1 -
+        (1 - item.DISCNT1 / 100) *
+          (1 - item.DISCNT2 / 100) *
+          (1 - item.DISCNT3 / 100) *
+          (1 - item.DISCNT4 / 100)) *
+      100
+    );
+  }
+
   useEffect(() => {
     async function getAccountItemsSupabase() {
       let query = supabase.from("items").select(`*, products(*), bills(*)`, {
@@ -175,7 +186,7 @@ export default function TransactionItems({
                     className="hover:underline hover:cursor-pointer"
                     onClick={() => handleClickColumn("DISCNT1")}
                   >
-                    ส่วนลด
+                    ส่วนลด %
                   </TableHead>
                   <TableHead
                     className="hover:underline hover:cursor-pointer"
@@ -203,21 +214,21 @@ export default function TransactionItems({
                         ? `${item.products.DESCR}, ${item.products.MODEL}`
                         : ""}
                     </TableCell>
-                    <TableCell>{item.QTY}</TableCell>
+                    <TableCell className="text-right">{item.QTY}</TableCell>
                     <TableCell>{item.UI}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-right">
                       {item.PRICE.toLocaleString("th-TH", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </TableCell>
-                    <TableCell>
-                      {item.DISCNT1.toLocaleString("th-TH", {
+                    <TableCell className="text-right">
+                      {calculateCombinedDiscount(item).toLocaleString("th-TH", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-right">
                       {item.AMOUNT.toLocaleString("th-TH", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,

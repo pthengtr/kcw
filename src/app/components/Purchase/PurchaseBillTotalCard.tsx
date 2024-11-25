@@ -22,7 +22,11 @@ export default function PurchaseBillTotalCard() {
           <span>จำนวนรายการ</span>
           <span className="text-right">{!!posItems ? posItems.length : 0}</span>
           <span>ราคาเต็ม</span>
-          <span className="text-right">{getTotalFullCostBeforeVat()}</span>
+          <span className="text-right">
+            {vat === "vat"
+              ? getTotalFullCostBeforeVat()
+              : getTotalCostAfterVat()}
+          </span>
           <span>ส่วนลดทั้งหมด</span>
           <span className="text-right">{getTotalDiscount()}</span>
           {vat === "vat" && !!posItems && (

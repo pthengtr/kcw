@@ -21,7 +21,7 @@ export default function TransactionItemList({
   const pathName = usePathname();
 
   function getPrice(item: itemsType) {
-    if (pathName === "/purchase") {
+    if (pathName !== "/sales") {
       return (
         item.PRICE *
         (1 - item.DISCNT1 / 100) *
