@@ -4,9 +4,14 @@ import { useContext } from "react";
 import { NoteContext, NoteContextType } from "./NoteProvider";
 
 export default function NoteTotalCard() {
-  const { noteBills, getSumBeforeTax, getSumAfterTax, getSumTax } = useContext(
-    NoteContext
-  ) as NoteContextType;
+  const {
+    noteBills,
+    getSumBeforeTax,
+    getSumAfterTax,
+    getSumTax,
+    getSumFullAmount,
+    noteDiscount,
+  } = useContext(NoteContext) as NoteContextType;
 
   return (
     <Card className="W-full shadow-md">
@@ -16,10 +21,17 @@ export default function NoteTotalCard() {
           <span className="text-right">
             {!!noteBills ? noteBills.length : 0}
           </span>
-          {/* <span>ราคารวม</span>
-          <span className="text-right"></span>
+          <span>ราคาเต็มรวม</span>
+          <span className="text-right">{getSumFullAmount()}</span>
           <span>ส่วนลดทั้งหมด</span>
-          <span className="text-right"></span> */}
+          <span className="text-right">
+            {noteDiscount !== ""
+              ? parseFloat(noteDiscount).toLocaleString("th-TH", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+              : "0.00"}
+          </span>
           {!!noteBills && (
             <>
               <Separator className="col-span-2" />

@@ -21,6 +21,9 @@ export type NoteContextType = {
   getSumBeforeTax: () => string;
   getSumAfterTax: () => string;
   getSumTax: () => string;
+  getSumFullAmount: () => string;
+  noteDiscount: string;
+  setNoteDiscount: (discount: string) => void;
 };
 
 export const NoteContext = createContext<NoteContextType | null>(null);
@@ -30,7 +33,7 @@ type NoteProviderProps = {
 };
 
 export default function NoteProvider({ children }: NoteProviderProps) {
-  //const [noteDiscount, setNoteDiscount] = useState("");
+  const [noteDiscount, setNoteDiscount] = useState("");
   const [noteBills, setNoteBills] = useState<billType[]>();
   const [noteDate, setNoteDate] = useState(new Date());
   const [purchaseNoteNo, setPurchaseNoteNo] = useState("");
@@ -38,10 +41,24 @@ export default function NoteProvider({ children }: NoteProviderProps) {
   const [currentBill, setCurrentBill] = useState<billType>();
   const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
 
+  function getSumFullAmount() {
+    return !!noteBills
+      ? noteBills
+          .reduce((acc, bill) => acc + bill.AFTERTAX, 0)
+          .toLocaleString("th-TH", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+      : "0.00";
+  }
+
   function getSumBeforeTax() {
     return !!noteBills
       ? noteBills
-          .reduce((acc, bill) => acc + bill.BEFORETAX, 0)
+          .reduce(
+            (acc, bill) => acc + bill.BEFORETAX,
+            noteDiscount !== "" ? -parseFloat(noteDiscount) : 0
+          )
           .toLocaleString("th-TH", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -52,7 +69,10 @@ export default function NoteProvider({ children }: NoteProviderProps) {
   function getSumAfterTax() {
     return !!noteBills
       ? noteBills
-          .reduce((acc, bill) => acc + bill.AFTERTAX, 0)
+          .reduce(
+            (acc, bill) => acc + bill.AFTERTAX,
+            noteDiscount !== "" ? -parseFloat(noteDiscount) : 0
+          )
           .toLocaleString("th-TH", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -96,6 +116,9 @@ export default function NoteProvider({ children }: NoteProviderProps) {
     getSumBeforeTax,
     getSumAfterTax,
     getSumTax,
+    getSumFullAmount,
+    noteDiscount,
+    setNoteDiscount,
   };
 
   return <NoteContext.Provider value={value}>{children}</NoteContext.Provider>;

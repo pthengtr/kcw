@@ -28,6 +28,8 @@ export default function NoteBillsCard() {
     setNoteDetailOpen,
     purchaseNoteNo,
     setPurchaseNoteNo,
+    noteDiscount,
+    setNoteDiscount,
   } = useContext(NoteContext) as NoteContextType;
   const { data: session } = useSession();
   const pathName = usePathname();
@@ -132,7 +134,16 @@ export default function NoteBillsCard() {
         )}
 
         <Separator />
-        <div className="flex gap-4 justify-center mt-4"></div>
+
+        <div className="flex gap-4 justify-end items-center mt-4 mx-8">
+          <span>ส่วนลด</span>
+          <Input
+            type="number"
+            value={noteDiscount}
+            onChange={(e) => setNoteDiscount(e.target.value)}
+            className="w-20 text-right [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:ring-transparent"
+          />
+        </div>
 
         <NoteDetailDialog />
       </CardContent>

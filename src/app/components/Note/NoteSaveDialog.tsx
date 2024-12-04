@@ -15,8 +15,15 @@ import { useToast } from "@/hooks/use-toast";
 import { usePathname } from "next/navigation";
 
 export default function NoteSaveDialog() {
-  const { noteBills, setNoteBills, getSumAfterTax, noteDate, purchaseNoteNo } =
-    useContext(NoteContext) as NoteContextType;
+  const {
+    noteBills,
+    setNoteBills,
+    getSumAfterTax,
+    getSumFullAmount,
+    noteDate,
+    purchaseNoteNo,
+    noteDiscount,
+  } = useContext(NoteContext) as NoteContextType;
 
   const { toast } = useToast();
   const pathName = usePathname();
@@ -51,9 +58,9 @@ export default function NoteSaveDialog() {
     const newNote: noteType = {
       noteId: parseInt(newNoteId),
       accountId: currentAccountId,
-      BILLAMT: parseFloat(getSumAfterTax().replace(",", "")),
-      DISCOUNT: 0,
-      NETAMT: 0,
+      BILLAMT: parseFloat(getSumFullAmount().replace(",", "")),
+      DISCOUNT: parseFloat(noteDiscount),
+      NETAMT: parseFloat(getSumAfterTax().replace(",", "")),
       NOTEDATE: date,
       NOTENO: newNoteNo,
     };
