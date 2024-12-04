@@ -24,7 +24,7 @@ export default function TransactionNotesBillList({
       <TransactionBillList
         currentBills={currentNoteBills}
         mode="notes"
-        acctType={currentNote.accounts.ACCTTYPE}
+        acctType={!!currentNote.accounts ? currentNote.accounts.ACCTTYPE : "P"}
       />
 
       {currentNote && (

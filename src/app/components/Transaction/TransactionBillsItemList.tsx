@@ -75,7 +75,11 @@ export default function TransactionBillsItemList({
                     ))}
                     <span>ค้างชำระ</span>
                     <span className="font-semibold text-right">
-                      {currentBill.bill_payment
+                      {currentBill.DUEAMT.toLocaleString("th-TH", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                      {/* {currentBill.bill_payment
                         .reduce(
                           (acc, payment) => acc - payment.AMOUNT,
                           currentBill.AFTERTAX
@@ -83,7 +87,7 @@ export default function TransactionBillsItemList({
                         .toLocaleString("th-TH", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
-                        })}
+                        })} */}
                     </span>
                   </>
                 ) : (

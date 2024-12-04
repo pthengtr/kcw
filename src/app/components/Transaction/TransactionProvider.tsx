@@ -37,7 +37,8 @@ export type noteType = {
   BILLAMT: number;
   DISCOUNT: number;
   NETAMT: number;
-  accounts: accountsType;
+  accountId: number | null;
+  accounts?: accountsType;
 };
 
 export type bill_paymentType = {
@@ -57,6 +58,7 @@ export type billType = {
   BEFORETAX: number;
   TAX: number;
   AFTERTAX: number;
+  DUEAMT: number;
   PO: string;
   DUEDATE: string | null;
   REMARKS: string;

@@ -49,9 +49,9 @@ const menu = [
     classes: "",
   },
   {
-    name: "วางบิลขาย",
+    name: "วางบิลลูกหนี้",
     icon: NoteSVG,
-    path: "/",
+    path: "/sale-note",
     classes: "",
   },
   {
@@ -79,9 +79,9 @@ const menu = [
     classes: "",
   },
   {
-    name: "วางบิลซื้อ",
+    name: "วางบิลเจ้าหนี้",
     icon: NoteSVG,
-    path: "/",
+    path: "/purchase-note",
     classes: "",
   },
   {
@@ -160,19 +160,6 @@ export default function NavMenu() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
-          <NavigationMenuContent className="md:w-96">
-            {menu.map((menu) => (
-              <NavigationMenuLink
-                key={menu.name}
-                href={menu.path}
-                className="w-fit"
-              >
-                {menu.name !== "POS" ? menu.name : <ShoppingCart />}
-              </NavigationMenuLink>
-            ))}
-          </NavigationMenuContent> */}
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

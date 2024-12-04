@@ -82,6 +82,7 @@ export default function PosBillSaveDialog() {
         vat === "vat" ? toFloat(getSumBeforeTax()) : toFloat(getSumAmount()),
       TAX: vat === "vat" ? toFloat(getSumTax()) : 0,
       AFTERTAX: toFloat(getSumAmount()),
+      DUEAMT: toFloat(getSumAmount()),
       PO: "",
       DUEDATE: null,
       REMARKS: "Test Sale Bill Creation",
@@ -132,25 +133,24 @@ export default function PosBillSaveDialog() {
   }
 
   async function createNewBill(date: Date) {
+    const firstDayOfMonthDate = new Date(date);
+    const lastDayOfMonthDate = new Date(date);
+
+    firstDayOfMonthDate.setHours(0, 0, 0);
+    firstDayOfMonthDate.setDate(1);
+
+    lastDayOfMonthDate.setHours(0, 0, 0);
+    lastDayOfMonthDate.setDate(1);
+    lastDayOfMonthDate.setMonth(date.getMonth() + 1);
+
     let query = supabase
       .from("bills")
       .select(`*`)
       .ilike("BILLTYPE", payment === "CASH" ? "1SY" : "1SN")
-      .lt(
-        "BILLDATE",
-        new Date(
-          `${date.getUTCFullYear().toString()}-${(
-            date.getUTCMonth() + 2
-          ).toString()}-01 00:00`
-        ).toLocaleDateString("en-US")
-      )
+      .lt("BILLDATE", new Date(lastDayOfMonthDate).toLocaleDateString("en-US"))
       .gte(
         "BILLDATE",
-        new Date(
-          `${date.getUTCFullYear().toString()}-${(
-            date.getUTCMonth() + 1
-          ).toString()}-01 00:00`
-        ).toLocaleDateString("en-US")
+        new Date(firstDayOfMonthDate).toLocaleDateString("en-US")
       )
       .order("BILLDATE", { ascending: false })
       .limit(1);

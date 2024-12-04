@@ -58,7 +58,7 @@ export default function PosSelectAcount() {
       .select("*", {
         count: "exact",
       })
-      .eq("ACCTTYPE", pathName === "/Pos" ? "S" : "P")
+      .eq("ACCTTYPE", pathName === "/pos" ? "S" : "P")
       .order("ACCTNAME", { ascending: true })
       .limit(10);
 

@@ -68,6 +68,7 @@ export default function PurchaseBillSaveDialog() {
           : toFloat(getTotalCostAfterVat()),
       TAX: vat === "vat" ? toFloat(getTotalTax()) : 0,
       AFTERTAX: toFloat(getTotalCostAfterVat()),
+      DUEAMT: newBillType === "1PY" ? 0 : toFloat(getTotalCostAfterVat()),
       PO: "",
       DUEDATE: null,
       REMARKS: "Test Purchase Bill Creation",
