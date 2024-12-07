@@ -59,7 +59,7 @@ export default function NoteSaveDialog() {
       noteId: parseInt(newNoteId),
       accountId: currentAccountId,
       BILLAMT: parseFloat(getSumFullAmount().replace(",", "")),
-      DISCOUNT: parseFloat(noteDiscount),
+      DISCOUNT: parseFloat(noteDiscount !== "" ? noteDiscount : "0"),
       NETAMT: parseFloat(getSumAfterTax().replace(",", "")),
       NOTEDATE: date,
       NOTENO: newNoteNo,
