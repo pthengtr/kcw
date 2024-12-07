@@ -16,11 +16,11 @@ import { supabase } from "@/app/lib/supabase";
 import { NoteContext, NoteContextType } from "./NoteProvider";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import NoteSelectAcount from "./NoteSelectAccount";
 
 export default function NoteBillsCard() {
   const {
     noteBills,
-    setNoteBills,
     noteDate,
     setNoteDate,
     setCurrentBill,
@@ -33,13 +33,6 @@ export default function NoteBillsCard() {
   } = useContext(NoteContext) as NoteContextType;
   const { data: session } = useSession();
   const pathName = usePathname();
-
-  function handleAddBill(bill: billType) {
-    const newNoteBills =
-      noteBills !== undefined ? [...noteBills, bill] : [bill];
-
-    setNoteBills(newNoteBills);
-  }
 
   async function getCurrentBillItemsSupabase(bill: billType) {
     const { data, error } = await supabase
@@ -66,7 +59,7 @@ export default function NoteBillsCard() {
       <CardHeader className="h-[22%]">
         <CardTitle className="flex flex-col gap-4">
           <div className="flex justify-between">
-            {/* <PosSelectAcount /> */}
+            <NoteSelectAcount />
             <span></span>
             <span className="font-normal text-base italic">
               {session?.user?.name}
@@ -76,10 +69,7 @@ export default function NoteBillsCard() {
           <Separator />
           <div className="text-center items-center flex">
             <div className="flex-1 text-left flex gap-2">
-              <BillSheet
-                handleAddBill={handleAddBill}
-                selectedBills={noteBills}
-              />
+              <BillSheet />
             </div>
             {pathName === "/sale-note" ? (
               <div className="flex gap-2">ใบวางบิลลูกหนี้</div>

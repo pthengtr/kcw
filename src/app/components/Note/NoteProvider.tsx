@@ -1,8 +1,9 @@
 "use client";
 import { createContext, useState } from "react";
 import React from "react";
-import { billType } from "../Transaction/TransactionProvider";
+import { accountsType, billType } from "../Transaction/TransactionProvider";
 import { itemsType } from "../Transaction/TransactionProvider";
+import { supabase } from "@/app/lib/supabase";
 
 export type NoteContextType = {
   noteBills: billType[] | undefined;
@@ -17,7 +18,10 @@ export type NoteContextType = {
   setCurrentBill: (bill: billType) => void;
   currentBillItems: itemsType[] | undefined;
   setCurrentBillItems: (items: itemsType[]) => void;
+  currentAccount: accountsType | undefined;
+  setCurrentAccount: (account: accountsType) => void;
   handleRemoveBill: (bill: billType) => void;
+  handleAddBill: (bill: billType) => void;
   getSumBeforeTax: () => string;
   getSumAfterTax: () => string;
   getSumTax: () => string;
@@ -40,6 +44,7 @@ export default function NoteProvider({ children }: NoteProviderProps) {
   const [noteDetailOpen, setNoteDetailOpen] = useState(false);
   const [currentBill, setCurrentBill] = useState<billType>();
   const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
+  const [currentAccount, setCurrentAccount] = useState<accountsType>();
 
   function getSumFullAmount() {
     return !!noteBills
@@ -91,12 +96,37 @@ export default function NoteProvider({ children }: NoteProviderProps) {
       : "0.00";
   }
 
+  function handleAddBill(bill: billType) {
+    const newNoteBills =
+      noteBills !== undefined ? [...noteBills, bill] : [bill];
+
+    if (!!bill.accountId) {
+      getAccountSupabase(bill.accountId.toString());
+    }
+    setNoteBills(newNoteBills);
+  }
+
   function handleRemoveBill(bill: billType) {
     const newNoteBills = noteBills?.filter(
       (noteBill) => noteBill.billId != bill.billId
     );
+
+    if (newNoteBills?.length === 0) {
+      setCurrentAccount(undefined);
+    }
     setNoteBills(newNoteBills);
     setNoteDetailOpen(false);
+  }
+
+  async function getAccountSupabase(accountId: string) {
+    const { data, error } = await supabase
+      .from("accounts")
+      .select(`*`)
+      .eq("accountId", accountId)
+      .limit(1);
+
+    if (error) return;
+    if (data !== null) setCurrentAccount(data[0]);
   }
 
   const value = {
@@ -112,7 +142,10 @@ export default function NoteProvider({ children }: NoteProviderProps) {
     setCurrentBill,
     currentBillItems,
     setCurrentBillItems,
+    currentAccount,
+    setCurrentAccount,
     handleRemoveBill,
+    handleAddBill,
     getSumBeforeTax,
     getSumAfterTax,
     getSumTax,

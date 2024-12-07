@@ -6,8 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SearchIcon } from "./PosSelectAccount";
-
+import { SearchIcon } from "../Common/SelectAccount";
 import { supabase } from "@/app/lib/supabase";
 import { useContext, useState } from "react";
 import { billType, itemsType } from "../Transaction/TransactionProvider";

@@ -1,10 +1,9 @@
 "use client";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { supabase } from "@/app/lib/supabase";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { billType, itemsType } from "../Transaction/TransactionProvider";
-import BillsTable from "../Common/BillsTable";
 import TransactionBillsItemList from "../Transaction/TransactionBillsItemList";
 import { Input } from "@/components/ui/input";
 import DateRange from "../Common/DateRange";
@@ -20,16 +19,10 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { createLastYearDate } from "../Transaction/TransactionProvider";
+import NoteBillsTable from "./NoteBillsTable";
+import { NoteContext, NoteContextType } from "./NoteProvider";
 
-type BillSheetProps = {
-  handleAddBill: (bill: billType) => void;
-  selectedBills: billType[] | undefined;
-};
-
-export default function BillSheet({
-  handleAddBill,
-  selectedBills,
-}: BillSheetProps) {
+export default function BillSheet() {
   const [isOpen, setIsOpen] = useState(false);
   const [bills, setBills] = useState<billType[]>();
   const [currentBill, setCurrentBill] = useState<billType>();
@@ -38,19 +31,19 @@ export default function BillSheet({
   const [toDate, setToDate] = useState(new Date());
   const [fromDate, setFromDate] = useState(createLastYearDate());
   const [unpaidOnly, setUnpaidOnly] = useState(true);
-  const [sortBy, setSortBy] = useState("accountId");
   const [maxSearch, setMaxSearch] = useState("50");
+
+  const {
+    handleAddBill,
+    handleRemoveBill,
+    noteBills: selectedBills,
+    currentAccount,
+  } = useContext(NoteContext) as NoteContextType;
 
   const pathName = usePathname();
 
-  const currentAccountId =
-    !!selectedBills && selectedBills.length > 0
-      ? selectedBills[0].accountId
-      : undefined;
-  const currentAccountName =
-    !!selectedBills && selectedBills.length > 0
-      ? selectedBills[0].accounts?.ACCTNAME
-      : undefined;
+  const currentAccountId = currentAccount?.accountId;
+  const currentAccountName = currentAccount?.ACCTNAME;
 
   async function getBillItemsSupabase(billId: string) {
     const { data, error } = await supabase
@@ -94,8 +87,10 @@ export default function BillSheet({
         .ilike("BILLTYPE", `${pathName === "/sale-note" ? "1S%" : "1P%"}`)
         .lte("JOURDATE", toDate.toLocaleString("en-US"))
         .gte("JOURDATE", fromDate.toLocaleString("en-US"))
+        .neq("CANCELED", "Y")
         .is("noteId", null)
-        .order(sortBy, { ascending: false })
+        .order("accountId", { ascending: true })
+        .order("JOURDATE", { ascending: true })
         .limit(parseInt(maxSearch));
 
       if (filterText !== "") {
@@ -132,7 +127,6 @@ export default function BillSheet({
     filterText,
     toDate,
     fromDate,
-    sortBy,
     maxSearch,
     unpaidOnly,
     currentAccountId,
@@ -160,35 +154,6 @@ export default function BillSheet({
               setToDate={setToDate}
               setFromDate={setFromDate}
             />
-          </div>
-          <div className="flex gap-4 items-center">
-            <div className="flex gap-2 items-center">
-              <span>เรียงลำดับตาม</span>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-fit">
-                  <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="accountId">ชื่อลูกค้า</SelectItem>
-                  <SelectItem value="JOURDATE">วันที่</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex gap-2 items-center">
-              <span>ค้นหาทั้งหมด</span>
-              <Select value={maxSearch} onValueChange={setMaxSearch}>
-                <SelectTrigger className="w-fit">
-                  <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
-                  <SelectItem value="200">200</SelectItem>
-                  <SelectItem value="500">500</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
             <div className="flex items-center space-x-2">
               <Switch
@@ -204,15 +169,46 @@ export default function BillSheet({
               </Label>
             </div>
           </div>
+
           {!!bills && (
-            <div className="h-[70vh] relative overflow-auto w-full">
-              <BillsTable
+            <div className="h-[80vh] relative overflow-auto w-full">
+              <NoteBillsTable
                 bills={bills}
                 currentBill={currentBill}
                 handleClickBill={handleClickBill}
               />
             </div>
           )}
+
+          <div className="flex gap-4 items-center">
+            {/* <div className="flex gap-2 items-center">
+              <span>เรียงลำดับตาม</span>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-fit">
+                  <SelectValue placeholder="Theme" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="accountId">ชื่อลูกค้า</SelectItem>
+                  <SelectItem value="JOURDATE">วันที่</SelectItem>
+                </SelectContent>
+              </Select>
+            </div> */}
+
+            <div className="flex gap-2 items-center">
+              <Label htmlFor="result-limit">ค้นหาทั้งหมด</Label>
+              <Select value={maxSearch} onValueChange={setMaxSearch}>
+                <SelectTrigger className="w-fit">
+                  <SelectValue placeholder="Theme" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                  <SelectItem value="200">200</SelectItem>
+                  <SelectItem value="500">500</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </section>
         <section className="w-1/2">
           <div className="h-[15%] flex gap-4 items-center justify-center">
@@ -223,27 +219,24 @@ export default function BillSheet({
               </div>
             )}
 
-            {!!currentBill && (
-              <Button
-                disabled={selectedBills
-                  ?.map((bill) => bill.billId)
-                  .includes(currentBill.billId)}
-                onClick={() => !!currentBill && handleAddBill(currentBill)}
-                className="bg-secondary hover:bg-red-700 flex items-center justify-center gap-2"
-              >
-                {selectedBills
-                  ?.map((bill) => bill.billId)
-                  .includes(currentBill.billId) ? (
-                  <span>เพิ่มแล้ว</span>
-                ) : (
-                  <>
-                    {" "}
-                    <AddSVG />
-                    <span>เพิ่มบิลนี้</span>
-                  </>
-                )}
-              </Button>
-            )}
+            {!!currentBill &&
+              (selectedBills
+                ?.map((bill) => bill.billId)
+                .includes(currentBill.billId) ? (
+                <Button
+                  onClick={() => handleRemoveBill(currentBill)}
+                  className="bg-secondary hover:bg-red-700 flex items-center justify-center gap-2"
+                >
+                  <RemoveSVG />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => handleAddBill(currentBill)}
+                  className="bg-secondary hover:bg-red-700 flex items-center justify-center gap-2"
+                >
+                  <span>เพิ่มบิลนี้</span>
+                </Button>
+              ))}
           </div>
           <div className="h-[85%]">
             <TransactionBillsItemList
@@ -257,16 +250,16 @@ export default function BillSheet({
   );
 }
 
-function AddSVG() {
+function RemoveSVG() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      height="24px"
+      height="18px"
       viewBox="0 -960 960 960"
-      width="24px"
+      width="18px"
       fill="currentcolor"
     >
-      <path d="M440-240h80v-120h120v-80H520v-120h-80v120H320v80h120v120ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+      <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
     </svg>
   );
 }
