@@ -45,40 +45,6 @@ export default function SelectAcount({
     handleSelectCustomer(account);
   }
 
-  function getAccountType() {
-    let accountType;
-
-    switch (pathName) {
-      case "/pos":
-      case "/sale-note":
-        accountType = "S";
-        break;
-      case "/purchase":
-      case "/purchase-note":
-        accountType = "P";
-        break;
-    }
-
-    return accountType;
-  }
-
-  function getPlaceholderText() {
-    let placeholderText;
-
-    switch (pathName) {
-      case "/pos":
-      case "/sale-note":
-        placeholderText = "ค้นหาลูกค้า..";
-        break;
-      case "/purchase":
-      case "/purchase-note":
-        placeholderText = "ค้นหาบริษัท..";
-        break;
-    }
-
-    return placeholderText;
-  }
-
   async function searchAccounts(search: string) {
     if (search === "") return;
 
@@ -92,7 +58,7 @@ export default function SelectAcount({
       .select("*", {
         count: "exact",
       })
-      .eq("ACCTTYPE", getAccountType())
+      .eq("ACCTTYPE", getAccountType(pathName))
       .order("ACCTNAME", { ascending: true })
       .limit(10);
 
@@ -129,7 +95,7 @@ export default function SelectAcount({
               {currentCustomer.ACCTNAME}
             </>
           ) : (
-            <>{getPlaceholderText()}</>
+            <>{getPlaceholderText(pathName)}</>
           )}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -167,6 +133,40 @@ export default function SelectAcount({
       </DropdownMenu>
     </div>
   );
+}
+
+export function getAccountType(pathName: string) {
+  let accountType;
+
+  switch (pathName) {
+    case "/pos":
+    case "/sale-note":
+      accountType = "S";
+      break;
+    case "/purchase":
+    case "/purchase-note":
+      accountType = "P";
+      break;
+  }
+
+  return accountType;
+}
+
+export function getPlaceholderText(pathName: string) {
+  let placeholderText;
+
+  switch (pathName) {
+    case "/pos":
+    case "/sale-note":
+      placeholderText = "ค้นหาลูกค้า..";
+      break;
+    case "/purchase":
+    case "/purchase-note":
+      placeholderText = "ค้นหาบริษัท..";
+      break;
+  }
+
+  return placeholderText;
 }
 
 export function SearchIcon() {

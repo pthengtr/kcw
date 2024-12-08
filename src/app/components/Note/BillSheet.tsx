@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
-import { createLastYearDate } from "../Transaction/TransactionProvider";
+import { createPreviousYearDate } from "../Transaction/TransactionProvider";
 import NoteBillsTable from "./NoteBillsTable";
 import { NoteContext, NoteContextType } from "./NoteProvider";
 
@@ -29,7 +29,7 @@ export default function BillSheet() {
   const [billItems, setBillItems] = useState<itemsType[]>();
   const [filterText, setFilterText] = useState("");
   const [toDate, setToDate] = useState(new Date());
-  const [fromDate, setFromDate] = useState(createLastYearDate());
+  const [fromDate, setFromDate] = useState(createPreviousYearDate(1));
   const [unpaidOnly, setUnpaidOnly] = useState(true);
   const [maxSearch, setMaxSearch] = useState("50");
 
@@ -67,7 +67,7 @@ export default function BillSheet() {
     if (open) {
       setFilterText("");
       setToDate(new Date());
-      setFromDate(createLastYearDate());
+      setFromDate(createPreviousYearDate(1));
       setMaxSearch("50");
       setCurrentBill(undefined);
       setBillItems(undefined);
@@ -103,7 +103,7 @@ export default function BillSheet() {
       }
 
       if (unpaidOnly) {
-        query = query.gt("DUEAMT", 0);
+        query = query.neq("DUEAMT", 0);
       }
 
       if (!!currentAccountId) {

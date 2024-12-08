@@ -22,9 +22,11 @@ export default function NoteBillsTable({
   currentBill,
   handleClickBill,
 }: NoteBillsTableProps) {
-  const { handleAddBill, noteBills: selectedBills } = useContext(
-    NoteContext
-  ) as NoteContextType;
+  const {
+    handleAddBill,
+    handleRemoveBill,
+    noteBills: selectedBills,
+  } = useContext(NoteContext) as NoteContextType;
 
   return (
     <Table>
@@ -73,7 +75,12 @@ export default function NoteBillsTable({
               {selectedBills
                 ?.map((selectedBill) => selectedBill.billId)
                 .includes(bill.billId) ? (
-                <CheckSVG />
+                <Button
+                  onClick={() => handleRemoveBill(bill)}
+                  className="bg-transparent text-inherit hover:border p-2"
+                >
+                  <CheckSVG />
+                </Button>
               ) : (
                 <Button
                   onClick={() => handleAddBill(bill)}

@@ -3,7 +3,7 @@ import { ProductDetailProps } from "@/app/components/Product/ProductDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/app/lib/supabase";
 import { itemsType } from "@/app/components/Transaction/TransactionProvider";
-import { createLastYearDate } from "@/app/components/Transaction/TransactionProvider";
+import { createPreviousYearDate } from "@/app/components/Transaction/TransactionProvider";
 import { Separator } from "@/components/ui/separator";
 
 import {
@@ -24,7 +24,7 @@ export default function ProductCardSale({ productDetail }: ProductDetailProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   const [filterText, setFilterText] = useState("");
-  const [fromDate, setFromDate] = useState<Date>(createLastYearDate());
+  const [fromDate, setFromDate] = useState<Date>(createPreviousYearDate(3));
   const [toDate, setToDate] = useState<Date>(new Date());
   const [limit, setLimit] = useState("50");
   const [totalCount, setTotalCount] = useState(0);

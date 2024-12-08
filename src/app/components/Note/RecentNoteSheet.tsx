@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { createLastYearDate } from "../Transaction/TransactionProvider";
+import { createPreviousYearDate } from "../Transaction/TransactionProvider";
 import NoteTable from "../Common/NoteTable";
 
 export default function RecentNoteSheet() {
@@ -26,7 +26,7 @@ export default function RecentNoteSheet() {
   const [noteBills, setNoteBills] = useState<billType[]>();
   const [filterText, setFilterText] = useState("");
   const [toDate, setToDate] = useState(new Date());
-  const [fromDate, setFromDate] = useState(createLastYearDate());
+  const [fromDate, setFromDate] = useState(createPreviousYearDate(1));
   const [sortBy, setSortBy] = useState("accountId");
   const [maxSearch, setMaxSearch] = useState("50");
 
@@ -56,7 +56,7 @@ export default function RecentNoteSheet() {
     if (open) {
       setFilterText("");
       setToDate(new Date());
-      setFromDate(createLastYearDate());
+      setFromDate(createPreviousYearDate(1));
       setMaxSearch("50");
       setCurrentNote(undefined);
       setNoteBills(undefined);
@@ -72,6 +72,7 @@ export default function RecentNoteSheet() {
         })
         .lte("NOTEDATE", toDate.toLocaleString("en-US"))
         .gte("NOTEDATE", fromDate.toLocaleString("en-US"))
+        .eq("accounts.ACCTTYPE", pathName === "/sale-note" ? "S" : "P")
         .order(sortBy, { ascending: false })
         .limit(parseInt(maxSearch));
 

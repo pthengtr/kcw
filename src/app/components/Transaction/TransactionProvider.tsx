@@ -169,9 +169,9 @@ export const TransactionContext = createContext<TransactionContextType | null>(
   null
 );
 
-export function createLastYearDate() {
+export function createPreviousYearDate(years: number) {
   const date = new Date();
-  date.setFullYear(date.getFullYear() - 3);
+  date.setFullYear(date.getFullYear() - years);
   return date;
 }
 
@@ -183,7 +183,7 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   const [accountId, setAccountId] = useState("");
   const [billNo, setBillNo] = useState("");
   const [filterText, setFilterText] = useState("");
-  const [fromDate, setFromDate] = useState<Date>(createLastYearDate());
+  const [fromDate, setFromDate] = useState<Date>(createPreviousYearDate(3));
   const [toDate, setToDate] = useState<Date>(new Date());
   const [currentTab, setCurrentTab] = useState("allItems");
   const [billType, setBillType] = useState("1");

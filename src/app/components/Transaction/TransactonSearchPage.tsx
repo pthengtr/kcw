@@ -9,7 +9,7 @@ import TransactionBills from "./TransactionBills";
 import TransactionNotes from "./TransactionNotes";
 import TransactionVouchers from "./TransactionVouchers";
 import {
-  createLastYearDate,
+  createPreviousYearDate,
   TransactionContext,
   TransactionContextType,
 } from "./TransactionProvider";
@@ -65,7 +65,7 @@ export default function TransactionSearchPage() {
     setCurrentBillItems(undefined);
     setFilterText("");
     setToDate(new Date());
-    setFromDate(createLastYearDate());
+    setFromDate(createPreviousYearDate(3));
   }, [
     setCurrentBill,
     setCurrentNote,
@@ -84,7 +84,7 @@ export default function TransactionSearchPage() {
     setCurrentTab(value);
     setFilterText("");
     setToDate(new Date());
-    setFromDate(createLastYearDate());
+    setFromDate(createPreviousYearDate(3));
   }
 
   return (
