@@ -5,6 +5,7 @@ import { NoteContext, NoteContextType } from "./NoteProvider";
 import { usePathname } from "next/navigation";
 import { getPlaceholderText } from "../Common/SelectAccount";
 import { supabase } from "@/app/lib/supabase";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -24,6 +25,7 @@ type unpaidAccountType = {
 export default function NoteSelectAcount() {
   const [isOpen, setIsOpen] = useState(false);
   const [accounts, setAccounts] = useState<unpaidAccountType[]>();
+  const [filterText, setFilterText] = useState("");
 
   const pathName = usePathname();
   const { currentAccount, setCurrentAccount, setNoteBills } = useContext(
@@ -42,7 +44,7 @@ export default function NoteSelectAcount() {
 
   useEffect(() => {
     async function getAccountUnpaidSupabase() {
-      const query = supabase
+      let query = supabase
         .from("bills")
         .select(`accountId, DUEAMT.count(),  DUEAMT.sum(), accounts!inner(*)`)
         .eq("accounts.ACCTTYPE", pathName === "/sale-note" ? "S" : "P")
@@ -50,11 +52,18 @@ export default function NoteSelectAcount() {
         .neq("DUEAMT", 0)
         .neq("CANCELED", "Y")
         .is("noteId", null)
-        .limit(500)
-        .returns<unpaidAccountType[]>();
+        .limit(500);
 
-      const { data, error } = await query;
+      if (filterText !== "") {
+        query = query.or(
+          `ACCTNAME.ilike.%${filterText}%, ACCTNO.ilike.%${filterText}%`,
+          {
+            referencedTable: "accounts",
+          }
+        );
+      }
 
+      const { data, error } = await query.returns<unpaidAccountType[]>();
       if (error) {
         console.log(error);
         return;
@@ -66,7 +75,7 @@ export default function NoteSelectAcount() {
     }
 
     if (isOpen) getAccountUnpaidSupabase();
-  }, [isOpen, pathName]);
+  }, [isOpen, pathName, filterText]);
 
   return (
     <Sheet open={isOpen} onOpenChange={handleSheetOpen}>
@@ -87,6 +96,16 @@ export default function NoteSelectAcount() {
         )}
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-[40%] overflow-auto">
+        <div className="w-full flex gap-4 justify-center">
+          <Input
+            className={`rounded-md w-56`}
+            type="text"
+            placeholder="ชื่อลูกค้า..."
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+          ></Input>
+        </div>
+
         <Table>
           <TableHeader>
             <TableRow>

@@ -19,7 +19,7 @@ export type NoteContextType = {
   currentBillItems: itemsType[] | undefined;
   setCurrentBillItems: (items: itemsType[]) => void;
   currentAccount: accountsType | undefined;
-  setCurrentAccount: (account: accountsType) => void;
+  setCurrentAccount: (account: accountsType | undefined) => void;
   handleRemoveBill: (bill: billType) => void;
   handleAddBill: (bill: billType) => void;
   getSumBeforeTax: () => string;

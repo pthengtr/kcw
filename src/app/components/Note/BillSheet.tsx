@@ -5,9 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { billType, itemsType } from "../Transaction/TransactionProvider";
 import TransactionBillsItemList from "../Transaction/TransactionBillsItemList";
-import { Input } from "@/components/ui/input";
-import DateRange from "../Common/DateRange";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -30,7 +27,6 @@ export default function BillSheet() {
   const [filterText, setFilterText] = useState("");
   const [toDate, setToDate] = useState(new Date());
   const [fromDate, setFromDate] = useState(createPreviousYearDate(1));
-  const [unpaidOnly, setUnpaidOnly] = useState(true);
   const [maxSearch, setMaxSearch] = useState("50");
 
   const {
@@ -76,7 +72,7 @@ export default function BillSheet() {
 
   useEffect(() => {
     async function getBillsSupabase() {
-      let query = supabase
+      const query = supabase
         .from("bills")
         .select(
           `*, vouchers(*), notes(*), accounts!inner(*), bill_payment(*)`,
@@ -91,24 +87,9 @@ export default function BillSheet() {
         .is("noteId", null)
         .order("accountId", { ascending: true })
         .order("JOURDATE", { ascending: true })
+        .neq("DUEAMT", 0)
+        .eq("accountId", currentAccountId)
         .limit(parseInt(maxSearch));
-
-      if (filterText !== "") {
-        query = query.or(
-          `ACCTNAME.ilike.%${filterText}%, ACCTNO.ilike.%${filterText}%`,
-          {
-            referencedTable: "accounts",
-          }
-        );
-      }
-
-      if (unpaidOnly) {
-        query = query.neq("DUEAMT", 0);
-      }
-
-      if (!!currentAccountId) {
-        query = query.eq("accountId", currentAccountId);
-      }
 
       const { data, error } = await query;
       if (error) {
@@ -128,7 +109,6 @@ export default function BillSheet() {
     toDate,
     fromDate,
     maxSearch,
-    unpaidOnly,
     currentAccountId,
   ]);
 
@@ -139,39 +119,8 @@ export default function BillSheet() {
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-[100%] overflow-auto flex">
         <section className="flex flex-col items-center gap-4 w-1/2">
-          <div className="w-full flex gap-4 justify-center">
-            <Input
-              className={`rounded-md w-56`}
-              type="text"
-              placeholder="ชื่อลูกค้า..."
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-            ></Input>
-
-            <DateRange
-              toDate={toDate}
-              fromDate={fromDate}
-              setToDate={setToDate}
-              setFromDate={setFromDate}
-            />
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                checked={unpaidOnly}
-                onCheckedChange={setUnpaidOnly}
-                id="unpaid-only"
-              />
-              <Label
-                htmlFor="unpaid-only"
-                className={`${unpaidOnly ? "" : "text-gray-400"}`}
-              >
-                เฉพาะค้างชำระ
-              </Label>
-            </div>
-          </div>
-
           {!!bills && (
-            <div className="h-[80vh] relative overflow-auto w-full">
+            <div className="h-[85vh] relative overflow-auto w-full">
               <NoteBillsTable
                 bills={bills}
                 currentBill={currentBill}
@@ -181,19 +130,6 @@ export default function BillSheet() {
           )}
 
           <div className="flex gap-4 items-center">
-            {/* <div className="flex gap-2 items-center">
-              <span>เรียงลำดับตาม</span>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-fit">
-                  <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="accountId">ชื่อลูกค้า</SelectItem>
-                  <SelectItem value="JOURDATE">วันที่</SelectItem>
-                </SelectContent>
-              </Select>
-            </div> */}
-
             <div className="flex gap-2 items-center">
               <Label htmlFor="result-limit">ค้นหาทั้งหมด</Label>
               <Select value={maxSearch} onValueChange={setMaxSearch}>

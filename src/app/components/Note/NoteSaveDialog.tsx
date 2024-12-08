@@ -23,6 +23,8 @@ export default function NoteSaveDialog() {
     noteDate,
     purchaseNoteNo,
     noteDiscount,
+    setNoteDiscount,
+    setCurrentAccount,
   } = useContext(NoteContext) as NoteContextType;
 
   const { toast } = useToast();
@@ -152,6 +154,8 @@ export default function NoteSaveDialog() {
   function handleConfirmNote() {
     console.log(noteDate);
     createNewNote(noteDate);
+    setNoteDiscount("");
+    setCurrentAccount(undefined);
   }
 
   return (
