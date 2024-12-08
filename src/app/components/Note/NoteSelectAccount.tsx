@@ -16,8 +16,8 @@ import {
 
 type unpaidAccountType = {
   accountId: string;
-  count: string;
-  sum: string;
+  count: number;
+  sum: number;
   accounts: accountsType;
 };
 
@@ -44,15 +44,14 @@ export default function NoteSelectAcount() {
     async function getAccountUnpaidSupabase() {
       const query = supabase
         .from("bills")
-        .select(
-          `*, accountId, accountId.count(),  DUEAMT.sum(), accounts!inner(*)`
-        )
+        .select(`accountId, DUEAMT.count(),  DUEAMT.sum(), accounts!inner(*)`)
         .eq("accounts.ACCTTYPE", pathName === "/sale-note" ? "S" : "P")
         .ilike("BILLTYPE", `${pathName === "/sale-note" ? "1S%" : "1P%"}`)
         .neq("DUEAMT", 0)
         .neq("CANCELED", "Y")
         .is("noteId", null)
-        .limit(500);
+        .limit(500)
+        .returns<unpaidAccountType[]>();
 
       const { data, error } = await query;
 
@@ -61,8 +60,8 @@ export default function NoteSelectAcount() {
         return;
       }
       if (data !== null) {
-        //const sortedData = data.sort((a, b) => b.sum - a.sum);
-        setAccounts(data);
+        const sortedData = data.sort((a, b) => b.sum - a.sum);
+        setAccounts(sortedData);
       }
     }
 
@@ -113,7 +112,7 @@ export default function NoteSelectAcount() {
                   <TableCell>{account.accounts.ACCTNAME}</TableCell>
                   <TableCell className="text-right">{account.count}</TableCell>
                   <TableCell className="text-right">
-                    {parseFloat(account.sum).toLocaleString("th-TH", {
+                    {account.sum.toLocaleString("th-TH", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
