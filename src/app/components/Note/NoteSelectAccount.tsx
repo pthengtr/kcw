@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import AccountHeader from "../Common/AccountHeader";
 
 type unpaidAccountType = {
   accountId: string;
@@ -81,21 +82,12 @@ export default function NoteSelectAcount() {
     <Sheet open={isOpen} onOpenChange={handleSheetOpen}>
       <SheetTrigger className="bg-gray-100 text-base p-2 rounded-md hover:bg-gray-200">
         {!!currentAccount ? (
-          <>
-            <span
-              className={`${
-                currentAccount.ACCTTYPE === "S" ? "bg-green-800" : "bg-red-800"
-              } rounded-sm text-white px-1`}
-            >
-              {currentAccount.ACCTNO}
-            </span>{" "}
-            {currentAccount.ACCTNAME}
-          </>
+          <AccountHeader currentAccount={currentAccount} />
         ) : (
           <>{getPlaceholderText(pathName)}</>
         )}
       </SheetTrigger>
-      <SheetContent side="left" className="sm:max-w-[40%] overflow-auto">
+      <SheetContent side="left" className="sm:max-w-[40%] flex flex-col gap-4">
         <div className="w-full flex gap-4 justify-center">
           <Input
             className={`rounded-md w-56`}
@@ -106,40 +98,44 @@ export default function NoteSelectAcount() {
           ></Input>
         </div>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ชื่อย่อ</TableHead>
-              <TableHead>ชื่อลูกค้า</TableHead>
-              <TableHead>ยังไม่วางบิล</TableHead>
-              <TableHead>ยอดรวม</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {!!accounts &&
-              accounts.map((account) => (
-                <TableRow
-                  key={account.accounts.accountId}
-                  className={`${
-                    currentAccount?.accountId === account.accounts.accountId
-                      ? "bg-primary text-gray-100 hover:bg-primary hover:text-gray-100"
-                      : ""
-                  }`}
-                  onClick={() => handleSelectCustomer(account.accounts)}
-                >
-                  <TableCell>{account.accounts.ACCTNO}</TableCell>
-                  <TableCell>{account.accounts.ACCTNAME}</TableCell>
-                  <TableCell className="text-right">{account.count}</TableCell>
-                  <TableCell className="text-right">
-                    {account.sum.toLocaleString("th-TH", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+        <div className="h-[90vh] overflow-auto relative ">
+          <Table>
+            <TableHeader className="sticky top-0 bg-white">
+              <TableRow>
+                <TableHead>ชื่อย่อ</TableHead>
+                <TableHead>ชื่อลูกค้า</TableHead>
+                <TableHead>ยังไม่วางบิล</TableHead>
+                <TableHead>ยอดรวม</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {!!accounts &&
+                accounts.map((account) => (
+                  <TableRow
+                    key={account.accounts.accountId}
+                    className={`${
+                      currentAccount?.accountId === account.accounts.accountId
+                        ? "bg-primary text-gray-100 hover:bg-primary hover:text-gray-100"
+                        : ""
+                    }`}
+                    onClick={() => handleSelectCustomer(account.accounts)}
+                  >
+                    <TableCell>{account.accounts.ACCTNO}</TableCell>
+                    <TableCell>{account.accounts.ACCTNAME}</TableCell>
+                    <TableCell className="text-right">
+                      {account.count}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {account.sum.toLocaleString("th-TH", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </div>
       </SheetContent>
     </Sheet>
   );

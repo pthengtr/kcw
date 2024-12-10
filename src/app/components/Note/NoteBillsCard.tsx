@@ -1,11 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { useSession } from "next-auth/react";
 import BillSheet from "./BillSheet";
 import { useContext } from "react";
@@ -17,12 +11,16 @@ import { NoteContext, NoteContextType } from "./NoteProvider";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import NoteSelectAcount from "./NoteSelectAccount";
+import DateSingle from "../Common/DateSingle";
+import { Label } from "@/components/ui/label";
 
 export default function NoteBillsCard() {
   const {
     noteBills,
     noteDate,
     setNoteDate,
+    noteDueDate,
+    setNoteDueDate,
     setCurrentBill,
     setCurrentBillItems,
     setNoteDetailOpen,
@@ -57,14 +55,17 @@ export default function NoteBillsCard() {
 
   return (
     <Card className="w-full pb-8 shadow-md flex flex-col">
-      <CardHeader className="h-[22%]">
+      <CardHeader className="h-fit">
         <CardTitle className="flex flex-col gap-4">
           <div className="flex justify-between">
             <NoteSelectAcount />
             <span></span>
-            <span className="font-normal text-base italic">
-              {session?.user?.name}
-            </span>
+            <div className="flex-1 flex justify-end items-center gap-2">
+              <Label>วันที่ออก</Label>
+              <DateSingle date={noteDate} setDate={setNoteDate} />
+              <Label>ครบกำหนด</Label>
+              <DateSingle date={noteDueDate} setDate={setNoteDueDate} />
+            </div>
           </div>
 
           <Separator />
@@ -82,40 +83,13 @@ export default function NoteBillsCard() {
                 onChange={(e) => setPurchaseNoteNo(e.target.value)}
               ></Input>
             )}
-            <div className="flex-1 flex justify-end">
-              <Popover>
-                <PopoverTrigger className="py-1 px-2 rounded-md hover:bg-gray-200 text-base">
-                  {noteDate.toLocaleDateString("th-TH", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </PopoverTrigger>
-                <PopoverContent className="pointer-events-auto">
-                  <Calendar
-                    mode="single"
-                    selected={noteDate}
-                    onDayClick={(date) => setNoteDate(date)}
-                    defaultMonth={noteDate}
-                    formatters={{
-                      formatCaption: (date) =>
-                        date.toLocaleDateString("th-TH", {
-                          month: "long",
-                          year: "numeric",
-                        }),
-                    }}
-                    classNames={{
-                      day_selected:
-                        "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+            <span className="flex-1 flex justify-end font-normal text-base italic">
+              {session?.user?.name}
+            </span>
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="h-[78%] flex flex-col">
+      <CardContent className="h-[75%] flex flex-col">
         {!!noteBills && (
           <div className="overflow-auto">
             <BillsTable

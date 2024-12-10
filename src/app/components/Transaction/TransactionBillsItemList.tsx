@@ -1,3 +1,4 @@
+import { Label } from "@/components/ui/label";
 import TransactionItemList from "./TransactionItemList";
 import { itemsType, billType } from "./TransactionProvider";
 import React from "react";
@@ -23,25 +24,43 @@ export default function TransactionBillsItemList({
       {currentBillItems && (
         <div className="w-full h-full overflow-auto text-lg p-4 flex flex-col gap-4">
           {currentBill && (
-            <div className="flex gap-4 justify-center">
-              <span>บิลเลขที่</span>
-              <span className="font-semibold">{currentBill.BILLNO}</span>
-              {currentBill.accounts?.ACCTTYPE === "P" && (
-                <>
-                  <span>วันที่ของเข้า</span>
-                  <span className="font-semibold">
-                    {new Date(currentBill.JOURDATE).toLocaleDateString("th-TH")}
-                  </span>
-                </>
-              )}
-
-              <span>วันที่หน้าบิล</span>
-              <span className="font-semibold">
-                {new Date(currentBill.BILLDATE).toLocaleDateString("th-TH")}
-              </span>
-
-              <span>พนักงาน</span>
-              <span className="font-semibold">{currentBill.SALE}</span>
+            <div className="flex flex-col gap-4 justify-center">
+              <div className="flex gap-4 justify-center items-baseline">
+                <Label>บิลเลขที่</Label>
+                <span className="bg-gray-100 font-semibold p-1 rounded-md">
+                  {currentBill.BILLNO}
+                </span>
+                <Label>พนักงาน</Label>
+                <span className="bg-gray-100 font-semibold p-1 rounded-md">
+                  {currentBill.SALE}
+                </span>
+              </div>
+              <div className="flex gap-4 justify-center items-baseline">
+                {currentBill.accounts?.ACCTTYPE === "P" && (
+                  <>
+                    <Label>วันที่ของเข้า</Label>
+                    <span className="bg-gray-100 font-semibold p-1 rounded-md">
+                      {new Date(currentBill.JOURDATE).toLocaleDateString(
+                        "th-TH"
+                      )}
+                    </span>
+                  </>
+                )}
+                <Label>วันที่หน้าบิล</Label>
+                <span className="bg-gray-100 font-semibold p-1 rounded-md">
+                  {new Date(currentBill.BILLDATE).toLocaleDateString("th-TH")}
+                </span>
+                {!!currentBill.DUEDATE && (
+                  <>
+                    <Label>ครบกำหนด</Label>
+                    <span className="bg-gray-100 font-semibold p-1 rounded-md">
+                      {new Date(currentBill.DUEDATE).toLocaleDateString(
+                        "th-TH"
+                      )}
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
           )}
 
@@ -79,15 +98,6 @@ export default function TransactionBillsItemList({
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
-                      {/* {currentBill.bill_payment
-                        .reduce(
-                          (acc, payment) => acc - payment.AMOUNT,
-                          currentBill.AFTERTAX
-                        )
-                        .toLocaleString("th-TH", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })} */}
                     </span>
                   </>
                 ) : (

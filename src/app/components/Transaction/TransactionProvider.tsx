@@ -33,6 +33,7 @@ export type voucherType = {
 export type noteType = {
   noteId: number;
   NOTEDATE: Date;
+  DUEDATE: Date;
   NOTENO: string;
   BILLAMT: number;
   DISCOUNT: number;
@@ -163,6 +164,7 @@ export type TransactionContextType = {
   handleClickNote: (noteId: number) => void;
   handleClickVoucher: (voucherId: number) => void;
   handleClickBill: (billNo: string) => void;
+  getBillStatus: (bill: billType) => string;
 };
 
 export const TransactionContext = createContext<TransactionContextType | null>(
@@ -303,6 +305,17 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     getCurrentVoucherBillsSupabase(voucherId);
   }
 
+  function getBillStatus(bill: billType) {
+    let status = "";
+    if (!!bill.vouchers || bill.DUEAMT === 0) {
+      status = "ชำระแล้ว";
+    } else if (!!bill.notes) {
+      status = "วางบิลแล้ว";
+    } else {
+      status = "ยังไม่วางบิล";
+    }
+    return status;
+  }
   const value = {
     accountId,
     setAccountId,
@@ -348,6 +361,7 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     handleClickNote,
     handleClickVoucher,
     handleClickBill,
+    getBillStatus,
   };
 
   return (

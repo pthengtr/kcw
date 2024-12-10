@@ -16,11 +16,13 @@ type NoteBillsTableProps = {
   bills: billType[];
   currentBill: billType | undefined;
   handleClickBill?: (bill: billType) => void;
+  addButton?: boolean;
 };
 export default function NoteBillsTable({
   bills,
   currentBill,
   handleClickBill,
+  addButton = false,
 }: NoteBillsTableProps) {
   const {
     handleAddBill,
@@ -33,11 +35,10 @@ export default function NoteBillsTable({
       <TableHeader className="sticky top-0 bg-white">
         <TableRow>
           <TableHead>วันที่</TableHead>
-          <TableHead>เวลา</TableHead>
           <TableHead>เลขที่บิล</TableHead>
-          <TableHead>ชื่อลูกค้า</TableHead>
+          <TableHead>ครบกำหนด</TableHead>
           <TableHead>ยอดรวม</TableHead>
-          <TableHead></TableHead>
+          {addButton && <TableHead></TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -58,12 +59,14 @@ export default function NoteBillsTable({
                 year: "2-digit",
               })}
             </TableCell>
-            <TableCell>
-              {new Date(bill.JOURDATE).toLocaleTimeString("th-TH")}
-            </TableCell>
             <TableCell className="w-36">{bill.BILLNO}</TableCell>
-            <TableCell className="min-w-48">
-              {bill.accounts?.ACCTNAME}
+            <TableCell>
+              {!!bill.DUEDATE &&
+                new Date(bill.DUEDATE).toLocaleDateString("th-TH", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "2-digit",
+                })}
             </TableCell>
             <TableCell className="text-right">
               {bill.AFTERTAX.toLocaleString("th-TH", {
@@ -71,25 +74,27 @@ export default function NoteBillsTable({
                 maximumFractionDigits: 2,
               })}
             </TableCell>
-            <TableCell className="flex justify-center w-20">
-              {selectedBills
-                ?.map((selectedBill) => selectedBill.billId)
-                .includes(bill.billId) ? (
-                <Button
-                  onClick={() => handleRemoveBill(bill)}
-                  className="bg-transparent text-inherit hover:border p-2"
-                >
-                  <CheckSVG />
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => handleAddBill(bill)}
-                  className="bg-transparent text-inherit hover:border p-2"
-                >
-                  <AddSVG />
-                </Button>
-              )}
-            </TableCell>
+            {addButton && (
+              <TableCell className="flex justify-center w-20">
+                {selectedBills
+                  ?.map((selectedBill) => selectedBill.billId)
+                  .includes(bill.billId) ? (
+                  <Button
+                    onClick={() => handleRemoveBill(bill)}
+                    className="bg-transparent text-inherit hover:border p-2"
+                  >
+                    <CheckSVG />
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => handleAddBill(bill)}
+                    className="bg-transparent text-inherit hover:border p-2"
+                  >
+                    <AddSVG />
+                  </Button>
+                )}
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>

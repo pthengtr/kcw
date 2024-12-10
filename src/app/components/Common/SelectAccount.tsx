@@ -12,6 +12,7 @@ import {
 import { supabase } from "@/app/lib/supabase";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import AccountHeader from "./AccountHeader";
 
 type SelectAccountProps = {
   currentCustomer: accountsType | undefined;
@@ -82,18 +83,7 @@ export default function SelectAcount({
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none ">
           {!!currentCustomer ? (
-            <>
-              <span
-                className={`${
-                  currentCustomer.ACCTTYPE === "S"
-                    ? "bg-green-800"
-                    : "bg-red-800"
-                } rounded-sm text-white px-1`}
-              >
-                {currentCustomer.ACCTNO}
-              </span>{" "}
-              {currentCustomer.ACCTNAME}
-            </>
+            <AccountHeader currentAccount={currentCustomer} />
           ) : (
             <>{getPlaceholderText(pathName)}</>
           )}
@@ -115,18 +105,10 @@ export default function SelectAcount({
             customerList.map((customer, index) => (
               <DropdownMenuItem
                 id={`menuindex-${index}`}
-                className="flex gap-2"
                 key={customer.accountId}
                 onClick={() => _handleSelectCustomer(customer)}
               >
-                <span
-                  className={`${
-                    customer.ACCTTYPE === "S" ? "bg-green-800" : "bg-red-800"
-                  } rounded-sm text-white px-1`}
-                >
-                  {customer.ACCTNO}
-                </span>
-                <span>{customer.ACCTNAME}</span>
+                <AccountHeader currentAccount={customer} />
               </DropdownMenuItem>
             ))}
         </DropdownMenuContent>

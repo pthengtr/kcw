@@ -128,9 +128,18 @@ export default function TransactionSearchPage() {
                           </span>
                           <span>
                             {`${
-                              transactionAccountObject[
-                                key as keyof typeof accountInfo
-                              ]
+                              key === "ALLOW"
+                                ? parseFloat(
+                                    transactionAccountObject[
+                                      key as keyof typeof accountInfo
+                                    ].toString()
+                                  ).toLocaleString("th-TH", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })
+                                : transactionAccountObject[
+                                    key as keyof typeof accountInfo
+                                  ]
                             }  ${
                               key === "ADDR1"
                                 ? transactionAccountObject.ADDR2

@@ -29,7 +29,9 @@ export default function TransactionNotesBillList({
 
       {currentNote && (
         <div className="flex justify-end pb-16 px-16 text-base mt-auto  h-fit">
-          <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg">
+          <div className="grid grid-cols-2 w-fit justify-end gap-4 border p-4 rounded-lg justify-items-end">
+            <span>จำนวนบิล</span>
+            <span className="font-semibold">{currentNoteBills?.length}</span>
             <span>จำนวนเงิน</span>
             <span className="font-semibold">
               {currentNote.BILLAMT.toLocaleString("th-TH", {

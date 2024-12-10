@@ -4,7 +4,6 @@ import { supabase } from "@/app/lib/supabase";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { billType, noteType } from "../Transaction/TransactionProvider";
-import BillsTable from "../Common/BillsTable";
 import { Input } from "@/components/ui/input";
 import DateRange from "../Common/DateRange";
 
@@ -18,6 +17,10 @@ import {
 
 import { createPreviousYearDate } from "../Transaction/TransactionProvider";
 import NoteTable from "../Common/NoteTable";
+import NoteBillsTable from "./NoteBillsTable";
+import AccountHeader from "../Common/AccountHeader";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function RecentNoteSheet() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +30,7 @@ export default function RecentNoteSheet() {
   const [filterText, setFilterText] = useState("");
   const [toDate, setToDate] = useState(new Date());
   const [fromDate, setFromDate] = useState(createPreviousYearDate(1));
-  const [sortBy, setSortBy] = useState("accountId");
+  const [sortBy, setSortBy] = useState("NOTEDATE");
   const [maxSearch, setMaxSearch] = useState("50");
 
   const pathName = usePathname();
@@ -60,6 +63,7 @@ export default function RecentNoteSheet() {
       setMaxSearch("50");
       setCurrentNote(undefined);
       setNoteBills(undefined);
+      setSortBy("NOTEDATE");
     }
   }
 
@@ -169,16 +173,66 @@ export default function RecentNoteSheet() {
             </div>
           )}
         </section>
-        <section className="w-1/2">
-          <div className="h-[85%]">
+        <section className="w-1/2 flex flex-col items-center gap-8">
+          <div className="flex flex-col gap-4 items-center">
+            {!!currentNote?.accounts && (
+              <>
+                <AccountHeader currentAccount={currentNote?.accounts} />
+                <div className="flex gap-4 justify-center items-center">
+                  <Label>วันที่วางบิล</Label>
+                  <span className="p-1 bg-gray-100 rounded-md">
+                    {new Date(currentNote?.NOTEDATE).toLocaleDateString(
+                      "th-TH"
+                    )}
+                  </span>
+                  <Label>เลขที่ใบวางบิล</Label>
+                  <span className="p-1 bg-gray-100 rounded-md">
+                    {currentNote.NOTENO}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="h-[60%] w-full relative overflow-auto">
             {!!noteBills && (
-              <BillsTable
+              <NoteBillsTable
                 bills={noteBills}
                 currentBill={undefined}
                 handleClickBill={undefined}
               />
             )}
           </div>
+          {!!noteBills && (
+            <>
+              <Card className="p-2 self-end mx-16">
+                <CardContent className="p-2 grid grid-cols-2 gap-y-2 gap-x-6 items-center justify-items-end">
+                  <Label>จำนวนบิล</Label>
+                  <span className="font-semibold">{noteBills?.length}</span>
+                  <Label>ราคาเต็มรวม</Label>
+                  <span className="font-semibold">
+                    {currentNote?.BILLAMT.toLocaleString("th-TH", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                  <Label>ส่วนลด</Label>
+                  <span className="font-semibold">
+                    {currentNote?.DISCOUNT.toLocaleString("th-TH", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                  <Label>ยอดรวม</Label>
+                  <span className="font-semibold">
+                    {currentNote?.NETAMT.toLocaleString("th-TH", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </section>
       </SheetContent>
     </Sheet>

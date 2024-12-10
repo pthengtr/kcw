@@ -21,6 +21,7 @@ export default function NoteSaveDialog() {
     getSumAfterTax,
     getSumFullAmount,
     noteDate,
+    noteDueDate,
     purchaseNoteNo,
     noteDiscount,
     setNoteDiscount,
@@ -64,6 +65,7 @@ export default function NoteSaveDialog() {
       DISCOUNT: parseFloat(noteDiscount !== "" ? noteDiscount : "0"),
       NETAMT: parseFloat(getSumAfterTax().replace(",", "")),
       NOTEDATE: date,
+      DUEDATE: noteDueDate,
       NOTENO: newNoteNo,
     };
 

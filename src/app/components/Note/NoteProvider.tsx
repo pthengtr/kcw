@@ -10,6 +10,8 @@ export type NoteContextType = {
   setNoteBills: (bills: billType[] | undefined) => void;
   noteDate: Date;
   setNoteDate: (date: Date) => void;
+  noteDueDate: Date;
+  setNoteDueDate: (date: Date) => void;
   noteDetailOpen: boolean;
   setNoteDetailOpen: (open: boolean) => void;
   purchaseNoteNo: string;
@@ -40,15 +42,19 @@ export default function NoteProvider({ children }: NoteProviderProps) {
   const [noteDiscount, setNoteDiscount] = useState("");
   const [noteBills, setNoteBills] = useState<billType[]>();
   const [noteDate, setNoteDate] = useState(new Date());
+  const [noteDueDate, setNoteDueDate] = useState(new Date());
   const [purchaseNoteNo, setPurchaseNoteNo] = useState("");
   const [noteDetailOpen, setNoteDetailOpen] = useState(false);
   const [currentBill, setCurrentBill] = useState<billType>();
   const [currentBillItems, setCurrentBillItems] = useState<itemsType[]>();
   const [currentAccount, setCurrentAccount] = useState<accountsType>();
 
-  function getSumFullAmount() {
-    return !!noteBills
-      ? noteBills
+  function getSumFullAmount(bills?: billType[]) {
+    if (!bills) {
+      bills = noteBills;
+    }
+    return !!bills
+      ? bills
           .reduce((acc, bill) => acc + bill.AFTERTAX, 0)
           .toLocaleString("th-TH", {
             minimumFractionDigits: 2,
@@ -57,9 +63,12 @@ export default function NoteProvider({ children }: NoteProviderProps) {
       : "0.00";
   }
 
-  function getSumBeforeTax() {
-    return !!noteBills
-      ? noteBills
+  function getSumBeforeTax(bills?: billType[]) {
+    if (!bills) {
+      bills = noteBills;
+    }
+    return !!bills
+      ? bills
           .reduce(
             (acc, bill) => acc + bill.BEFORETAX,
             noteDiscount !== "" ? -parseFloat(noteDiscount) : 0
@@ -71,9 +80,12 @@ export default function NoteProvider({ children }: NoteProviderProps) {
       : "0.00";
   }
 
-  function getSumAfterTax() {
-    return !!noteBills
-      ? noteBills
+  function getSumAfterTax(bills?: billType[]) {
+    if (!bills) {
+      bills = noteBills;
+    }
+    return !!bills
+      ? bills
           .reduce(
             (acc, bill) => acc + bill.AFTERTAX,
             noteDiscount !== "" ? -parseFloat(noteDiscount) : 0
@@ -85,9 +97,12 @@ export default function NoteProvider({ children }: NoteProviderProps) {
       : "0.00";
   }
 
-  function getSumTax() {
-    return !!noteBills
-      ? noteBills
+  function getSumTax(bills?: billType[]) {
+    if (!bills) {
+      bills = noteBills;
+    }
+    return !!bills
+      ? bills
           .reduce((acc, bill) => acc + bill.TAX, 0)
           .toLocaleString("th-TH", {
             minimumFractionDigits: 2,
@@ -134,6 +149,8 @@ export default function NoteProvider({ children }: NoteProviderProps) {
     setNoteBills,
     noteDate,
     setNoteDate,
+    noteDueDate,
+    setNoteDueDate,
     purchaseNoteNo,
     setPurchaseNoteNo,
     noteDetailOpen,

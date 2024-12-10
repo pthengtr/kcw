@@ -37,6 +37,7 @@ export default function TransactionBillsBillList({
     currentVoucherBills,
     currentNote,
     currentNoteBills,
+    getBillStatus,
   } = useContext(TransactionContext) as TransactionContextType;
 
   useEffect(() => {
@@ -113,23 +114,23 @@ export default function TransactionBillsBillList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {accountBills.map((item, index) => (
+            {accountBills.map((bill, index) => (
               <TableRow
-                onClick={() => handleClickBill(item)}
+                onClick={() => handleClickBill(bill)}
                 className={`${
-                  currentBill?.BILLNO === item.BILLNO
+                  currentBill?.BILLNO === bill.BILLNO
                     ? "bg-primary text-white hover:bg-primary"
                     : ""
                 }`}
-                key={`${item.BILLNO}-${index}`}
-                id={item.BILLNO}
+                key={`${bill.BILLNO}-${index}`}
+                id={bill.BILLNO}
               >
                 <TableCell>
-                  {new Date(item.JOURDATE).toLocaleDateString("th-TH")}
+                  {new Date(bill.JOURDATE).toLocaleDateString("th-TH")}
                 </TableCell>
-                <TableCell>{item.BILLNO}</TableCell>
+                <TableCell>{bill.BILLNO}</TableCell>
                 <TableCell>
-                  {item.AFTERTAX.toLocaleString("th-TH", {
+                  {bill.AFTERTAX.toLocaleString("th-TH", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
@@ -137,23 +138,23 @@ export default function TransactionBillsBillList({
 
                 <TableCell
                   className={`${
-                    item.notes &&
+                    bill.notes &&
                     "hover:cursor-pointer hover:underline hover:italic"
                   }`}
                   onClick={() => {
-                    if (!!item.noteId) handleClickNote(item.noteId);
+                    if (!!bill.noteId) handleClickNote(bill.noteId);
                   }}
                 >
-                  {!!item.notes && (
+                  {!!bill.notes && (
                     <Dialog>
                       <DialogTrigger
                         className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
                         onClick={() => {
-                          if (!!item.voucherId)
-                            handleClickVoucher(item.voucherId);
+                          if (!!bill.voucherId)
+                            handleClickVoucher(bill.voucherId);
                         }}
                       >
-                        {item.notes?.NOTENO}
+                        {bill.notes?.NOTENO}
                       </DialogTrigger>
                       <DialogContent className="h-[80vh] sm:max-w-[1280px]">
                         {!!currentNote && (
@@ -168,21 +169,21 @@ export default function TransactionBillsBillList({
                 </TableCell>
 
                 <TableCell>
-                  {item.notes &&
-                    new Date(item.notes?.NOTEDATE).toLocaleDateString("th-TH")}
+                  {bill.notes &&
+                    new Date(bill.notes?.NOTEDATE).toLocaleDateString("th-TH")}
                 </TableCell>
 
                 <TableCell>
-                  {!!item.vouchers && (
+                  {!!bill.vouchers && (
                     <Dialog>
                       <DialogTrigger
                         className={`${"hover:cursor-pointer hover:underline hover:italic"}`}
                         onClick={() => {
-                          if (!!item.voucherId)
-                            handleClickVoucher(item.voucherId);
+                          if (!!bill.voucherId)
+                            handleClickVoucher(bill.voucherId);
                         }}
                       >
-                        {item.vouchers?.VOUCNO}
+                        {bill.vouchers?.VOUCNO}
                       </DialogTrigger>
                       <DialogContent className="h-[80vh] sm:max-w-[1280px]">
                         {!!currentVoucher && (
@@ -197,17 +198,11 @@ export default function TransactionBillsBillList({
                 </TableCell>
 
                 <TableCell>
-                  {item.vouchers &&
-                    new Date(item.vouchers?.VOUCDATE).toLocaleDateString()}
+                  {bill.vouchers &&
+                    new Date(bill.vouchers?.VOUCDATE).toLocaleDateString()}
                 </TableCell>
 
-                <TableCell>
-                  {item.vouchers
-                    ? "ชำระแล้ว"
-                    : item.notes
-                    ? "วางบิลแล้ว"
-                    : "ยังไม่วางบิล"}
-                </TableCell>
+                <TableCell>{getBillStatus(bill)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

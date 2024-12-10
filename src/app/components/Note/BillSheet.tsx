@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { createPreviousYearDate } from "../Transaction/TransactionProvider";
 import NoteBillsTable from "./NoteBillsTable";
 import { NoteContext, NoteContextType } from "./NoteProvider";
+import AccountHeader from "../Common/AccountHeader";
 
 export default function BillSheet() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,12 +35,12 @@ export default function BillSheet() {
     handleRemoveBill,
     noteBills: selectedBills,
     currentAccount,
+    getSumAfterTax,
   } = useContext(NoteContext) as NoteContextType;
 
   const pathName = usePathname();
 
   const currentAccountId = currentAccount?.accountId;
-  const currentAccountName = currentAccount?.ACCTNAME;
 
   async function getBillItemsSupabase(billId: string) {
     const { data, error } = await supabase
@@ -119,17 +120,35 @@ export default function BillSheet() {
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-[100%] overflow-auto flex">
         <section className="flex flex-col items-center gap-4 w-1/2">
+          {!!currentAccount && (
+            <AccountHeader currentAccount={currentAccount} />
+          )}
+
           {!!bills && (
             <div className="h-[85vh] relative overflow-auto w-full">
               <NoteBillsTable
                 bills={bills}
                 currentBill={currentBill}
                 handleClickBill={handleClickBill}
+                addButton
               />
             </div>
           )}
 
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center justify-evenly w-full">
+            <div className="flex gap-4 items-center">
+              <div className="flex gap-2 items-center">
+                <Label>จำนวนบิลที่เลือก</Label>
+                <span className="font-semibold">
+                  {!!selectedBills ? selectedBills?.length : "0"}
+                </span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <Label>ยอดรวม</Label>
+                <span className="font-semibold">{getSumAfterTax()}</span>
+              </div>
+            </div>
+
             <div className="flex gap-2 items-center">
               <Label htmlFor="result-limit">ค้นหาทั้งหมด</Label>
               <Select value={maxSearch} onValueChange={setMaxSearch}>
@@ -147,28 +166,21 @@ export default function BillSheet() {
           </div>
         </section>
         <section className="w-1/2">
-          <div className="h-[15%] flex gap-4 items-center justify-center">
-            {!!currentAccountName && (
-              <div className="flex flex-col items-center">
-                <span>กำลังสร้างใบวางบิลของ</span>
-                <span className="font-semibold">{currentAccountName}</span>
-              </div>
-            )}
-
+          <div className="h-fit flex gap-4 items-center justify-center">
             {!!currentBill &&
               (selectedBills
                 ?.map((bill) => bill.billId)
                 .includes(currentBill.billId) ? (
                 <Button
                   onClick={() => handleRemoveBill(currentBill)}
-                  className="bg-secondary hover:bg-red-700 flex items-center justify-center gap-2"
+                  className="w-full mx-8  bg-secondary hover:bg-red-700 flex items-center justify-center gap-2"
                 >
                   <RemoveSVG />
                 </Button>
               ) : (
                 <Button
                   onClick={() => handleAddBill(currentBill)}
-                  className="bg-secondary hover:bg-red-700 flex items-center justify-center gap-2"
+                  className="w-full mx-8 bg-secondary hover:bg-red-700 flex items-center justify-center gap-2"
                 >
                   <span>เพิ่มบิลนี้</span>
                 </Button>
