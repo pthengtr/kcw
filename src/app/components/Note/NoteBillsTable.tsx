@@ -59,7 +59,7 @@ export default function NoteBillsTable({
                 year: "2-digit",
               })}
             </TableCell>
-            <TableCell className="w-36">{bill.BILLNO}</TableCell>
+            <TableCell>{bill.BILLNO}</TableCell>
             <TableCell>
               {!!bill.DUEDATE &&
                 new Date(bill.DUEDATE).toLocaleDateString("th-TH", {
@@ -75,7 +75,7 @@ export default function NoteBillsTable({
               })}
             </TableCell>
             {addButton && (
-              <TableCell className="flex justify-center w-20">
+              <TableCell className="flex justify-center">
                 {selectedBills
                   ?.map((selectedBill) => selectedBill.billId)
                   .includes(bill.billId) ? (

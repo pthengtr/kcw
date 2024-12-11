@@ -20,7 +20,6 @@ export default function NoteSaveDialog() {
     setNoteBills,
     getSumAfterTax,
     getSumFullAmount,
-    noteDate,
     noteDueDate,
     purchaseNoteNo,
     noteDiscount,
@@ -154,8 +153,7 @@ export default function NoteSaveDialog() {
   }
 
   function handleConfirmNote() {
-    console.log(noteDate);
-    createNewNote(noteDate);
+    createNewNote(new Date());
     setNoteDiscount("");
     setCurrentAccount(undefined);
   }

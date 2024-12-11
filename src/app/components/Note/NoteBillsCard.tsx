@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import BillSheet from "./BillSheet";
 import { useContext } from "react";
 import { billType } from "../Transaction/TransactionProvider";
-import BillsTable from "../Common/BillsTable";
 import NoteDetailDialog from "./NoteDetailDialog";
 import { supabase } from "@/app/lib/supabase";
 import { NoteContext, NoteContextType } from "./NoteProvider";
@@ -13,12 +12,11 @@ import { Input } from "@/components/ui/input";
 import NoteSelectAcount from "./NoteSelectAccount";
 import DateSingle from "../Common/DateSingle";
 import { Label } from "@/components/ui/label";
+import NoteBillsTable from "./NoteBillsTable";
 
 export default function NoteBillsCard() {
   const {
     noteBills,
-    noteDate,
-    setNoteDate,
     noteDueDate,
     setNoteDueDate,
     setCurrentBill,
@@ -61,8 +59,6 @@ export default function NoteBillsCard() {
             <NoteSelectAcount />
             <span></span>
             <div className="flex-1 flex justify-end items-center gap-2">
-              <Label>วันที่ออก</Label>
-              <DateSingle date={noteDate} setDate={setNoteDate} />
               <Label>ครบกำหนด</Label>
               <DateSingle date={noteDueDate} setDate={setNoteDueDate} />
             </div>
@@ -92,7 +88,7 @@ export default function NoteBillsCard() {
       <CardContent className="h-[75%] flex flex-col">
         {!!noteBills && (
           <div className="overflow-auto">
-            <BillsTable
+            <NoteBillsTable
               bills={noteBills}
               currentBill={undefined}
               handleClickBill={handleClickNoteBill}

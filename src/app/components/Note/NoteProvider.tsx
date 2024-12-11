@@ -8,8 +8,6 @@ import { supabase } from "@/app/lib/supabase";
 export type NoteContextType = {
   noteBills: billType[] | undefined;
   setNoteBills: (bills: billType[] | undefined) => void;
-  noteDate: Date;
-  setNoteDate: (date: Date) => void;
   noteDueDate: Date;
   setNoteDueDate: (date: Date) => void;
   noteDetailOpen: boolean;
@@ -41,7 +39,6 @@ type NoteProviderProps = {
 export default function NoteProvider({ children }: NoteProviderProps) {
   const [noteDiscount, setNoteDiscount] = useState("");
   const [noteBills, setNoteBills] = useState<billType[]>();
-  const [noteDate, setNoteDate] = useState(new Date());
   const [noteDueDate, setNoteDueDate] = useState(new Date());
   const [purchaseNoteNo, setPurchaseNoteNo] = useState("");
   const [noteDetailOpen, setNoteDetailOpen] = useState(false);
@@ -147,8 +144,6 @@ export default function NoteProvider({ children }: NoteProviderProps) {
   const value = {
     noteBills,
     setNoteBills,
-    noteDate,
-    setNoteDate,
     noteDueDate,
     setNoteDueDate,
     purchaseNoteNo,
