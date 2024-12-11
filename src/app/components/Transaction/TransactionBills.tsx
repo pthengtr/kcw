@@ -16,13 +16,7 @@ import TransactionBillsBillList from "./TransactionBillsBillList";
 import TransactionBillsItemList from "./TransactionBillsItemList";
 import TransactionTotalCount from "../TotalCount";
 
-type TransactionAccountBillsProps = {
-  accountId: string;
-};
-
-export default function TransactionBills({
-  accountId,
-}: TransactionAccountBillsProps) {
+export default function TransactionBills() {
   const {
     toDate,
     fromDate,
@@ -34,6 +28,7 @@ export default function TransactionBills({
     currentBillItems,
     getCurrentBillItemsSupabase,
     billType,
+    currentAccount,
   } = useContext(TransactionContext) as TransactionContextType;
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
@@ -65,7 +60,7 @@ export default function TransactionBills({
         })
         .ilike("BILLNO", `%${filterText}%`)
         .ilike("BILLTYPE", `${billType}%`)
-        .eq("accountId", accountId)
+        .eq("accountId", currentAccount?.accountId)
         .order(sortBy, { ascending: sortAsc })
         .lte("JOURDATE", toDate.toLocaleString("en-US"))
         .gte("JOURDATE", fromDate.toLocaleString("en-US"))
@@ -78,7 +73,7 @@ export default function TransactionBills({
 
     getBillsSupabase();
   }, [
-    accountId,
+    currentAccount,
     setAccountBills,
     fromDate,
     toDate,

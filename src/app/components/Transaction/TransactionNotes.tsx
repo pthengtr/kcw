@@ -15,11 +15,7 @@ import TransactionNotesNoteList from "./TransactionNotesNoteList";
 import TransactionTotalCount from "../TotalCount";
 import TransactionNoteBillList from "./TransactionNotesBillList";
 
-type TransactionNotesProps = {
-  accountId: string;
-};
-
-export default function TransactionNotes({ accountId }: TransactionNotesProps) {
+export default function TransactionNotes() {
   const {
     accountNotes,
     setAccountNotes,
@@ -30,6 +26,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
     toDate,
     fromDate,
     filterText,
+    currentAccount,
   } = useContext(TransactionContext) as TransactionContextType;
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
@@ -58,7 +55,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
         .from("notes")
         .select(`*, accounts(*)`, { count: "exact" })
         .ilike("NOTENO", `%${filterText}%`)
-        .eq("accountId", accountId)
+        .eq("accountId", currentAccount?.accountId)
         .order(sortBy, { ascending: sortAsc })
         .lte("NOTEDATE", toDate.toLocaleString("en-US"))
         .gte("NOTEDATE", fromDate.toLocaleString("en-US"))
@@ -71,7 +68,7 @@ export default function TransactionNotes({ accountId }: TransactionNotesProps) {
 
     getNotesSupabase();
   }, [
-    accountId,
+    currentAccount,
     setAccountNotes,
     fromDate,
     toDate,

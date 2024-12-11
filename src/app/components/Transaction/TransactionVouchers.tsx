@@ -15,13 +15,7 @@ import TransactionVouchersVoucherList from "./TransactionVouchersVoucherList";
 import TransactionTotalCount from "../TotalCount";
 import TransactionVouchersBillList from "./TransactionVouchersBillList";
 
-type TransactionVouchersProps = {
-  accountId: string;
-};
-
-export default function TransactionVouchers({
-  accountId,
-}: TransactionVouchersProps) {
+export default function TransactionVouchers() {
   const {
     toDate,
     fromDate,
@@ -32,6 +26,7 @@ export default function TransactionVouchers({
     setCurrentVoucher,
     currentVoucherBills,
     getCurrentVoucherBillsSupabase,
+    currentAccount,
   } = useContext(TransactionContext) as TransactionContextType;
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
@@ -60,7 +55,7 @@ export default function TransactionVouchers({
         .from("vouchers")
         .select(`*, accounts(*), checks(*)`, { count: "exact" })
         .ilike("VOUCNO", `%${filterText}%`)
-        .eq("accountId", accountId)
+        .eq("accountId", currentAccount?.accountId)
         .lte("VOUCDATE", toDate.toLocaleString("en-US"))
         .gte("VOUCDATE", fromDate.toLocaleString("en-US"))
         .order(sortBy, { ascending: sortAsc })
@@ -73,7 +68,7 @@ export default function TransactionVouchers({
 
     getVouchersSupabase();
   }, [
-    accountId,
+    currentAccount,
     setAccountVouchers,
     fromDate,
     toDate,

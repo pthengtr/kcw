@@ -22,13 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import TransactionBillsItemList from "./TransactionBillsItemList";
 
-type TransactionCustomerItemsProps = {
-  accountId: string;
-};
-
-export default function TransactionItems({
-  accountId,
-}: TransactionCustomerItemsProps) {
+export default function TransactionItems() {
   const [accountItems, setAccountItems] = useState<itemsType[]>();
   const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState("50");
@@ -43,6 +37,7 @@ export default function TransactionItems({
     handleClickBill,
     currentBill,
     currentBillItems,
+    currentAccount,
   } = useContext(TransactionContext) as TransactionContextType;
 
   function handleClickColumn(column: string) {
@@ -107,7 +102,7 @@ export default function TransactionItems({
       }
 
       query = query
-        .eq("accountId", accountId)
+        .eq("accountId", currentAccount?.accountId)
         .lte("JOURDATE", toDate.toLocaleString("en-US"))
         .gte("JOURDATE", fromDate.toLocaleString("en-US"))
         .order(sortBy, { ascending: sortAsc, nullsFirst: sortAsc })
@@ -124,7 +119,7 @@ export default function TransactionItems({
     getAccountItemsSupabase();
   }, [
     setAccountItems,
-    accountId,
+    currentAccount,
     fromDate,
     toDate,
     filterText,

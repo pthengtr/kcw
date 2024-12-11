@@ -13,6 +13,7 @@ import { supabase } from "@/app/lib/supabase";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import AccountHeader from "./AccountHeader";
+import AccountInfo from "./AccountInfo";
 
 type SelectAccountProps = {
   currentCustomer: accountsType | undefined;
@@ -79,7 +80,7 @@ export default function SelectAcount({
     }
   }
   return (
-    <div className="flex gap-2 justify-start items-center text-xl">
+    <div className="flex gap-2 justify-start items-center text-inherit">
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none ">
           {!!currentCustomer ? (
@@ -113,6 +114,7 @@ export default function SelectAcount({
             ))}
         </DropdownMenuContent>
       </DropdownMenu>
+      {!!currentCustomer && <AccountInfo account={currentCustomer} />}
     </div>
   );
 }
@@ -122,10 +124,12 @@ export function getAccountType(pathName: string) {
 
   switch (pathName) {
     case "/pos":
+    case "/customer":
     case "/sale-note":
       accountType = "S";
       break;
     case "/purchase":
+    case "/supplier":
     case "/purchase-note":
       accountType = "P";
       break;
@@ -139,10 +143,12 @@ export function getPlaceholderText(pathName: string) {
 
   switch (pathName) {
     case "/pos":
+    case "/customer":
     case "/sale-note":
       placeholderText = "ค้นหาลูกค้า..";
       break;
     case "/purchase":
+    case "/supplier":
     case "/purchase-note":
       placeholderText = "ค้นหาบริษัท..";
       break;

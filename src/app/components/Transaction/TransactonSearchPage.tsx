@@ -1,7 +1,6 @@
 "use client";
 import React, { useContext, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SearchContext, SearchContextType } from "../SearchProvider";
 import { usePathname } from "next/navigation";
 import TransactionFilter from "./TransactionFilter";
 import TransactionItems from "./TransactionItems";
@@ -9,33 +8,15 @@ import TransactionBills from "./TransactionBills";
 import TransactionNotes from "./TransactionNotes";
 import TransactionVouchers from "./TransactionVouchers";
 import {
+  accountsType,
   createPreviousYearDate,
   TransactionContext,
   TransactionContextType,
 } from "./TransactionProvider";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
-const accountInfo = {
-  ADDR1: "ที่อยู่",
-  PHONE: "โทรศัพท์",
-  MOBILE: "เลขประจำตัวผู้เสียภาษี",
-  FAX: "แฟกซ์",
-  CONTACT: "ติดต่อ",
-  EMAIL: "อีเมล",
-  TERM: "เครดิต",
-  ALLOW: "วงเงิน",
-  REMARKS: "หมายเหตุ",
-};
+import SelectAcount from "../Common/SelectAccount";
 
 export default function TransactionSearchPage() {
-  const { transactionAccountObject } = useContext(
-    SearchContext
-  ) as SearchContextType;
-
   const {
     setCurrentTab,
     currentTab,
@@ -52,11 +33,11 @@ export default function TransactionSearchPage() {
     setToDate,
     setFromDate,
     setFilterText,
+    currentAccount,
+    setCurrentAccount,
   } = useContext(TransactionContext) as TransactionContextType;
 
-  const accountId = transactionAccountObject
-    ? transactionAccountObject.accountId.toString()
-    : "";
+  const accountId = currentAccount ? currentAccount.accountId.toString() : "";
 
   useEffect(() => {
     setCurrentBill(undefined);
@@ -71,7 +52,7 @@ export default function TransactionSearchPage() {
     setCurrentNote,
     setCurrentVoucher,
     setCurrentBillItems,
-    transactionAccountObject,
+    currentAccount,
     setFilterText,
     setToDate,
     setFromDate,
@@ -87,6 +68,10 @@ export default function TransactionSearchPage() {
     setFromDate(createPreviousYearDate(3));
   }
 
+  function handleAccountChange(account: accountsType) {
+    setCurrentAccount(account);
+  }
+
   return (
     <main className="h-[85%] w-full">
       <Tabs
@@ -96,63 +81,10 @@ export default function TransactionSearchPage() {
       >
         <div className="flex justify-center items-center py-2 bg-gray-100 px-16">
           <div className="flex-1 flex gap-2 items-center">
-            {transactionAccountObject && (
-              <Popover>
-                <PopoverTrigger>
-                  <div className="flex gap-2">
-                    <span
-                      className={`font-semibold text-xl text-white px-1 rounded-md ${
-                        transactionAccountObject?.ACCTTYPE === "P"
-                          ? "bg-red-900"
-                          : transactionAccountObject?.ACCTTYPE === "S"
-                          ? "bg-green-900"
-                          : "bg-primary"
-                      }`}
-                    >
-                      {transactionAccountObject?.ACCTNO}
-                    </span>
-                    <span className="font-semibold text-xl">
-                      {transactionAccountObject?.ACCTNAME}
-                    </span>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="grid grid-cols-[auto_auto] w-full max-w-[500px] gap-x-6 gap-y-2">
-                  {Object.keys(accountInfo).map((key) => (
-                    <React.Fragment key={key}>
-                      {!!transactionAccountObject[
-                        key as keyof typeof accountInfo
-                      ] && (
-                        <>
-                          <span className="text-gray-500">
-                            {accountInfo[key as keyof typeof accountInfo]}
-                          </span>
-                          <span>
-                            {`${
-                              key === "ALLOW"
-                                ? parseFloat(
-                                    transactionAccountObject[
-                                      key as keyof typeof accountInfo
-                                    ].toString()
-                                  ).toLocaleString("th-TH", {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                  })
-                                : transactionAccountObject[
-                                    key as keyof typeof accountInfo
-                                  ]
-                            }  ${
-                              key === "ADDR1"
-                                ? transactionAccountObject.ADDR2
-                                : ""
-                            }`}
-                          </span>
-                        </>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </PopoverContent>
-              </Popover>
-            )}
+            <SelectAcount
+              currentCustomer={currentAccount}
+              handleSelectCustomer={handleAccountChange}
+            />
           </div>
           <TabsList>
             <TabsTrigger value="allItems">ดูสินค้าทั้งหมด</TabsTrigger>
@@ -179,16 +111,16 @@ export default function TransactionSearchPage() {
         </div>
 
         <TabsContent value="allItems">
-          {accountId !== "" && <TransactionItems accountId={accountId} />}
+          {accountId !== "" && <TransactionItems />}
         </TabsContent>
         <TabsContent value="bills">
-          {accountId !== "" && <TransactionBills accountId={accountId} />}
+          {accountId !== "" && <TransactionBills />}
         </TabsContent>
         <TabsContent value="notes">
-          {accountId !== "" && <TransactionNotes accountId={accountId} />}
+          {accountId !== "" && <TransactionNotes />}
         </TabsContent>
         <TabsContent value="vouchers">
-          {accountId !== "" && <TransactionVouchers accountId={accountId} />}
+          {accountId !== "" && <TransactionVouchers />}
         </TabsContent>
       </Tabs>
     </main>

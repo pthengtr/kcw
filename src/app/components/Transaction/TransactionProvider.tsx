@@ -165,6 +165,8 @@ export type TransactionContextType = {
   handleClickVoucher: (voucherId: number) => void;
   handleClickBill: (billNo: string) => void;
   getBillStatus: (bill: billType) => string;
+  currentAccount: accountsType | undefined;
+  setCurrentAccount: (id: accountsType | undefined) => void;
 };
 
 export const TransactionContext = createContext<TransactionContextType | null>(
@@ -189,6 +191,9 @@ export default function TransactionProvider({ children }: TransactionProvider) {
   const [toDate, setToDate] = useState<Date>(new Date());
   const [currentTab, setCurrentTab] = useState("allItems");
   const [billType, setBillType] = useState("1");
+  const [currentAccount, setCurrentAccount] = useState<
+    accountsType | undefined
+  >();
 
   //Bills tab states
   const [accountBills, setAccountBills] = useState<billType[]>();
@@ -362,6 +367,8 @@ export default function TransactionProvider({ children }: TransactionProvider) {
     handleClickVoucher,
     handleClickBill,
     getBillStatus,
+    currentAccount,
+    setCurrentAccount,
   };
 
   return (

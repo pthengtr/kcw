@@ -36,8 +36,7 @@ export type SearchContextType = {
   category: string;
   currentPage: number;
   setCurrentPage: (page: number) => void;
-  transactionAccountObject: accountsType | undefined;
-  setTransactionAccountObject: (id: accountsType | undefined) => void;
+
   handleToggleStatus: () => void;
   handleSelect: (value: string, key: string) => void;
   handleSubmitForm: (e: React.FormEvent<HTMLFormElement>) => void;
