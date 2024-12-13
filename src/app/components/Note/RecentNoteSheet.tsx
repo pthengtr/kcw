@@ -97,12 +97,13 @@ export default function RecentNoteSheet() {
         .limit(parseInt(maxSearch));
 
       if (filterText !== "") {
-        query = query.or(
-          `ACCTNAME.ilike.%${filterText}%, ACCTNO.ilike.%${filterText}%`,
-          {
-            referencedTable: "accounts",
-          }
-        );
+        // query = query.or(
+        //   `ACCTNAME.ilike.%${filterText}%, ACCTNO.ilike.%${filterText}%`,
+        //   {
+        //     referencedTable: "accounts",
+        //   }
+        // );
+        query = query.ilike("NOTENO", `%${filterText}%`);
       }
 
       const { data, error } = await query;
@@ -136,7 +137,7 @@ export default function RecentNoteSheet() {
             <Input
               className={`rounded-md w-56`}
               type="text"
-              placeholder="ชื่อลูกค้า..."
+              placeholder="เลขที่ใบวางบิล..."
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             ></Input>
