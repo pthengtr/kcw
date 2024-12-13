@@ -67,7 +67,7 @@ export default function NoteSaveDialog() {
       date = new Date(updateNote.NOTEDATE);
     }
 
-    if ((newNoteNo = "")) {
+    if (newNoteNo === "") {
       toast({
         title: "ไม่มีเลขที่ใบวางบิล",
         description: "กรุณาใส่เลขที่ใบวางบิล",
@@ -182,6 +182,7 @@ export default function NoteSaveDialog() {
     setNoteDiscount("");
     setCurrentAccount(undefined);
     setUpdateNote(undefined);
+    setNoteBills(undefined);
   }
 
   return (
