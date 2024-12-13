@@ -38,7 +38,7 @@ export type noteType = {
   BILLAMT: number;
   DISCOUNT: number;
   NETAMT: number;
-  accountId: number | null;
+  accountId: number;
   accounts?: accountsType;
 };
 

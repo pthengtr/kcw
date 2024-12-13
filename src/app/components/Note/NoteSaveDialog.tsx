@@ -24,19 +24,19 @@ export default function NoteSaveDialog() {
     purchaseNoteNo,
     noteDiscount,
     setNoteDiscount,
+    currentAccount,
     setCurrentAccount,
+    updateNote,
+    setUpdateNote,
   } = useContext(NoteContext) as NoteContextType;
 
   const { toast } = useToast();
   const pathName = usePathname();
 
-  const currentAccountId =
-    !!noteBills && noteBills[0] !== undefined ? noteBills[0].accountId : null;
-
-  function formatNewNote(date: Date, data: noteType[]): noteType {
+  function formatNewNote(date: Date, data: noteType[]) {
     const billHeader = "KCW-BN";
 
-    const newNoteId = Math.random().toString().substring(2, 14);
+    let newNoteId = Math.random().toString().substring(2, 14);
 
     const sequenceNumber =
       data.length === 0
@@ -45,30 +45,51 @@ export default function NoteSaveDialog() {
             .toString()
             .padStart(4, "0");
 
-    const newNoteNo =
-      pathName === "/sale-note"
-        ? billHeader +
-          date
-            .toLocaleDateString("th-TH", { month: "2-digit", year: "2-digit" })
-            .split("/")
-            .reverse()
-            .join("") +
-          "-" +
-          sequenceNumber
-        : purchaseNoteNo;
+    let newNoteNo = "";
 
-    const newNote: noteType = {
-      noteId: parseInt(newNoteId),
-      accountId: currentAccountId,
-      BILLAMT: parseFloat(getSumFullAmount().replace(",", "")),
-      DISCOUNT: parseFloat(noteDiscount !== "" ? noteDiscount : "0"),
-      NETAMT: parseFloat(getSumAfterTax().replace(",", "")),
-      NOTEDATE: date,
-      DUEDATE: noteDueDate,
-      NOTENO: newNoteNo,
-    };
+    if (pathName === "/sale-note") {
+      newNoteNo =
+        billHeader +
+        date
+          .toLocaleDateString("th-TH", { month: "2-digit", year: "2-digit" })
+          .split("/")
+          .reverse()
+          .join("") +
+        "-" +
+        sequenceNumber;
+    } else {
+      purchaseNoteNo;
+    }
 
-    return newNote;
+    if (!!updateNote) {
+      newNoteId = updateNote.noteId.toString();
+      newNoteNo = updateNote.NOTENO;
+    }
+
+    if ((newNoteNo = "")) {
+      toast({
+        title: "ไม่มีเลขที่ใบวางบิล",
+        description: "กรุณาใส่เลขที่ใบวางบิล",
+        action: <CancelSVG />,
+        className: "text-xl",
+      });
+      return;
+    }
+
+    if (!!currentAccount?.accountId) {
+      const newNote: noteType = {
+        noteId: parseInt(newNoteId),
+        accountId: currentAccount.accountId,
+        BILLAMT: parseFloat(getSumFullAmount().replace(",", "")),
+        DISCOUNT: parseFloat(noteDiscount !== "" ? noteDiscount : "0"),
+        NETAMT: parseFloat(getSumAfterTax().replace(",", "")),
+        NOTEDATE: date,
+        DUEDATE: noteDueDate,
+        NOTENO: newNoteNo,
+      };
+
+      return newNote;
+    }
   }
 
   async function createNewNote(date: Date) {
@@ -114,26 +135,29 @@ export default function NoteSaveDialog() {
       return;
     }
 
-    const newNote: noteType = formatNewNote(date, data);
+    const newNote = formatNewNote(date, data);
 
     console.log(JSON.stringify(newNote));
     console.log(
       JSON.stringify(noteBills?.map((bill) => ({ billId: bill.billId })))
     );
 
-    const { data: dataRpc, error: errorRpc } = await supabase.rpc(
-      "fn_create_new_sale_note",
-      {
-        new_note: JSON.stringify(newNote),
-        new_note_bills: JSON.stringify(
-          noteBills?.map((bill) => ({ billId: bill.billId }))
-        ),
-      }
-    );
+    let rpcFunction = "fn_create_new_sale_note";
+
+    if (!!updateNote) {
+      rpcFunction = "fn_update_sale_note";
+    }
+
+    const { data: dataRpc, error: errorRpc } = await supabase.rpc(rpcFunction, {
+      new_note: JSON.stringify(newNote),
+      new_note_bills: JSON.stringify(
+        noteBills?.map((bill) => ({ billId: bill.billId }))
+      ),
+    });
 
     console.log(dataRpc, errorRpc);
 
-    if (!!errorRpc || dataRpc !== newNote.NOTENO) {
+    if (!!errorRpc || dataRpc !== newNote?.NOTENO) {
       toast({
         title: !!errorRpc ? errorRpc.code : "เกิดข้อผิดพลาด",
         description: !!errorRpc ? errorRpc.message : dataRpc,
@@ -156,6 +180,7 @@ export default function NoteSaveDialog() {
     createNewNote(new Date());
     setNoteDiscount("");
     setCurrentAccount(undefined);
+    setUpdateNote(undefined);
   }
 
   return (

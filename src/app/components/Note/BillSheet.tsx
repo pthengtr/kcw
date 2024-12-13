@@ -31,6 +31,7 @@ export default function BillSheet() {
   const [maxSearch, setMaxSearch] = useState("50");
 
   const {
+    updateNote,
     handleAddBill,
     handleRemoveBill,
     noteBills: selectedBills,
@@ -85,11 +86,15 @@ export default function BillSheet() {
         .lte("JOURDATE", toDate.toLocaleString("en-US"))
         .gte("JOURDATE", fromDate.toLocaleString("en-US"))
         .neq("CANCELED", "Y")
-        .is("noteId", null)
+        .or(
+          `noteId.is.null${
+            !!updateNote ? ", noteId.eq." + updateNote.noteId : ""
+          }`
+        )
+        .eq("accountId", currentAccountId)
         .order("accountId", { ascending: true })
         .order("JOURDATE", { ascending: true })
         .neq("DUEAMT", 0)
-        .eq("accountId", currentAccountId)
         .limit(parseInt(maxSearch));
 
       const { data, error } = await query;
@@ -111,12 +116,13 @@ export default function BillSheet() {
     fromDate,
     maxSearch,
     currentAccountId,
+    updateNote,
   ]);
 
   return (
     <Sheet open={isOpen} onOpenChange={handleSheetOpen}>
       <SheetTrigger className="bg-gray-100 text-base p-2 rounded-md hover:bg-gray-200">
-        ค้นหาบิล
+        เพิ่มบิล
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-[100%] overflow-auto flex">
         <section className="flex flex-col items-center gap-4 w-1/2">

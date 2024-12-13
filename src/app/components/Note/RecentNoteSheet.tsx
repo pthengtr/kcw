@@ -1,7 +1,7 @@
 "use client";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { supabase } from "@/app/lib/supabase";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { billType, noteType } from "../Transaction/TransactionProvider";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,8 @@ import NoteBillsTable from "./NoteBillsTable";
 import AccountHeader from "../Common/AccountHeader";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { NoteContext, NoteContextType } from "./NoteProvider";
 
 export default function RecentNoteSheet() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +34,10 @@ export default function RecentNoteSheet() {
   const [fromDate, setFromDate] = useState(createPreviousYearDate(1));
   const [sortBy, setSortBy] = useState("NOTEDATE");
   const [maxSearch, setMaxSearch] = useState("50");
+
+  const { handleUpdateNote, handleDeleteNote } = useContext(
+    NoteContext
+  ) as NoteContextType;
 
   const pathName = usePathname();
 
@@ -65,6 +71,16 @@ export default function RecentNoteSheet() {
       setNoteBills(undefined);
       setSortBy("NOTEDATE");
     }
+  }
+
+  function _handleUpdateNote(note: noteType) {
+    setIsOpen(false);
+    handleUpdateNote(note);
+  }
+
+  function _handleDeleteNote(note: noteType) {
+    setIsOpen(false);
+    handleDeleteNote(note);
   }
 
   useEffect(() => {
@@ -202,9 +218,25 @@ export default function RecentNoteSheet() {
               />
             )}
           </div>
-          {!!noteBills && (
-            <>
-              <Card className="p-2 self-end mx-16">
+          <div className="flex justify-evenly w-full">
+            {!!currentNote && (
+              <div className="flex flex-col gap-4">
+                <Button
+                  className="bg-secondary hover:bg-red-700 flex gap-2"
+                  onClick={() => _handleUpdateNote(currentNote)}
+                >
+                  <EditSVG /> แก้ไขใบวางบิลนี้
+                </Button>
+                <Button
+                  className="bg-secondary hover:bg-red-700  flex gap-2"
+                  onClick={() => _handleDeleteNote(currentNote)}
+                >
+                  <DeleteSVG /> ลบใบวางบิลนี้
+                </Button>
+              </div>
+            )}
+            {!!noteBills && (
+              <Card className="p-2">
                 <CardContent className="p-2 grid grid-cols-2 gap-y-2 gap-x-6 items-center justify-items-end">
                   <Label>จำนวนบิล</Label>
                   <span className="font-semibold">{noteBills?.length}</span>
@@ -231,10 +263,38 @@ export default function RecentNoteSheet() {
                   </span>
                 </CardContent>
               </Card>
-            </>
-          )}
+            )}
+          </div>
         </section>
       </SheetContent>
     </Sheet>
+  );
+}
+
+function EditSVG() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="currentcolor"
+    >
+      <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+    </svg>
+  );
+}
+
+function DeleteSVG() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="currentcolor"
+    >
+      <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+    </svg>
   );
 }

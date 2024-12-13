@@ -27,6 +27,7 @@ export default function NoteBillsCard() {
     noteDiscount,
     setNoteDiscount,
     currentAccount,
+    updateNote,
   } = useContext(NoteContext) as NoteContextType;
   const { data: session } = useSession();
   const pathName = usePathname();
@@ -69,8 +70,12 @@ export default function NoteBillsCard() {
             <div className="flex-1 text-left flex gap-2">
               {!!currentAccount && <BillSheet />}
             </div>
-            {pathName === "/sale-note" ? (
-              <div className="flex gap-2">ใบวางบิลลูกหนี้</div>
+            {!!updateNote ? (
+              <div className="flex gap-2">
+                ใบวางบิลเลขที่ {updateNote.NOTENO}
+              </div>
+            ) : pathName === "/sale-note" ? (
+              <div className="flex gap-2">สร้างใบวางบิลลูกหนี้</div>
             ) : (
               <Input
                 className="w-72"
