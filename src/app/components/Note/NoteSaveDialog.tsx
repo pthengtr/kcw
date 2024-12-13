@@ -64,6 +64,7 @@ export default function NoteSaveDialog() {
     if (!!updateNote) {
       newNoteId = updateNote.noteId.toString();
       newNoteNo = updateNote.NOTENO;
+      date = new Date(updateNote.NOTEDATE);
     }
 
     if ((newNoteNo = "")) {
