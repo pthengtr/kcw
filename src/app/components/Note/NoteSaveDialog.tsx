@@ -58,10 +58,11 @@ export default function NoteSaveDialog() {
         "-" +
         sequenceNumber;
     } else {
-      purchaseNoteNo;
+      newNoteNo = purchaseNoteNo;
     }
 
     if (!!updateNote) {
+      console.log("update note");
       newNoteId = updateNote.noteId.toString();
       newNoteNo = updateNote.NOTENO;
       date = new Date(updateNote.NOTEDATE);
@@ -78,7 +79,6 @@ export default function NoteSaveDialog() {
         DUEDATE: noteDueDate,
         NOTENO: newNoteNo,
       };
-
       return newNote;
     }
   }
@@ -127,6 +127,8 @@ export default function NoteSaveDialog() {
     }
 
     const newNote = formatNewNote(date, data);
+
+    console.log(newNote);
 
     if (newNote?.NOTENO === "") {
       console.log("no note number");
