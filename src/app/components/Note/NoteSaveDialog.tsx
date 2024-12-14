@@ -22,6 +22,7 @@ export default function NoteSaveDialog() {
     getSumFullAmount,
     noteDueDate,
     purchaseNoteNo,
+    setPurchaseNoteNo,
     noteDiscount,
     setNoteDiscount,
     currentAccount,
@@ -181,6 +182,7 @@ export default function NoteSaveDialog() {
       setNoteDiscount("");
       setCurrentAccount(undefined);
       setUpdateNote(undefined);
+      setPurchaseNoteNo("");
       return;
     }
   }
