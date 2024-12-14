@@ -67,16 +67,6 @@ export default function NoteSaveDialog() {
       date = new Date(updateNote.NOTEDATE);
     }
 
-    if (newNoteNo === "") {
-      toast({
-        title: "ไม่มีเลขที่ใบวางบิล",
-        description: "กรุณาใส่เลขที่ใบวางบิล",
-        action: <CancelSVG />,
-        className: "text-xl",
-      });
-      return;
-    }
-
     if (!!currentAccount?.accountId) {
       const newNote: noteType = {
         noteId: parseInt(newNoteId),
@@ -138,6 +128,17 @@ export default function NoteSaveDialog() {
 
     const newNote = formatNewNote(date, data);
 
+    if (newNote?.NOTENO === "") {
+      console.log("no note number");
+      toast({
+        title: "ไม่มีเลขที่ใบวางบิล",
+        description: "กรุณาใส่เลขที่ใบวางบิล",
+        action: <CancelSVG />,
+        className: "text-xl",
+      });
+      return;
+    }
+
     console.log(JSON.stringify(newNote));
     console.log(
       JSON.stringify(noteBills?.map((bill) => ({ billId: bill.billId })))
@@ -165,6 +166,7 @@ export default function NoteSaveDialog() {
         action: <CancelSVG />,
         className: "text-xl",
       });
+      return;
     } else {
       toast({
         title: !!dataRpc ? dataRpc : "",
@@ -174,15 +176,15 @@ export default function NoteSaveDialog() {
       });
 
       setNoteBills(undefined);
+      setNoteDiscount("");
+      setCurrentAccount(undefined);
+      setUpdateNote(undefined);
+      return;
     }
   }
 
   function handleConfirmNote() {
     createNewNote(new Date());
-    setNoteDiscount("");
-    setCurrentAccount(undefined);
-    setUpdateNote(undefined);
-    setNoteBills(undefined);
   }
 
   return (
